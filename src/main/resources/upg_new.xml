@@ -1,0 +1,196 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://upg.sbns.bssys.com/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="UniversalPaymentGate" targetNamespace="http://upg.sbns.bssys.com/">
+  <wsdl:types>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns0="http://upg.sbns.bssys.com/" elementFormDefault="qualified" targetNamespace="http://upg.sbns.bssys.com/">
+  <xsd:complexType name="preLogin">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="userLogin" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="loginResponse">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="return" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="getRequestStatus">
+    <xsd:sequence>
+      <xsd:element maxOccurs="unbounded" minOccurs="0" name="requests" type="xsd:string"/>
+      <xsd:element minOccurs="0" name="sessionId" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="preLoginResponse">
+    <xsd:sequence>
+      <xsd:element maxOccurs="unbounded" minOccurs="0" name="return" type="xsd:base64Binary"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="sendRequests">
+    <xsd:sequence>
+      <xsd:element maxOccurs="unbounded" minOccurs="0" name="requests" type="xsd:string"/>
+      <xsd:element minOccurs="0" name="sessionId" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="sendDocumentReceiptsResponse">
+    <xsd:sequence>
+      <xsd:element maxOccurs="unbounded" minOccurs="0" name="return" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="login">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="userLogin" type="xsd:string"/>
+      <xsd:element minOccurs="0" name="preloginId" type="xsd:string"/>
+      <xsd:element maxOccurs="unbounded" minOccurs="0" name="clientAuthData" type="xsd:base64Binary"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="sendDocumentReceipts">
+    <xsd:sequence>
+      <xsd:element maxOccurs="unbounded" minOccurs="0" name="receipts" type="xsd:string"/>
+      <xsd:element minOccurs="0" name="sessionId" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="sendRequestsResponse">
+    <xsd:sequence>
+      <xsd:element maxOccurs="unbounded" minOccurs="0" name="return" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="getRequestStatusResponse">
+    <xsd:sequence>
+      <xsd:element maxOccurs="unbounded" minOccurs="0" name="return" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="preLogin" type="ns0:preLogin"/>
+  <xsd:element name="loginResponse" type="ns0:loginResponse"/>
+  <xsd:element name="getRequestStatus" type="ns0:getRequestStatus"/>
+  <xsd:element name="preLoginResponse" type="ns0:preLoginResponse"/>
+  <xsd:element name="sendRequests" type="ns0:sendRequests"/>
+  <xsd:element name="sendDocumentReceiptsResponse" type="ns0:sendDocumentReceiptsResponse"/>
+  <xsd:element name="login" type="ns0:login"/>
+  <xsd:element name="sendDocumentReceipts" type="ns0:sendDocumentReceipts"/>
+  <xsd:element name="sendRequestsResponse" type="ns0:sendRequestsResponse"/>
+  <xsd:element name="getRequestStatusResponse" type="ns0:getRequestStatusResponse"/>
+</xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="sendDocumentReceiptsResponse">
+    <wsdl:part element="tns:sendDocumentReceiptsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="login">
+    <wsdl:part element="tns:login" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="sendDocumentReceipts">
+    <wsdl:part element="tns:sendDocumentReceipts" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="sendRequestsResponse">
+    <wsdl:part element="tns:sendRequestsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getRequestStatusResponse">
+    <wsdl:part element="tns:getRequestStatusResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="preLogin">
+    <wsdl:part element="tns:preLogin" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="loginResponse">
+    <wsdl:part element="tns:loginResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getRequestStatus">
+    <wsdl:part element="tns:getRequestStatus" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="preLoginResponse">
+    <wsdl:part element="tns:preLoginResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="sendRequests">
+    <wsdl:part element="tns:sendRequests" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="UniversalPaymentGate">
+    <wsdl:operation name="preLogin">
+      <wsdl:input message="tns:preLogin" name="preLogin">
+    </wsdl:input>
+      <wsdl:output message="tns:preLoginResponse" name="preLoginResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getRequestStatus">
+      <wsdl:input message="tns:getRequestStatus" name="getRequestStatus">
+    </wsdl:input>
+      <wsdl:output message="tns:getRequestStatusResponse" name="getRequestStatusResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="login">
+      <wsdl:input message="tns:login" name="login">
+    </wsdl:input>
+      <wsdl:output message="tns:loginResponse" name="loginResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="sendDocumentReceipts">
+      <wsdl:input message="tns:sendDocumentReceipts" name="sendDocumentReceipts">
+    </wsdl:input>
+      <wsdl:output message="tns:sendDocumentReceiptsResponse" name="sendDocumentReceiptsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="sendRequests">
+      <wsdl:input message="tns:sendRequests" name="sendRequests">
+    </wsdl:input>
+      <wsdl:output message="tns:sendRequestsResponse" name="sendRequestsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="UniversalPaymentGateSoapBinding" type="tns:UniversalPaymentGate">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="preLogin">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="preLogin">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="preLoginResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getRequestStatus">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getRequestStatus">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getRequestStatusResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="login">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="login">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="loginResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="sendDocumentReceipts">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="sendDocumentReceipts">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="sendDocumentReceiptsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="sendRequests">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="sendRequests">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="sendRequestsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="UniversalPaymentGate">
+    <wsdl:port binding="tns:UniversalPaymentGateSoapBinding" name="UniversalPaymentGateImplPort">
+      <soap:address location="http://localhost:28016/sbns-upg/upg"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
