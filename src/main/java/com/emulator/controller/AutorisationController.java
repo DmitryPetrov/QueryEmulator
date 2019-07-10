@@ -10,6 +10,8 @@ import com.emulator.domain.SOAPClient;
 import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.prelogin.PreLoginResult;
 
+import java.io.IOException;
+
 @Controller
 public class AutorisationController {
 
@@ -25,14 +27,19 @@ public class AutorisationController {
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     @ResponseBody
-    public String logIn(
+    public String login(
             // @RequestParam(value = "userName", required = true) String userName,
             // @RequestParam(value = "password", required = true) String password
     ) {
         AppUser user = new AppUser("testui", "L8UWRF");
 
-        PreLoginResult result = client.callPreLogin(user);
+        String result = null;
+        try {
+            result = client.authorization("testui", "L8UWRF");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        return result.toString();
+        return result;
     }
 }

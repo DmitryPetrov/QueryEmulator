@@ -16,7 +16,7 @@ public class PreLoginResult {
     }
 
     public String getSaltString() {
-        return salt.toString();
+        return new String(salt);
     }
 
     public void setSalt(byte[] salt) {
@@ -28,7 +28,7 @@ public class PreLoginResult {
     }
 
     public String getBytesFromServerString() {
-        return bytesFromServer.toString();
+        return new String(bytesFromServer);
     }
 
     public void setBytesFromServer(byte[] bytesFromServer) {
@@ -37,6 +37,10 @@ public class PreLoginResult {
 
     public byte[] getLegacySalt() {
         return legacySalt;
+    }
+
+    public String getLegacySaltString() {
+        return new String(legacySalt);
     }
 
     public void setLegacySalt(byte[] legacySalt) {
@@ -48,13 +52,17 @@ public class PreLoginResult {
     }
 
     public void setPreLoginId(byte[] preLoginIdBase64) {
-        byte[] decodedBytes = Base64.getMimeDecoder().decode(Arrays.toString(preLoginIdBase64));
+        byte[] decodedBytes = Base64.getMimeDecoder().decode(new String(preLoginIdBase64));
         String decodedString = new String(decodedBytes);
         this.preLoginId = decodedString;
     }
 
     public byte[] getUserHash() {
         return userHash;
+    }
+
+    public String getUserHashString() {
+        return new String(userHash);
     }
 
     public void setUserHash(byte[] userHashBase64) {
@@ -64,9 +72,9 @@ public class PreLoginResult {
 
     @Override
     public String toString() {
-        return "PreLoginResult [salt=" + Arrays.toString(salt) + ", bytesFromServer=" + Arrays.toString(bytesFromServer)
-                + ", legacySalt=" + Arrays.toString(legacySalt) + ", preLoginId=" + preLoginId + ", userHash="
-                + Arrays.toString(userHash) + "]";
+        return "PreLoginResult [salt=" + getSaltString() + ", bytesFromServer=" + getBytesFromServerString()
+                + ", legacySalt=" + getLegacySaltString() + ", preLoginId=" + getPreLoginId() + ", userHash="
+                + getUserHashString() + "]";
     }
 
 }

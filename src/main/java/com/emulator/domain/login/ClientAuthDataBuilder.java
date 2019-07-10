@@ -1,5 +1,6 @@
 package com.emulator.domain.login;
 
+import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.prelogin.PreLoginResult;
 
 import java.io.BufferedReader;
@@ -11,36 +12,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SRP {
+public class ClientAuthDataBuilder {
 
-/*    private String login = null;
-    private String password = null;
-    private String salt = null;
-    private String bytesFromServer = null;
-
-    private AppUser user;
-    private PreLoginResult preLoginResult;
-
-    {
-        login = "rtk";
-        password = "N";
-        salt = "ob+TXc2f9w7n7w==";
-        bytesFromServer = "Sd3U3BCcMGD0Gkeq0Ksmx8EJVeON1zw6Ogvqzf6sQVQ=";
-    }
-
-    public SRP() {
-
-    }
-
-    public Map<String, String> run(AppUser user) throws IOException {
-        List<String> command = buildCommand();
+    public Map<String, String> build(AppUser user, PreLoginResult preLoginResult) throws IOException {
+        List<String> command = buildCommand(user, preLoginResult);
 
         ProcessBuilder pb = new ProcessBuilder(command);
         Process process = pb.start();
 
         Map<String, String> result = getResult(process);
-
-        System.out.println("---->> " + result);
 
         return result;
     }
@@ -61,8 +41,6 @@ public class SRP {
         InputStream stdout = process.getInputStream ();
         BufferedReader stdoutReader = new BufferedReader (new InputStreamReader(stdout));
         while ((line = stdoutReader.readLine ()) != null) {
-            System.out.println ("[Stdout] " + line);
-
             if(line.contains("passwordHash")) {
                 String[] array = line.split(" ");
                 String passwordHash = array[(array.length - 1)];
@@ -80,32 +58,17 @@ public class SRP {
         return result;
     }
 
-    private List<String> buildCommand() {
+    private List<String> buildCommand(AppUser user, PreLoginResult preLoginResult) {
         List<String> command = new ArrayList<String>();
         command.add("java");
         command.add("-jar");
-        command.add("srp-1.0-SNAPSHOT-shaded.jar");
-        command.add(login);
-        command.add(password);
-        command.add(salt);
-        command.add(bytesFromServer);
+        command.add("srp-1.1-SNAPSHOT-shaded.jar");
+        command.add(user.getUserName());
+        command.add(user.getPassword());
+        command.add(preLoginResult.getSalt().toString());
+        command.add(preLoginResult.getBytesFromServer().toString());
+        command.add("true");
 
         return command;
     }
-
-    private String getLogin() {
-        return user.getUserName();
-    }
-
-    private String getPassword() {
-        return user.getPassword();
-    }
-
-    private String getSalt() {
-        return preLoginResult.getSaltString();
-    }
-
-    private String getBytesFromServer() {
-        return preLoginResult.getBytesFromServerString();
-    }*/
 }
