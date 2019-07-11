@@ -7,6 +7,7 @@ import com.emulator.domain.login.LoginResult;
 import com.emulator.domain.prelogin.PreLoginResult;
 import com.emulator.domain.wsclient.com.bssys.sbns.upg.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 
 import javax.xml.bind.JAXBElement;
@@ -22,17 +23,25 @@ public class SOAPClient extends WebServiceGatewaySupport {
     @Autowired
     XmlMessagePrinter messagePrinter;
 
+    @Autowired
+    @Qualifier("defaultUser")
+    private AppUser defaultUser;
+
     public SOAPClient() {
         super();
     }
 
-    public String authorization(String userLogin, String password) throws IOException {
-        AppUser user = new AppUser(userLogin, password);
+    public String authorization(String userName, String password) throws IOException {
+        AppUser user;
+
+        if((userName == null) || (password == null)) {
+            user = defaultUser;
+        } else {
+            user = new AppUser(userName, password);
+        }
 
         PreLoginResult preLoginResult = callPreLogin(user);
-
         Map<String, String> authData = new ClientAuthDataBuilder().build(user, preLoginResult);
-
         LoginResult loginResult = callLogin(user, preLoginResult, authData);
 
         return preLoginResult.toString() + "<br>"+ authData.toString() + "<br>" + loginResult.getSessionId();
@@ -41,12 +50,11 @@ public class SOAPClient extends WebServiceGatewaySupport {
     private PreLoginResult callPreLogin(AppUser user) {
         PreLogin request = factory.createPreLogin();
         request.setUserLogin(user.getUserName());
-
         JAXBElement<PreLogin> preLoginElement = factory.createPreLogin(request);
         JAXBElement<PreLoginResponse> preLoginResponseElement;
+
         preLoginResponseElement = (JAXBElement<PreLoginResponse>) getWebServiceTemplate()
                 .marshalSendAndReceive(preLoginElement, messagePrinter);
-
         PreLoginResponse response = preLoginResponseElement.getValue();
 
         return getPreLoginResult(response);
@@ -72,12 +80,11 @@ public class SOAPClient extends WebServiceGatewaySupport {
         List<byte[]> clientAuthData = request.getClientAuthData();
         clientAuthData.add(authData.get("extPasswordData").getBytes());
         clientAuthData.add(authData.get("passwordHash").getBytes());
-
         JAXBElement<Login> loginElement = factory.createLogin(request);
         JAXBElement<LoginResponse> loginResponseElement;
+
         loginResponseElement = (JAXBElement<LoginResponse>) getWebServiceTemplate()
                 .marshalSendAndReceive(loginElement, messagePrinter);
-
         LoginResponse response = loginResponseElement.getValue();
 
         return getLoginResult(response);

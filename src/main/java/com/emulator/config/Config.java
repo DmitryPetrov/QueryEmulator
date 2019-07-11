@@ -1,7 +1,9 @@
 package com.emulator.config;
 
 import com.emulator.domain.SOAPClient;
+import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.wsclient.com.bssys.sbns.upg.ObjectFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
@@ -50,6 +52,12 @@ public class Config {
     @Bean
     public XmlMessagePrinter xmlMessagePrinter() {
         return new XmlMessagePrinter();
+    }
+
+    @Bean(name = "defaultUser")
+    public AppUser defaultUser(@Value("${defaultUser.userName}") String userName,
+                               @Value("${defaultUser.password}")String password) {
+        return new AppUser(userName, password);
     }
 
     private void disableSslVerification() {
