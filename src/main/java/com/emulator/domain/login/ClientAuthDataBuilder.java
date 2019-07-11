@@ -16,19 +16,19 @@ public class ClientAuthDataBuilder {
 
     private final String USE_2048_BIT_SRP = "false";
 
-    public Map<String, String> build(AppUser user, PreLoginResult preLoginResult) throws IOException {
+    public ClientAuthData build(AppUser user, PreLoginResult preLoginResult) throws IOException {
         List<String> command = buildCommand(user, preLoginResult);
 
         ProcessBuilder pb = new ProcessBuilder(command);
         Process process = pb.start();
 
-        Map<String, String> result = getResult(process);
+        ClientAuthData result = getResult(process);
 
         return result;
     }
 
-    private Map<String, String> getResult(Process process) throws IOException {
-        Map<String, String> result = new HashMap<>();
+    private ClientAuthData getResult(Process process) throws IOException {
+        ClientAuthData authData = new ClientAuthData();
 
         // clean up if any output in stderr
         InputStream stderr = process.getErrorStream ();
@@ -46,18 +46,18 @@ public class ClientAuthDataBuilder {
             if(line.contains("passwordHash")) {
                 String[] array = line.split(" ");
                 String passwordHash = array[(array.length - 1)];
-                result.put("passwordHash", passwordHash);
+                authData.setPasswordHash(passwordHash);
             }
 
             if(line.contains("extPasswordData")) {
                 String[] array = line.split(" ");
                 String extPasswordData = array[(array.length - 1)];
-                result.put("extPasswordData", extPasswordData);
+                authData.setExtPasswordData(extPasswordData);
             }
         }
         stdoutReader.close();
 
-        return result;
+        return authData;
     }
 
     private List<String> buildCommand(AppUser user, PreLoginResult preLoginResult) {

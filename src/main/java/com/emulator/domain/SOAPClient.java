@@ -2,6 +2,7 @@ package com.emulator.domain;
 
 import com.emulator.config.XmlMessagePrinter;
 import com.emulator.domain.entity.AppUser;
+import com.emulator.domain.login.ClientAuthData;
 import com.emulator.domain.login.ClientAuthDataBuilder;
 import com.emulator.domain.login.LoginResult;
 import com.emulator.domain.prelogin.PreLoginResult;
@@ -41,7 +42,7 @@ public class SOAPClient extends WebServiceGatewaySupport {
         }
 
         PreLoginResult preLoginResult = callPreLogin(user);
-        Map<String, String> authData = new ClientAuthDataBuilder().build(user, preLoginResult);
+        ClientAuthData authData = new ClientAuthDataBuilder().build(user, preLoginResult);
         LoginResult loginResult = callLogin(user, preLoginResult, authData);
 
         return preLoginResult.toString() + "<br>"+ authData.toString() + "<br>" + loginResult.getSessionId();
@@ -73,13 +74,13 @@ public class SOAPClient extends WebServiceGatewaySupport {
         return result;
     }
 
-    private LoginResult callLogin(AppUser user, PreLoginResult preLoginResult, Map<String, String> authData) {
+    private LoginResult callLogin(AppUser user, PreLoginResult preLoginResult, ClientAuthData authData) {
         Login request = factory.createLogin();
         request.setUserLogin(user.getUserName());
         request.setPreloginId(preLoginResult.getPreLoginIdString());
         List<byte[]> clientAuthData = request.getClientAuthData();
-        clientAuthData.add(authData.get("extPasswordData").getBytes());
-        clientAuthData.add(authData.get("passwordHash").getBytes());
+        clientAuthData.add(authData.getPasswordHash());
+        clientAuthData.add(authData.getExtPasswordData());
         JAXBElement<Login> loginElement = factory.createLogin(request);
         JAXBElement<LoginResponse> loginResponseElement;
 
