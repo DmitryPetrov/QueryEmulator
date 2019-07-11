@@ -1,6 +1,5 @@
 package com.emulator.domain.prelogin;
 
-import java.util.Arrays;
 import java.util.Base64;
 
 public class PreLoginResult {
@@ -8,7 +7,7 @@ public class PreLoginResult {
     private byte[] salt;
     private byte[] bytesFromServer;
     private byte[] legacySalt;
-    private String preLoginId;
+    private byte[] preLoginId;
     private byte[] userHash;
 
     public byte[] getSalt() {
@@ -16,11 +15,11 @@ public class PreLoginResult {
     }
 
     public String getSaltString() {
-        return new String(salt);
+        return toString(salt);
     }
 
     public void setSalt(byte[] salt) {
-        this.salt = salt;
+        this.salt = Base64.getEncoder().encode(salt);
     }
 
     public byte[] getBytesFromServer() {
@@ -28,11 +27,11 @@ public class PreLoginResult {
     }
 
     public String getBytesFromServerString() {
-        return new String(bytesFromServer);
+        return toString(bytesFromServer);
     }
 
     public void setBytesFromServer(byte[] bytesFromServer) {
-        this.bytesFromServer = bytesFromServer;
+        this.bytesFromServer = Base64.getEncoder().encode(bytesFromServer);
     }
 
     public byte[] getLegacySalt() {
@@ -40,21 +39,23 @@ public class PreLoginResult {
     }
 
     public String getLegacySaltString() {
-        return new String(legacySalt);
+        return toString(legacySalt);
     }
 
     public void setLegacySalt(byte[] legacySalt) {
-        this.legacySalt = legacySalt;
+        this.legacySalt = Base64.getEncoder().encode(legacySalt);
     }
 
-    public String getPreLoginId() {
+    public String getPreLoginIdString() {
+        return toString(preLoginId);
+    }
+
+    public byte[] getPreLoginId() {
         return preLoginId;
     }
 
-    public void setPreLoginId(byte[] preLoginIdBase64) {
-        byte[] decodedBytes = Base64.getMimeDecoder().decode(new String(preLoginIdBase64));
-        String decodedString = new String(decodedBytes);
-        this.preLoginId = decodedString;
+    public void setPreLoginId(byte[] preLoginId) {
+        this.preLoginId = preLoginId;
     }
 
     public byte[] getUserHash() {
@@ -62,12 +63,15 @@ public class PreLoginResult {
     }
 
     public String getUserHashString() {
-        return new String(userHash);
+        return toString(userHash);
     }
 
-    public void setUserHash(byte[] userHashBase64) {
-        byte[] decodedBytes = Base64.getMimeDecoder().decode(Arrays.toString(userHashBase64));
-        this.userHash = decodedBytes;
+    public void setUserHash(byte[] userHash) {
+        this.userHash = userHash;
+    }
+
+    private String toString(byte[] bytes) {
+        return new String(bytes);
     }
 
     @Override
