@@ -1,9 +1,11 @@
 package com.emulator.config;
 
 import com.emulator.domain.SOAPClient;
+import com.emulator.domain.wsclient.com.bssys.sbns.upg.ObjectFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 
 import javax.net.ssl.*;
 import java.security.KeyManagementException;
@@ -23,18 +25,35 @@ public class Config {
     @Bean
     public SOAPClient soapClient(Jaxb2Marshaller marshaller) {
         SOAPClient client = new SOAPClient();
-        client.setDefaultUri("https://172.18.3.18:8443/sbns-upg");
+        client.setDefaultUri("https://correqtst00:8443/sbns-upg/upg");
         client.setMarshaller(marshaller);
         client.setUnmarshaller(marshaller);
+
+        ClientInterceptor[] interceptors = new ClientInterceptor[]{interceptor()};
+        client.setInterceptors(interceptors);
 
         disableSslVerification();
 
         return client;
     }
 
+    @Bean
+    public SoapClientInterceptor interceptor() {
+        return new SoapClientInterceptor();
+    }
+
+    @Bean
+    public ObjectFactory objectFactory() {
+        return new ObjectFactory();
+    }
+
+    @Bean
+    public XmlMessagePrinter xmlMessagePrinter() {
+        return new XmlMessagePrinter();
+    }
+
     private void disableSslVerification() {
-        try
-        {
+        try {
             // Create a trust manager that does not validate certificate chains
             TrustManager[] trustAllCerts = new TrustManager[]{new UnTrustworthyTrustManager()};
 
