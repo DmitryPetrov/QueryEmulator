@@ -32,18 +32,8 @@ public class AuthorizationManager {
     @Autowired
     private List<String> soapMassageTrace;
 
-    @Autowired
-    @Qualifier("defaultUser")
-    private AppUser defaultUser;
-
     public String authorization(String userName, String password) {
-        AppUser user;
-
-        if((userName == null) || (password == null)) {
-            user = defaultUser;
-        } else {
-            user = new AppUser(userName, password);
-        }
+        AppUser user = getUser(userName, password);
 
         PreLoginResult preLoginResult = callPreLogin(user);
         ClientAuthData authData = null;
@@ -61,6 +51,17 @@ public class AuthorizationManager {
         }
 
         return preLoginResult.toString() + "<br>"+ authData.toString() + "<br>" + loginResult.getSessionId();
+    }
+
+    @Autowired
+    @Qualifier("defaultUser")
+    private AppUser defaultUser;
+
+    private AppUser getUser(String userName, String password) {
+        if((userName == null) || (password == null)) {
+            return defaultUser;
+        }
+        return new AppUser(userName, password);
     }
 
     private PreLoginResult callPreLogin(AppUser user) {
