@@ -3,6 +3,7 @@ package com.emulator.domain.soap;
 import com.emulator.config.XmlMessagePrinter;
 import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.soap.com.bssys.sbns.upg.*;
+import com.emulator.domain.soap.exception.BadCredentialsLoginException;
 import com.emulator.domain.soap.login.ClientAuthData;
 import com.emulator.domain.soap.login.ClientAuthDataBuilder;
 import com.emulator.domain.soap.login.LoginResult;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.client.core.WebServiceTemplate;
 
+import javax.security.auth.login.LoginException;
 import javax.xml.bind.JAXBElement;
 import java.io.IOException;
 import java.util.List;
@@ -26,6 +28,9 @@ public class AuthorizationManager {
 
     @Autowired
     WebServiceTemplate webServiceTemplate;
+
+    @Autowired
+    private List<String> soapMassageTrace;
 
     @Autowired
     @Qualifier("defaultUser")
@@ -47,7 +52,13 @@ public class AuthorizationManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        LoginResult loginResult = callLogin(user, preLoginResult, authData);
+
+        LoginResult loginResult = null;
+        try {
+            loginResult = callLogin(user, preLoginResult, authData);
+        } catch (BadCredentialsLoginException e) {
+            e.printStackTrace();
+        }
 
         return preLoginResult.toString() + "<br>"+ authData.toString() + "<br>" + loginResult.getSessionId();
     }
@@ -78,7 +89,8 @@ public class AuthorizationManager {
         return result;
     }
 
-    private LoginResult callLogin(AppUser user, PreLoginResult preLoginResult, ClientAuthData authData) {
+    private LoginResult callLogin(AppUser user, PreLoginResult preLoginResult, ClientAuthData authData) throws
+            BadCredentialsLoginException {
         Login request = factory.createLogin();
         request.setUserLogin(user.getUserName());
         request.setPreloginId(preLoginResult.getPreLoginIdString());
@@ -95,11 +107,22 @@ public class AuthorizationManager {
         return getLoginResult(response);
     }
 
-    private LoginResult getLoginResult(LoginResponse response) {
+    private LoginResult getLoginResult(LoginResponse response) throws BadCredentialsLoginException {
+        String responseStr = response.getReturn();
+        if (responseStr.equals("BAD_CREDENTIALS")) {
+            String exception = responseStr;
+
+            exception += "\n>>>>SAOP Messages:";
+            for (String massage: soapMassageTrace) {
+                exception += ("\n" + massage);
+            }
+            exception += "\n>>>>Trace:";
+
+            throw new BadCredentialsLoginException(exception);
+        }
+
         LoginResult loginResult = new LoginResult();
-
-        loginResult.setSessionId(response.getReturn());
-
+        loginResult.setSessionId(responseStr);
         return loginResult;
     }
 
