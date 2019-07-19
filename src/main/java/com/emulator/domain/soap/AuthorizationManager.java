@@ -32,25 +32,24 @@ public class AuthorizationManager {
     @Autowired
     private List<String> soapMassageTrace;
 
-    public String authorization(String userName, String password) {
-        AppUser user = getUser(userName, password);
+    @Autowired
+    ClientAuthDataBuilder clientAuthDataBuilder;
 
+    public AppUser authorization(String userName, String password) {
+        AppUser user = getUser(userName, password);
         PreLoginResult preLoginResult = callPreLogin(user);
-        ClientAuthData authData = null;
+
         try {
-            authData = new ClientAuthDataBuilder().build(user, preLoginResult);
+            ClientAuthData authData = clientAuthDataBuilder.build(user, preLoginResult);
+            LoginResult loginResult = callLogin(user, preLoginResult, authData);
+            user.setSessionId(loginResult);
         } catch (IOException e) {
             e.printStackTrace();
-        }
-
-        LoginResult loginResult = null;
-        try {
-            loginResult = callLogin(user, preLoginResult, authData);
         } catch (BadCredentialsLoginException e) {
             e.printStackTrace();
         }
 
-        return preLoginResult.toString() + "<br>"+ authData.toString() + "<br>" + loginResult.getSessionId();
+        return user;
     }
 
     @Autowired

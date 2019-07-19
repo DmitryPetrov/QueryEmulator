@@ -11,7 +11,6 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 
 import javax.net.ssl.*;
-import java.io.StringWriter;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -45,8 +44,8 @@ public class Config {
     }
 
     @Bean
-    public SoapClientInterceptor interceptor() {
-        return new SoapClientInterceptor();
+    public WebServiceTemplateInterceptor interceptor() {
+        return new WebServiceTemplateInterceptor();
     }
 
     @Bean

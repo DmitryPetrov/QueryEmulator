@@ -2,6 +2,7 @@ package com.emulator.domain.soap.login;
 
 import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.soap.prelogin.PreLoginResult;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Component
 public class ClientAuthDataBuilder {
 
     private final String USE_2048_BIT_SRP = "false";
