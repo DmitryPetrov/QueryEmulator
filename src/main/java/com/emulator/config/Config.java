@@ -6,6 +6,7 @@ import com.emulator.domain.wsclient.com.bssys.sbns.upg.ObjectFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 
@@ -14,6 +15,7 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 
 @Configuration
+@Import(WebConfig.class)
 public class Config {
 
     @Bean

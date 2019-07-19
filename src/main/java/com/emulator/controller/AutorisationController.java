@@ -17,13 +17,6 @@ import java.io.IOException;
 @Controller
 public class AutorisationController {
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    @ResponseBody
-    public String index() {
-
-        return "index";
-    }
-
     @Autowired
     private SOAPClient client;
 
