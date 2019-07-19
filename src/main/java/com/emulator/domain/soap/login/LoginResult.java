@@ -1,4 +1,4 @@
-package com.emulator.domain.login;
+package com.emulator.domain.soap.login;
 
 public class LoginResult {
 

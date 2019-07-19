@@ -1,5 +1,5 @@
 
-package com.emulator.domain.wsclient.com.bssys.sbns.upg;
+package com.emulator.domain.soap.com.bssys.sbns.upg;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,12 +10,12 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for sendRequestsResponse complex type.
+ * <p>Java class for sendDocumentReceiptsResponse complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="sendRequestsResponse">
+ * &lt;complexType name="sendDocumentReceiptsResponse">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
@@ -29,10 +29,10 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "sendRequestsResponse", propOrder = {
+@XmlType(name = "sendDocumentReceiptsResponse", propOrder = {
     "_return"
 })
-public class SendRequestsResponse {
+public class SendDocumentReceiptsResponse {
 
     @XmlElement(name = "return")
     protected List<String> _return;

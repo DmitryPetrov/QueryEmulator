@@ -1,5 +1,5 @@
 
-package com.emulator.domain.wsclient.com.bssys.sbns.upg;
+package com.emulator.domain.soap.com.bssys.sbns.upg;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

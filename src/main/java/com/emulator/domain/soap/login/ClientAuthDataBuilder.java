@@ -1,7 +1,7 @@
-package com.emulator.domain.login;
+package com.emulator.domain.soap.login;
 
 import com.emulator.domain.entity.AppUser;
-import com.emulator.domain.prelogin.PreLoginResult;
+import com.emulator.domain.soap.prelogin.PreLoginResult;
 
 import java.io.BufferedReader;
 import java.io.IOException;

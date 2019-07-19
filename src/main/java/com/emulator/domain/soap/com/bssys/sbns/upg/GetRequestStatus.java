@@ -1,5 +1,5 @@
 
-package com.emulator.domain.wsclient.com.bssys.sbns.upg;
+package com.emulator.domain.soap.com.bssys.sbns.upg;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,12 +9,12 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for sendRequests complex type.
+ * <p>Java class for getRequestStatus complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="sendRequests">
+ * &lt;complexType name="getRequestStatus">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
@@ -29,11 +29,11 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "sendRequests", propOrder = {
+@XmlType(name = "getRequestStatus", propOrder = {
     "requests",
     "sessionId"
 })
-public class SendRequests {
+public class GetRequestStatus {
 
     protected List<String> requests;
     protected String sessionId;

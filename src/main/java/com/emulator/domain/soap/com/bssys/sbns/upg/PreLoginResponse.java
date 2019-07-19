@@ -1,5 +1,5 @@
 
-package com.emulator.domain.wsclient.com.bssys.sbns.upg;
+package com.emulator.domain.soap.com.bssys.sbns.upg;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,16 +10,16 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for getRequestStatusResponse complex type.
+ * <p>Java class for preLoginResponse complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="getRequestStatusResponse">
+ * &lt;complexType name="preLoginResponse">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="return" type="{http://www.w3.org/2001/XMLSchema}string" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="return" type="{http://www.w3.org/2001/XMLSchema}base64Binary" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -29,13 +29,13 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "getRequestStatusResponse", propOrder = {
+@XmlType(name = "preLoginResponse", propOrder = {
     "_return"
 })
-public class GetRequestStatusResponse {
+public class PreLoginResponse {
 
     @XmlElement(name = "return")
-    protected List<String> _return;
+    protected List<byte[]> _return;
 
     /**
      * Gets the value of the return property.
@@ -55,13 +55,12 @@ public class GetRequestStatusResponse {
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link String }
-     * 
+     * byte[]
      * 
      */
-    public List<String> getReturn() {
+    public List<byte[]> getReturn() {
         if (_return == null) {
-            _return = new ArrayList<String>();
+            _return = new ArrayList<byte[]>();
         }
         return this._return;
     }
