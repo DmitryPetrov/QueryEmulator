@@ -4,6 +4,7 @@ import com.emulator.config.XmlMessagePrinter;
 import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.soap.com.bssys.sbns.upg.*;
 import com.emulator.domain.soap.exception.BadCredentialsLoginException;
+import com.emulator.domain.soap.exception.SOAPServerLoginException;
 import com.emulator.domain.soap.login.ClientAuthData;
 import com.emulator.domain.soap.login.ClientAuthDataBuilder;
 import com.emulator.domain.soap.login.LoginResult;
@@ -13,7 +14,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.client.core.WebServiceTemplate;
 
-import javax.security.auth.login.LoginException;
 import javax.xml.bind.JAXBElement;
 import java.io.IOException;
 import java.util.List;
@@ -35,7 +35,7 @@ public class AuthorizationManager {
     @Autowired
     ClientAuthDataBuilder clientAuthDataBuilder;
 
-    public AppUser authorization(String userName, String password) {
+    public AppUser authorization(String userName, String password) throws SOAPServerLoginException {
         AppUser user = getUser(userName, password);
         PreLoginResult preLoginResult = callPreLogin(user);
 
@@ -47,6 +47,7 @@ public class AuthorizationManager {
             e.printStackTrace();
         } catch (BadCredentialsLoginException e) {
             e.printStackTrace();
+            throw new SOAPServerLoginException(e.getMessage());
         }
 
         return user;
@@ -117,6 +118,8 @@ public class AuthorizationManager {
                 exception += ("\n" + massage);
             }
             exception += "\n>>>>Trace:";
+
+            soapMassageTrace.clear();
 
             throw new BadCredentialsLoginException(exception);
         }
