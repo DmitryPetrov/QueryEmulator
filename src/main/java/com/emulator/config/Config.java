@@ -11,8 +11,11 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 
 import javax.net.ssl.*;
+import java.io.StringWriter;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 @Import(WebConfig.class)
@@ -60,6 +63,11 @@ public class Config {
     public AppUser defaultUser(@Value("${defaultUser.userName}") String userName,
                                @Value("${defaultUser.password}")String password) {
         return new AppUser(userName, password);
+    }
+
+    @Bean(name = "soapMessageTrace")
+    public List<String> soapMessageTrace() {
+        return new ArrayList<>();
     }
 
     private void disableSslVerification() {

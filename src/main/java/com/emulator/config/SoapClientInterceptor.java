@@ -1,12 +1,16 @@
 package com.emulator.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.context.MessageContext;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 public class SoapClientInterceptor implements ClientInterceptor {
+
     @Override
     public boolean handleRequest(MessageContext messageContext) throws WebServiceClientException {
         return true;
@@ -14,13 +18,13 @@ public class SoapClientInterceptor implements ClientInterceptor {
 
     @Override
     public boolean handleResponse(MessageContext messageContext) throws WebServiceClientException {
-        print(messageContext, "-FROM_SERVER-");
+        print(messageContext);
         return true;
     }
 
     @Override
     public boolean handleFault(MessageContext messageContext) throws WebServiceClientException {
-        print(messageContext, "-FAULT_FROM_SERVER-");
+        print(messageContext);
         return true;
     }
 
@@ -29,15 +33,16 @@ public class SoapClientInterceptor implements ClientInterceptor {
 
     }
 
-    private void print(MessageContext messageContext, String text) {
+    @Autowired
+    private List<String> soapMessageTrace;
+
+    private void print(MessageContext messageContext) {
         try {
-            System.out.println();
-            System.out.println("----------");
-            System.out.println(text);
-            messageContext.getResponse().writeTo(System.out);
-            System.out.println();
-            System.out.println("----------");
-            System.out.println();
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            messageContext.getResponse().writeTo(stream);
+            String responseStr = new String(stream.toByteArray());
+
+            soapMessageTrace.add(responseStr);
         } catch (IOException e) {
             e.printStackTrace();
         }
