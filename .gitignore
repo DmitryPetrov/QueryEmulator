@@ -33,3 +33,5 @@ build/
 
 # react frontend
 src/main/resources/static/main.js
+src/main/resources/static/dev.js
+src/main/resources/static/prod.js
