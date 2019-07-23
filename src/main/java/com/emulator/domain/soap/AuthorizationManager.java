@@ -47,7 +47,11 @@ public class AuthorizationManager {
             e.printStackTrace();
         } catch (BadCredentialsLoginException e) {
             e.printStackTrace();
-            throw new SOAPServerLoginException(e.getMessage());
+
+            SOAPServerLoginException soapException = new SOAPServerLoginException(e.getMessage());
+            soapException.setSoapMessages(e.getSoapMessages());
+
+            throw soapException;
         }
 
         return user;
@@ -111,17 +115,21 @@ public class AuthorizationManager {
     private LoginResult getLoginResult(LoginResponse response) throws BadCredentialsLoginException {
         String responseStr = response.getReturn();
         if (responseStr.equals("BAD_CREDENTIALS")) {
-            String exception = responseStr;
+            String exceptionMessage = responseStr;
 
-            exception += "\n>>>>SAOP Messages:";
-            for (String massage: soapMassageTrace) {
-                exception += ("\n" + massage);
+            String soapMessages = "";
+            for (String message: soapMassageTrace) {
+                soapMessages += ("\n" + message);
             }
-            exception += "\n>>>>Trace:";
+
+            exceptionMessage += "\n>>>>SAOP Messages:" + soapMessages;
 
             soapMassageTrace.clear();
 
-            throw new BadCredentialsLoginException(exception);
+            BadCredentialsLoginException e = new BadCredentialsLoginException(exceptionMessage);
+            e.setSoapMessages(soapMessages);
+
+            throw e;
         }
 
         LoginResult loginResult = new LoginResult();

@@ -31,8 +31,9 @@ public class AuthorizationController {
             resp.setStatus("OK");
             resp.setMessage("LogIn to SOAP server is success. sessionID=" + user.getSessionId());
         } catch (SOAPServerLoginException e) {
-            resp.setStatus("ERROR");
-            resp.setMessage("LogIn to SOAP server is fail. Error message =" + e.getMessage());
+            resp.setStatus("LogIn ERROR");
+            resp.setMessage("LogIn to SOAP server is fail.");
+            resp.setSoapMessages("<xml>" + e.getSoapMessages() + "</xml>");
             e.printStackTrace();
         }
 
