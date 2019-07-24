@@ -18,7 +18,7 @@ public class AuthorizationController {
     @Autowired
     private SOAPClient soapClient;
 
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
     public SOAPServerConnectionResponse login(HttpSession httpSession,
                         @RequestParam(value = "userName", required = false) String userName,
