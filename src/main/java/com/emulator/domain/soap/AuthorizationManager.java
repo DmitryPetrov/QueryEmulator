@@ -65,6 +65,10 @@ public class AuthorizationManager {
         if((userName == null) || (password == null)) {
             return defaultUser;
         }
+        if((userName.equals("(initialState)")) && (password.equals("(initialState)"))) {
+            return defaultUser;
+        }
+
         return new AppUser(userName, password);
     }
 
