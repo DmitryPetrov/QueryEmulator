@@ -23,20 +23,28 @@ public class AuthorizationController {
     public SOAPConnectionStatus login(HttpSession httpSession,
                                       @RequestParam(value = "userName", required = false) String userName,
                                       @RequestParam(value = "password", required = false) String password) {
-        SOAPConnectionStatus resp =  new SOAPConnectionStatus();
-
         try {
             AppUser user = soapClient.authorization(userName, password);
             httpSession.setAttribute("user", user);
-            resp.setStatus("OK");
-            resp.setMessage("LogIn to SOAP server is success. sessionID=" + user.getSessionId());
+            return authorizationSuccessed(user.getSessionId());
         } catch (SOAPServerLoginException e) {
-            resp.setStatus("LogIn ERROR");
-            resp.setMessage("LogIn to SOAP server is fail.");
-            resp.setSoapMessages("<SoapMessages>" + e.getSoapMessages() + "</SoapMessages>");
             e.printStackTrace();
+            return authorizationFailed(e);
         }
+    }
 
-        return resp;
+    private SOAPConnectionStatus authorizationSuccessed(String sessionId) {
+        SOAPConnectionStatus result =  new SOAPConnectionStatus();
+        result.setStatus("OK");
+        result.setMessage("LogIn to SOAP server is success. sessionID=" + sessionId);
+        return result;
+    }
+
+    private SOAPConnectionStatus authorizationFailed(SOAPServerLoginException exception) {
+        SOAPConnectionStatus result =  new SOAPConnectionStatus();
+        result.setStatus("LogIn ERROR");
+        result.setMessage("LogIn to SOAP server is fail.");
+        result.setSoapMessages("<SoapMessages>" + exception.getSoapMessages() + "</SoapMessages>");
+        return result;
     }
 }
