@@ -19,7 +19,7 @@ public class SendRequestController {
     @Autowired
     private SOAPClient soapClient;
 
-    @RequestMapping(value = "/sendRequest/request1", method = RequestMethod.POST)
+    @RequestMapping(value = "/sendRequests/requests1", method = RequestMethod.POST)
     @ResponseBody
     public SOAPConnectionStatus requests1(HttpSession httpSession,
                                           @RequestParam(value = "account", required = false) String account,
