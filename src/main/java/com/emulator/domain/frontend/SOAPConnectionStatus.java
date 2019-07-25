@@ -1,6 +1,6 @@
-package com.emulator.domain.frontend.response;
+package com.emulator.domain.frontend;
 
-public class SOAPServerConnectionResponse {
+public class SOAPConnectionStatus {
 
     private String status;
     private String message;

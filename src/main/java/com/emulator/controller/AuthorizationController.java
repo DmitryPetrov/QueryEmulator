@@ -1,7 +1,7 @@
 package com.emulator.controller;
 
 import com.emulator.domain.entity.AppUser;
-import com.emulator.domain.frontend.response.SOAPServerConnectionResponse;
+import com.emulator.domain.frontend.SOAPConnectionStatus;
 import com.emulator.domain.soap.SOAPClient;
 import com.emulator.domain.soap.exception.SOAPServerLoginException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +20,10 @@ public class AuthorizationController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
-    public SOAPServerConnectionResponse login(HttpSession httpSession,
-                        @RequestParam(value = "userName", required = false) String userName,
-                        @RequestParam(value = "password", required = false) String password) {
-        SOAPServerConnectionResponse resp =  new SOAPServerConnectionResponse();
+    public SOAPConnectionStatus login(HttpSession httpSession,
+                                      @RequestParam(value = "userName", required = false) String userName,
+                                      @RequestParam(value = "password", required = false) String password) {
+        SOAPConnectionStatus resp =  new SOAPConnectionStatus();
 
         try {
             AppUser user = soapClient.authorization(userName, password);
