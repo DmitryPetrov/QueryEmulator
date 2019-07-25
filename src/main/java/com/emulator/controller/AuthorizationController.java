@@ -26,14 +26,14 @@ public class AuthorizationController {
         try {
             AppUser user = soapClient.authorization(userName, password);
             httpSession.setAttribute("user", user);
-            return authorizationSuccessed(user.getSessionId());
+            return authorizationSucceeded(user.getSessionId());
         } catch (SOAPServerLoginException e) {
             e.printStackTrace();
             return authorizationFailed(e);
         }
     }
 
-    private SOAPConnectionStatus authorizationSuccessed(String sessionId) {
+    private SOAPConnectionStatus authorizationSucceeded(String sessionId) {
         SOAPConnectionStatus result =  new SOAPConnectionStatus();
         result.setStatus("OK");
         result.setMessage("LogIn to SOAP server is success. sessionID=" + sessionId);
