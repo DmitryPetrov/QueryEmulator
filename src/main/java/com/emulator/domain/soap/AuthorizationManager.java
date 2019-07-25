@@ -46,11 +46,8 @@ public class AuthorizationManager {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (BadCredentialsLoginException e) {
-            e.printStackTrace();
-
             SOAPServerLoginException soapException = new SOAPServerLoginException(e.getMessage());
             soapException.setSoapMessages(e.getSoapMessages());
-
             throw soapException;
         }
 
