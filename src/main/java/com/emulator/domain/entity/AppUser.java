@@ -1,6 +1,6 @@
 package com.emulator.domain.entity;
 
-import com.emulator.domain.soap.login.LoginResult;
+import com.emulator.domain.soap.authorization.login.LoginResult;
 
 public class AppUser {
 

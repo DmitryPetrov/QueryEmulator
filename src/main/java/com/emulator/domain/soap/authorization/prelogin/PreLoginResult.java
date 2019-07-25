@@ -1,4 +1,4 @@
-package com.emulator.domain.soap.prelogin;
+package com.emulator.domain.soap.authorization.prelogin;
 
 import java.util.Base64;
 

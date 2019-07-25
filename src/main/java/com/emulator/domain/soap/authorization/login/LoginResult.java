@@ -1,4 +1,4 @@
-package com.emulator.domain.soap.login;
+package com.emulator.domain.soap.authorization.login;
 
 public class LoginResult {
 

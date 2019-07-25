@@ -1,14 +1,14 @@
-package com.emulator.domain.soap;
+package com.emulator.domain.soap.authorization;
 
 import com.emulator.config.XmlMessagePrinter;
 import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.soap.com.bssys.sbns.upg.*;
 import com.emulator.domain.soap.exception.BadCredentialsLoginException;
 import com.emulator.domain.soap.exception.SOAPServerLoginException;
-import com.emulator.domain.soap.login.ClientAuthData;
-import com.emulator.domain.soap.login.ClientAuthDataBuilder;
-import com.emulator.domain.soap.login.LoginResult;
-import com.emulator.domain.soap.prelogin.PreLoginResult;
+import com.emulator.domain.soap.authorization.login.ClientAuthData;
+import com.emulator.domain.soap.authorization.login.ClientAuthDataBuilder;
+import com.emulator.domain.soap.authorization.login.LoginResult;
+import com.emulator.domain.soap.authorization.prelogin.PreLoginResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;

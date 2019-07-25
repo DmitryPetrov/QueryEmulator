@@ -1,6 +1,7 @@
 package com.emulator.domain.soap;
 
 import com.emulator.domain.entity.AppUser;
+import com.emulator.domain.soap.authorization.AuthorizationManager;
 import com.emulator.domain.soap.exception.SOAPServerLoginException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
