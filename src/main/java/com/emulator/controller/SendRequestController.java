@@ -5,6 +5,7 @@ import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.entity.StatementRequestData;
 import com.emulator.domain.frontend.SOAPConnectionStatus;
 import com.emulator.domain.soap.SOAPClient;
+import com.emulator.domain.soap.exception.RequestParameterLengthException;
 import com.emulator.domain.soap.exception.SOAPServerStatementRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,11 +28,15 @@ public class SendRequestController {
     public SOAPConnectionStatus runStatementRequest(HttpSession httpSession, @RequestBody StatementRequestData data) {
         AppUser user = defaultUser;//(AppUser) httpSession.getAttribute("user");
         try {
+            data.check();
             soapClient.sendStatementRequest(user, data);
             return statementRequestSucceeded(user.getSessionId());
         } catch (SOAPServerStatementRequestException e) {
             e.printStackTrace();
             return statementRequestFailed(e);
+        } catch (RequestParameterLengthException e) {
+            e.printStackTrace();
+            return requestParametersIsInvalid(e);
         }
     }
 
@@ -47,6 +52,14 @@ public class SendRequestController {
         result.setStatus("StatementRequest ERROR");
         result.setMessage("StatementRequest to SOAP server is fail.");
         result.setSoapMessages("<SoapMessages>" + exception.getSoapMessages() + "</SoapMessages>");
+        return result;
+    }
+
+    private SOAPConnectionStatus requestParametersIsInvalid(RequestParameterLengthException exception) {
+        SOAPConnectionStatus result = new SOAPConnectionStatus();
+        result.setStatus("StatementRequest request parameters is invalid ERROR");
+        result.setMessage("Parameter " + exception.getParameterName() + " must be shorter than " + exception
+                .getMaxLength() + " characters!");
         return result;
     }
 
