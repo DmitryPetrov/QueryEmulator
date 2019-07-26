@@ -93,7 +93,10 @@ public class Config {
     @Bean(name = "defaultUser")
     public AppUser defaultUser(@Value("${defaultUser.userName}") String userName,
                                @Value("${defaultUser.password}")String password) {
-        return new AppUser(userName, password);
+        AppUser defaultUser = new AppUser(userName, password);
+        defaultUser.setSessionId("defaultSessionId");
+
+        return defaultUser;
     }
 
     @Bean(name = "soapMessageTrace")
