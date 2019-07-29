@@ -3,6 +3,7 @@ package com.emulator.controller;
 import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.frontend.SOAPConnectionStatus;
 import com.emulator.domain.soap.SOAPClient;
+import com.emulator.domain.soap.exception.RequestParameterLengthException;
 import com.emulator.domain.soap.exception.SOAPServerLoginException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,16 +21,18 @@ public class AuthorizationController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
-    public SOAPConnectionStatus login(HttpSession httpSession,
-                                      @RequestParam(value = "userName", required = false) String userName,
-                                      @RequestParam(value = "password", required = false) String password) {
+    public SOAPConnectionStatus login(HttpSession httpSession, @RequestBody AppUser user) {
         try {
-            AppUser user = soapClient.authorization(userName, password);
+            user.check();
+            soapClient.authorization(user);
             httpSession.setAttribute("user", user);
             return authorizationSucceeded(user.getSessionId());
         } catch (SOAPServerLoginException e) {
             e.printStackTrace();
             return authorizationFailed(e);
+        } catch (RequestParameterLengthException e) {
+            e.printStackTrace();
+            return requestParametersIsInvalid(e);
         }
     }
 
@@ -45,6 +48,14 @@ public class AuthorizationController {
         result.setStatus("LogIn ERROR");
         result.setMessage("LogIn to SOAP server is fail.");
         result.setSoapMessages("<SoapMessages>" + exception.getSoapMessages() + "</SoapMessages>");
+        return result;
+    }
+
+    private SOAPConnectionStatus requestParametersIsInvalid(RequestParameterLengthException exception) {
+        SOAPConnectionStatus result = new SOAPConnectionStatus();
+        result.setStatus("ERROR: LogIn parameters is invalid");
+        result.setMessage("Parameter " + exception.getParameterName() + " must be shorter than " + exception
+                .getMaxLength() + " characters!");
         return result;
     }
 }

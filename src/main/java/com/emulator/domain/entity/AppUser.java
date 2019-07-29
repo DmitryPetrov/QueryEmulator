@@ -1,16 +1,40 @@
 package com.emulator.domain.entity;
 
 import com.emulator.domain.soap.authorization.login.LoginResult;
+import com.emulator.domain.soap.exception.RequestParameterLengthException;
 
 public class AppUser {
 
-    private String userName;
-    private String password;
-    private String sessionId;
+    private final String USERNAME_DEFAULT_VALUE = "testui";
+    private final String PASSWORD_DEFAULT_VALUE = "L8UWRF";
 
-    public AppUser(String name, String password) {
-        this.userName = name;
-        this.password = password;
+    private String userName = "";
+    private String password = "";
+    private String sessionId = "";
+
+    public AppUser() {
+
+    }
+
+    private String validate(String value, String defaultValue) {
+        if ((value == null) || (value.equals("(initialState)"))) {
+            return defaultValue;
+        }
+        return value;
+    }
+
+    private void validateStringLength(String paramName, String string, int maxLength) throws RequestParameterLengthException {
+        if (string.length() > maxLength) {
+            RequestParameterLengthException exception = new RequestParameterLengthException("String is too long");
+            exception.setMaxLength(maxLength);
+            exception.setParameterName(paramName);
+            throw exception;
+        }
+    }
+
+    public void check() throws RequestParameterLengthException {
+        validateStringLength("userName", this.userName, 255);
+        validateStringLength("password", this.password, 255);
     }
 
     public String getUserName() {
@@ -18,7 +42,7 @@ public class AppUser {
     }
 
     public void setUserName(String userName) {
-        this.userName = userName;
+        this.userName = validate(userName, USERNAME_DEFAULT_VALUE);
     }
 
     public String getPassword() {
@@ -26,7 +50,7 @@ public class AppUser {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = validate(password, PASSWORD_DEFAULT_VALUE);
     }
 
     public String getSessionId() {

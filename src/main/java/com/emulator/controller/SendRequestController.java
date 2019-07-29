@@ -21,13 +21,10 @@ public class SendRequestController {
     @Autowired
     private SOAPClient soapClient;
 
-    @Autowired
-    private AppUser defaultUser;
-
     @RequestMapping(value = "/sendRequests/statementRequest", method = RequestMethod.POST)
     @ResponseBody
     public SOAPConnectionStatus runStatementRequest(HttpSession httpSession, @RequestBody StatementRequestData data) {
-        AppUser user = defaultUser;//(AppUser) httpSession.getAttribute("user");
+        AppUser user = (AppUser) httpSession.getAttribute("user");
         try {
             data.check();
             StatementRequestResult result = soapClient.sendStatementRequest(user, data);

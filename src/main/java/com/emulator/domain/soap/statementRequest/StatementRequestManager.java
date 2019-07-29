@@ -51,7 +51,7 @@ public class StatementRequestManager {
 
         String SOAPServerMessage = response.getReturn().get(0);
 
-        if (true/*SOAPServerMessage.contains("NONEXISTENT SESSION")*/)
+        if (SOAPServerMessage.contains("NONEXISTENT SESSION"))
         {
             String soapMessages = "";
             for (String message : soapMassageTrace) {

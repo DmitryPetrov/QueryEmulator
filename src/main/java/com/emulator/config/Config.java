@@ -1,8 +1,6 @@
 package com.emulator.config;
 
-import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.soap.com.bssys.sbns.upg.ObjectFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -38,7 +36,7 @@ public class Config {
     @Bean
     public WebServiceTemplate webServiceTemplate(Jaxb2Marshaller marshaller) {
         WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
-        webServiceTemplate.setDefaultUri("https://correqtst00:8443/sbns-upg/upg");
+        webServiceTemplate.setDefaultUri("http://localhost:8081/");
         webServiceTemplate.setMarshaller(marshaller);
         webServiceTemplate.setUnmarshaller(marshaller);
 
@@ -83,15 +81,6 @@ public class Config {
             e.printStackTrace();
         }
         return docBuilder;
-    }
-
-    @Bean(name = "defaultUser")
-    public AppUser defaultUser(@Value("${defaultUser.userName}") String userName,
-                               @Value("${defaultUser.password}")String password) {
-        AppUser defaultUser = new AppUser(userName, password);
-        defaultUser.setSessionId("defaultSessionId");
-
-        return defaultUser;
     }
 
     @Bean(name = "soapMessageTrace")

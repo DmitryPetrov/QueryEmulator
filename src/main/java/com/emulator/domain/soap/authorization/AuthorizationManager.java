@@ -1,15 +1,14 @@
 package com.emulator.domain.soap.authorization;
 
 import com.emulator.domain.entity.AppUser;
-import com.emulator.domain.soap.com.bssys.sbns.upg.*;
-import com.emulator.domain.soap.exception.BadCredentialsLoginException;
-import com.emulator.domain.soap.exception.SOAPServerLoginException;
 import com.emulator.domain.soap.authorization.login.ClientAuthData;
 import com.emulator.domain.soap.authorization.login.ClientAuthDataBuilder;
 import com.emulator.domain.soap.authorization.login.LoginResult;
 import com.emulator.domain.soap.authorization.prelogin.PreLoginResult;
+import com.emulator.domain.soap.com.bssys.sbns.upg.*;
+import com.emulator.domain.soap.exception.BadCredentialsLoginException;
+import com.emulator.domain.soap.exception.SOAPServerLoginException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.client.core.WebServiceTemplate;
 
@@ -31,8 +30,7 @@ public class AuthorizationManager {
     @Autowired
     ClientAuthDataBuilder clientAuthDataBuilder;
 
-    public AppUser authorization(String userName, String password) throws SOAPServerLoginException {
-        AppUser user = getUser(userName, password);
+    public void authorization(AppUser user) throws SOAPServerLoginException {
         PreLoginResult preLoginResult = callPreLogin(user);
 
         try {
@@ -46,23 +44,6 @@ public class AuthorizationManager {
             soapException.setSoapMessages(e.getSoapMessages());
             throw soapException;
         }
-
-        return user;
-    }
-
-    @Autowired
-    @Qualifier("defaultUser")
-    private AppUser defaultUser;
-
-    private AppUser getUser(String userName, String password) {
-        if((userName == null) || (password == null)) {
-            return defaultUser;
-        }
-        if((userName.equals("(initialState)")) && (password.equals("(initialState)"))) {
-            return defaultUser;
-        }
-
-        return new AppUser(userName, password);
     }
 
     private PreLoginResult callPreLogin(AppUser user) {
@@ -80,6 +61,10 @@ public class AuthorizationManager {
 
     private PreLoginResult getPreLoginResult(PreLoginResponse response) {
         List<byte[]> responseFields = response.getReturn();
+
+        for (String message : soapMassageTrace) {
+            System.out.println(message);
+        }
 
         PreLoginResult result = new PreLoginResult();
         result.setSalt(responseFields.get(0));
@@ -113,7 +98,7 @@ public class AuthorizationManager {
         String responseStr = response.getReturn();
         if (responseStr.equals("BAD_CREDENTIALS")) {
             String soapMessages = "";
-            for (String message: soapMassageTrace) {
+            for (String message : soapMassageTrace) {
                 soapMessages += ("\n" + message);
             }
             soapMassageTrace.clear();
