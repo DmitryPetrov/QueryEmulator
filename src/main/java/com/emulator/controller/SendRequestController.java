@@ -57,7 +57,7 @@ public class SendRequestController {
 
     private SOAPConnectionStatus requestParametersIsInvalid(RequestParameterLengthException exception) {
         SOAPConnectionStatus result = new SOAPConnectionStatus();
-        result.setStatus("StatementRequest request parameters is invalid ERROR");
+        result.setStatus("ERROR: StatementRequest request parameters is invalid");
         result.setMessage("Parameter " + exception.getParameterName() + " must be shorter than " + exception
                 .getMaxLength() + " characters!");
         return result;
