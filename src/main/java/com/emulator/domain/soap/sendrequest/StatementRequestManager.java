@@ -35,44 +35,47 @@ public class StatementRequestManager {
     @Autowired
     private List<String> soapMassageTrace;
 
-    public void runStatementRequest(AppUser user, StatementRequestData data) throws SOAPServerStatementRequestException {
+    public StatementRequestResult runStatementRequest(AppUser user, StatementRequestData data) throws SOAPServerStatementRequestException {
         SendRequests request = factory.createSendRequests();
         request.setSessionId(user.getSessionId());
         List<String> requestData = request.getRequests();
-
         requestData.add(buildStatementRequest(data));
 
-        JAXBElement<SendRequests> request1Element = factory.createSendRequests(request);
-        JAXBElement<SendRequestsResponse> request1ResponseElement;
+        JAXBElement<SendRequests> statementRequestElement = factory.createSendRequests(request);
+        JAXBElement<SendRequestsResponse> statementRequestResponseElement;
 
-        request1ResponseElement = (JAXBElement<SendRequestsResponse>) webServiceTemplate
-                .marshalSendAndReceive("http://localhost:8081/", request1Element, messagePrinter);
-        SendRequestsResponse response = request1ResponseElement.getValue();
+        statementRequestResponseElement = (JAXBElement<SendRequestsResponse>) webServiceTemplate
+                .marshalSendAndReceive("http://localhost:8081/", statementRequestElement, messagePrinter);
+        SendRequestsResponse response = statementRequestResponseElement.getValue();
+
+        return getStatementRequestResult(response);
+    }
+
+    private StatementRequestResult getStatementRequestResult(SendRequestsResponse response) throws SOAPServerStatementRequestException {
+        StatementRequestResult result = new StatementRequestResult();
 
         String SOAPServerMessage = response.getReturn().get(0);
-//        if (SOAPServerMessage.contains("NONEXISTENT SESSION"))
-//        {
-        String soapMessages = "";
-        for (String message : soapMassageTrace) {
-//            message = message.replaceAll("&lt;", "<br/>&lt;");
-//            message = message.replaceAll("&gt;", ">");
-            soapMessages += ("\n" + message);
+
+        if (true/*SOAPServerMessage.contains("NONEXISTENT SESSION")*/)
+        {
+            String soapMessages = "";
+            for (String message : soapMassageTrace) {
+                message = message.replaceAll("&lt;", "<br/>&lt;");
+                message = message.replaceAll("&gt;", ">");
+                soapMessages += ("\n" + message);
+            }
+            soapMassageTrace.clear();
+
+            String exceptionMessage = "";
+            exceptionMessage += SOAPServerMessage;
+            exceptionMessage += "\n>>>>SAOP Messages:";
+            exceptionMessage += soapMessages;
+
+            SOAPServerStatementRequestException exception = new SOAPServerStatementRequestException(exceptionMessage);
+            exception.setSoapMessages(soapMessages);
+            throw exception;
         }
-        soapMassageTrace.clear();
-
-        String exceptionMessage = "";
-        exceptionMessage += SOAPServerMessage;
-        exceptionMessage += "\n>>>>SAOP Messages:";
-        exceptionMessage += soapMessages;
-
-        SOAPServerStatementRequestException exception = new SOAPServerStatementRequestException(exceptionMessage);
-        exception.setSoapMessages(soapMessages);
-        throw exception;
-
-//        }
-
-        //return getPreLoginResult(response);
-
+        return result;
     }
 
     @Autowired

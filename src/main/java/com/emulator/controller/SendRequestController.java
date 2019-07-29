@@ -7,6 +7,7 @@ import com.emulator.domain.frontend.SOAPConnectionStatus;
 import com.emulator.domain.soap.SOAPClient;
 import com.emulator.domain.soap.exception.RequestParameterLengthException;
 import com.emulator.domain.soap.exception.SOAPServerStatementRequestException;
+import com.emulator.domain.soap.sendrequest.StatementRequestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class SendRequestController {
         AppUser user = defaultUser;//(AppUser) httpSession.getAttribute("user");
         try {
             data.check();
-            soapClient.sendStatementRequest(user, data);
+            StatementRequestResult result = soapClient.sendStatementRequest(user, data);
             return statementRequestSucceeded(user.getSessionId());
         } catch (SOAPServerStatementRequestException e) {
             e.printStackTrace();
