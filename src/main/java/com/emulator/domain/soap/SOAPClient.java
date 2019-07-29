@@ -5,7 +5,7 @@ import com.emulator.domain.entity.StatementRequestData;
 import com.emulator.domain.soap.authorization.AuthorizationManager;
 import com.emulator.domain.soap.exception.SOAPServerLoginException;
 import com.emulator.domain.soap.exception.SOAPServerStatementRequestException;
-import com.emulator.domain.soap.sendrequest.SendRequestManager;
+import com.emulator.domain.soap.sendrequest.StatementRequestManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,10 +20,9 @@ public class SOAPClient {
     }
 
     @Autowired
-    SendRequestManager sendRequestManager;
+    StatementRequestManager statementRequestManager;
 
     public void sendStatementRequest(AppUser user, StatementRequestData data) throws SOAPServerStatementRequestException {
-        sendRequestManager.getStatementRequestResult(user, data);
-
+        statementRequestManager.runStatementRequest(user, data);
     }
 }

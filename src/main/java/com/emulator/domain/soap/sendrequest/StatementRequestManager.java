@@ -22,7 +22,7 @@ import java.io.StringWriter;
 import java.util.List;
 
 @Component
-public class SendRequestManager {
+public class StatementRequestManager {
     @Autowired
     ObjectFactory factory;
 
@@ -35,7 +35,7 @@ public class SendRequestManager {
     @Autowired
     private List<String> soapMassageTrace;
 
-    public void getStatementRequestResult(AppUser user, StatementRequestData data) throws SOAPServerStatementRequestException {
+    public void runStatementRequest(AppUser user, StatementRequestData data) throws SOAPServerStatementRequestException {
         SendRequests request = factory.createSendRequests();
         request.setSessionId(user.getSessionId());
         List<String> requestData = request.getRequests();
@@ -54,7 +54,7 @@ public class SendRequestManager {
 //        {
         String soapMessages = "";
         for (String message : soapMassageTrace) {
-            message = message.replaceAll("&lt;", "<br/>&lt;");
+//            message = message.replaceAll("&lt;", "<br/>&lt;");
 //            message = message.replaceAll("&gt;", ">");
             soapMessages += ("\n" + message);
         }
@@ -85,9 +85,9 @@ public class SendRequestManager {
         Element xml = buildStatementRequestXml(data);
 
         Document cdataWrapper = docBuilder.newDocument();
-        CDATASection cdata = cdataWrapper.createCDATASection(fromDoc(xml));
+        CDATASection cdata = cdataWrapper.createCDATASection(toString(xml));
 
-        return fromDoc(cdata);
+        return toString(cdata);
     }
 
     private Element buildStatementRequestXml(StatementRequestData data) {
@@ -187,7 +187,7 @@ public class SendRequestManager {
         return requestElement;
     }
 
-    private String fromDoc(Node element) {
+    private String toString(Node element) {
         DOMSource source = new DOMSource(element);
         StringWriter stringWriter = new StringWriter();
         StreamResult result = new StreamResult(stringWriter);
