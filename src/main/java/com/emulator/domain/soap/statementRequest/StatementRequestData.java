@@ -1,4 +1,4 @@
-package com.emulator.domain.entity;
+package com.emulator.domain.soap.statementRequest;
 
 import com.emulator.domain.soap.exception.RequestParameterLengthException;
 

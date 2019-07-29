@@ -2,7 +2,7 @@ package com.emulator.controller;
 
 
 import com.emulator.domain.entity.AppUser;
-import com.emulator.domain.entity.StatementRequestData;
+import com.emulator.domain.soap.statementRequest.StatementRequestData;
 import com.emulator.domain.frontend.SOAPConnectionStatus;
 import com.emulator.domain.soap.SOAPClient;
 import com.emulator.domain.soap.exception.RequestParameterLengthException;

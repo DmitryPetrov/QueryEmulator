@@ -2,7 +2,6 @@ package com.emulator.domain.soap.statementRequest;
 
 import com.emulator.config.XmlMessagePrinter;
 import com.emulator.domain.entity.AppUser;
-import com.emulator.domain.entity.StatementRequestData;
 import com.emulator.domain.soap.com.bssys.sbns.upg.ObjectFactory;
 import com.emulator.domain.soap.com.bssys.sbns.upg.SendRequests;
 import com.emulator.domain.soap.com.bssys.sbns.upg.SendRequestsResponse;

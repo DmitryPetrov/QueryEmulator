@@ -1,7 +1,7 @@
 package com.emulator.domain.soap;
 
 import com.emulator.domain.entity.AppUser;
-import com.emulator.domain.entity.StatementRequestData;
+import com.emulator.domain.soap.statementRequest.StatementRequestData;
 import com.emulator.domain.soap.authorization.AuthorizationManager;
 import com.emulator.domain.soap.exception.SOAPServerLoginException;
 import com.emulator.domain.soap.exception.SOAPServerStatementRequestException;
