@@ -49,18 +49,30 @@ public class StatementRequestData {
         return value;
     }
 
-    private void validateStringLength(String paramName, String string, int maxLength) {
+    private void validateStringLength(String paramName, String string, int maxLength) throws RequestParameterLengthException {
         if (string.length() > maxLength) {
             exception = new RequestParameterLengthException("String is too long");
             exception.setMaxLength(maxLength);
             exception.setParameterName(paramName);
+            throw exception;
         }
     }
 
     public void check() throws RequestParameterLengthException {
-        if(exception != null) {
-            throw exception;
-        }
+        validateStringLength("bankMessageAuthor", this.bankMessageAuthor, 1024);
+        validateStringLength("docId", this.docId, 36);
+        validateStringLength("docNumber", this.docNumber, 64);
+        validateStringLength("docTypeVersion", this.docTypeVersion, 12);
+        validateStringLength("externalId", this.externalId, 64);
+        validateStringLength("externalUPGId", this.externalUPGId, 64);
+        validateStringLength("orgId", this.orgId, 36);
+        validateStringLength("orgInn", this.orgInn, 15);
+        validateStringLength("orgName", this.orgName, 355);
+        validateStringLength("account", this.account, 20);
+        validateStringLength("bankBIC", this.bankBIC, 64);
+        validateStringLength("bankName", this.bankName, 500);
+        validateStringLength("accountOrgName", this.accountOrgName, 355);
+        validateStringLength("digestName", this.digestName, 255);
     }
 
     public String getAcceptDate() {
@@ -84,7 +96,6 @@ public class StatementRequestData {
     }
 
     public void setBankMessageAuthor(String bankMessageAuthor) {
-        validateStringLength("bankMessageAuthor", bankMessageAuthor, 1024);
         this.bankMessageAuthor = validate(bankMessageAuthor, "");
     }
 
@@ -101,7 +112,6 @@ public class StatementRequestData {
     }
 
     public void setDocId(String docId) {
-        validateStringLength("docId", docId, 36);
         this.docId = validate(docId, "40702810800000005897");
     }
 
@@ -110,7 +120,6 @@ public class StatementRequestData {
     }
 
     public void setDocNumber(String docNumber) {
-        validateStringLength("docNumber", docNumber, 64);
         this.docNumber = validate(docNumber, "78");
     }
 
@@ -120,7 +129,6 @@ public class StatementRequestData {
     }
 
     public void setDocTypeVersion(String docTypeVersion) {
-        validateStringLength("docTypeVersion", docTypeVersion, 12);
         this.docTypeVersion = validate(docTypeVersion, "");
     }
 
@@ -129,7 +137,6 @@ public class StatementRequestData {
     }
 
     public void setExternalId(String externalId) {
-        validateStringLength("externalId", externalId, 64);
         this.externalId = validate(externalId, "");
     }
 
@@ -138,7 +145,6 @@ public class StatementRequestData {
     }
 
     public void setExternalUPGId(String externalUPGId) {
-        validateStringLength("externalUPGId", externalUPGId, 64);
         this.externalUPGId = validate(externalUPGId, "");
     }
 
@@ -171,7 +177,6 @@ public class StatementRequestData {
     }
 
     public void setOrgId(String orgId) {
-        validateStringLength("orgId", orgId, 36);
         this.orgId = validate(orgId, "0ce353c5-9a53-497d-ad02-df1fb6c37feb");
     }
 
@@ -180,7 +185,6 @@ public class StatementRequestData {
     }
 
     public void setOrgInn(String orgInn) {
-        validateStringLength("orgInn", orgInn, 15);
         this.orgInn = validate(orgInn, "7842170415");
     }
 
@@ -189,7 +193,6 @@ public class StatementRequestData {
     }
 
     public void setOrgName(String orgName) {
-        validateStringLength("orgName", orgName, 355);
         this.orgName = validate(orgName, "АО \"РЗК\"");
     }
 
@@ -214,7 +217,6 @@ public class StatementRequestData {
     }
 
     public void setAccount(String account) {
-        validateStringLength("account", account, 20);
         this.account = validate(account, "40702810800000005897");
     }
 
@@ -223,7 +225,6 @@ public class StatementRequestData {
     }
 
     public void setBankBIC(String bankBIC) {
-        validateStringLength("bankBIC", bankBIC, 64);
         this.bankBIC = validate(bankBIC, "044030861");
     }
 
@@ -232,7 +233,6 @@ public class StatementRequestData {
     }
 
     public void setBankName(String bankName) {
-        validateStringLength("bankName", bankName, 500);
         this.bankName = validate(bankName, "АО &quot;АБ &quot;РОССИЯ&quot");
     }
 
@@ -241,7 +241,6 @@ public class StatementRequestData {
     }
 
     public void setAccountOrgName(String accountOrgName) {
-        validateStringLength("accountOrgName", accountOrgName, 355);
         this.accountOrgName = validate(accountOrgName, "");
     }
 
@@ -258,7 +257,6 @@ public class StatementRequestData {
     }
 
     public void setDigestName(String digestName) {
-        validateStringLength("digestName", digestName, 255);
         this.digestName = validate(digestName, "");
     }
 
