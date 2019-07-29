@@ -1,6 +1,5 @@
 package com.emulator.domain.soap.authorization;
 
-import com.emulator.config.XmlMessagePrinter;
 import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.soap.com.bssys.sbns.upg.*;
 import com.emulator.domain.soap.exception.BadCredentialsLoginException;
@@ -22,9 +21,6 @@ import java.util.List;
 public class AuthorizationManager {
     @Autowired
     ObjectFactory factory;
-
-    @Autowired
-    XmlMessagePrinter messagePrinter;
 
     @Autowired
     WebServiceTemplate webServiceTemplate;
@@ -76,7 +72,7 @@ public class AuthorizationManager {
         JAXBElement<PreLoginResponse> preLoginResponseElement;
 
         preLoginResponseElement = (JAXBElement<PreLoginResponse>) webServiceTemplate
-                .marshalSendAndReceive(preLoginElement, messagePrinter);
+                .marshalSendAndReceive(preLoginElement);
         PreLoginResponse response = preLoginResponseElement.getValue();
 
         return getPreLoginResult(response);
@@ -107,7 +103,7 @@ public class AuthorizationManager {
         JAXBElement<LoginResponse> loginResponseElement;
 
         loginResponseElement = (JAXBElement<LoginResponse>) webServiceTemplate
-                .marshalSendAndReceive(loginElement, messagePrinter);
+                .marshalSendAndReceive(loginElement);
         LoginResponse response = loginResponseElement.getValue();
 
         return getLoginResult(response);

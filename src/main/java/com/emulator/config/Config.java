@@ -61,11 +61,6 @@ public class Config {
     }
 
     @Bean
-    public XmlMessagePrinter xmlMessagePrinter() {
-        return new XmlMessagePrinter();
-    }
-
-    @Bean
     public Transformer transformer() {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = null;

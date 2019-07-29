@@ -1,6 +1,5 @@
 package com.emulator.domain.soap.statementRequest;
 
-import com.emulator.config.XmlMessagePrinter;
 import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.soap.com.bssys.sbns.upg.ObjectFactory;
 import com.emulator.domain.soap.com.bssys.sbns.upg.SendRequests;
@@ -26,9 +25,6 @@ public class StatementRequestManager {
     ObjectFactory factory;
 
     @Autowired
-    XmlMessagePrinter messagePrinter;
-
-    @Autowired
     WebServiceTemplate webServiceTemplate;
 
     @Autowired
@@ -44,7 +40,7 @@ public class StatementRequestManager {
         JAXBElement<SendRequestsResponse> statementRequestResponseElement;
 
         statementRequestResponseElement = (JAXBElement<SendRequestsResponse>) webServiceTemplate
-                .marshalSendAndReceive("http://localhost:8081/", statementRequestElement, messagePrinter);
+                .marshalSendAndReceive("http://localhost:8081/", statementRequestElement);
         SendRequestsResponse response = statementRequestResponseElement.getValue();
 
         return getStatementRequestResult(response);

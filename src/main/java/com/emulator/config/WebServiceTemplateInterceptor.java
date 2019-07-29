@@ -13,18 +13,19 @@ public class WebServiceTemplateInterceptor implements ClientInterceptor {
 
     @Override
     public boolean handleRequest(MessageContext messageContext) throws WebServiceClientException {
+        printRequest(messageContext);
         return true;
     }
 
     @Override
     public boolean handleResponse(MessageContext messageContext) throws WebServiceClientException {
-        print(messageContext);
+        printResponse(messageContext);
         return true;
     }
 
     @Override
     public boolean handleFault(MessageContext messageContext) throws WebServiceClientException {
-        print(messageContext);
+        printResponse(messageContext);
         return true;
     }
 
@@ -36,10 +37,22 @@ public class WebServiceTemplateInterceptor implements ClientInterceptor {
     @Autowired
     private List<String> soapMessageTrace;
 
-    private void print(MessageContext messageContext) {
+    private void printResponse(MessageContext messageContext) {
         try {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             messageContext.getResponse().writeTo(stream);
+            String responseStr = new String(stream.toByteArray());
+
+            soapMessageTrace.add(responseStr);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void printRequest(MessageContext messageContext) {
+        try {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            messageContext.getRequest().writeTo(stream);
             String responseStr = new String(stream.toByteArray());
 
             soapMessageTrace.add(responseStr);
