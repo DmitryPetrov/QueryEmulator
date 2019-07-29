@@ -5,8 +5,8 @@ import com.emulator.domain.entity.StatementRequestData;
 import com.emulator.domain.soap.authorization.AuthorizationManager;
 import com.emulator.domain.soap.exception.SOAPServerLoginException;
 import com.emulator.domain.soap.exception.SOAPServerStatementRequestException;
-import com.emulator.domain.soap.sendrequest.StatementRequestManager;
-import com.emulator.domain.soap.sendrequest.StatementRequestResult;
+import com.emulator.domain.soap.statementRequest.StatementRequestManager;
+import com.emulator.domain.soap.statementRequest.StatementRequestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

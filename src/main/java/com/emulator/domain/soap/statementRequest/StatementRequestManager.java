@@ -1,4 +1,4 @@
-package com.emulator.domain.soap.sendrequest;
+package com.emulator.domain.soap.statementRequest;
 
 import com.emulator.config.XmlMessagePrinter;
 import com.emulator.domain.entity.AppUser;
