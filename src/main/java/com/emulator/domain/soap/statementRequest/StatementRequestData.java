@@ -1,8 +1,9 @@
 package com.emulator.domain.soap.statementRequest;
 
+import com.emulator.domain.entity.RequestParameters;
 import com.emulator.domain.soap.exception.RequestParameterLengthException;
 
-public class StatementRequestData {
+public class StatementRequestData implements RequestParameters {
 
     private final String ACCEPT_DATE_DEFAULT_VALUE = "";
     private final String BANK_MESSAGE_DEFAULT_VALUE = "";
@@ -81,6 +82,7 @@ public class StatementRequestData {
         }
     }
 
+    @Override
     public void check() throws RequestParameterLengthException {
         validateStringLength("bankMessageAuthor", this.bankMessageAuthor, 1024);
         validateStringLength("docId", this.docId, 36);

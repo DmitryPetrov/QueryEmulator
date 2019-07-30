@@ -3,7 +3,7 @@ package com.emulator.domain.entity;
 import com.emulator.domain.soap.authorization.login.LoginResult;
 import com.emulator.domain.soap.exception.RequestParameterLengthException;
 
-public class AppUser {
+public class AppUser implements RequestParameters {
 
     private final String USERNAME_DEFAULT_VALUE = "testui";
     private final String PASSWORD_DEFAULT_VALUE = "L8UWRF";
@@ -32,6 +32,7 @@ public class AppUser {
         }
     }
 
+    @Override
     public void check() throws RequestParameterLengthException {
         validateStringLength("userName", this.userName, 255);
         validateStringLength("password", this.password, 255);
