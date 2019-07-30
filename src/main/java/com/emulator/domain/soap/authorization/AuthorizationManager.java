@@ -6,7 +6,6 @@ import com.emulator.domain.soap.authorization.login.ClientAuthDataBuilder;
 import com.emulator.domain.soap.authorization.login.LoginResult;
 import com.emulator.domain.soap.authorization.prelogin.PreLoginResult;
 import com.emulator.domain.soap.com.bssys.sbns.upg.*;
-import com.emulator.domain.soap.exception.BadCredentialsLoginException;
 import com.emulator.domain.soap.exception.SOAPServerLoginException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -39,10 +38,6 @@ public class AuthorizationManager {
             user.setSessionId(loginResult);
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (BadCredentialsLoginException e) {
-            SOAPServerLoginException soapException = new SOAPServerLoginException(e.getMessage());
-            soapException.setSoapMessages(e.getSoapMessages());
-            throw soapException;
         }
     }
 
@@ -77,7 +72,7 @@ public class AuthorizationManager {
     }
 
     private LoginResult callLogin(AppUser user, PreLoginResult preLoginResult, ClientAuthData authData) throws
-            BadCredentialsLoginException {
+            SOAPServerLoginException {
         Login request = factory.createLogin();
         request.setUserLogin(user.getUserName());
         request.setPreloginId(preLoginResult.getPreLoginIdString());
@@ -94,7 +89,7 @@ public class AuthorizationManager {
         return getLoginResult(response);
     }
 
-    private LoginResult getLoginResult(LoginResponse response) throws BadCredentialsLoginException {
+    private LoginResult getLoginResult(LoginResponse response) throws SOAPServerLoginException {
         String responseStr = response.getReturn();
         if (responseStr.equals("BAD_CREDENTIALS")) {
             String soapMessages = "";
@@ -108,7 +103,7 @@ public class AuthorizationManager {
             exceptionMessage += "\n>>>>SAOP Messages:";
             exceptionMessage += soapMessages;
 
-            BadCredentialsLoginException exception = new BadCredentialsLoginException(exceptionMessage);
+            SOAPServerLoginException exception = new SOAPServerLoginException(exceptionMessage);
             exception.setSoapMessages(soapMessages);
             throw exception;
         }
