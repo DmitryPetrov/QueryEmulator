@@ -25,6 +25,10 @@ public class SendRequestController {
     @ResponseBody
     public SOAPConnectionStatus runStatementRequest(HttpSession httpSession, @RequestBody StatementRequestData data) {
         AppUser user = (AppUser) httpSession.getAttribute("user");
+        if ((user == null) || user.getSessionId().equals("")) {
+            return userIsNotAuthorized();
+        }
+
         try {
             data.check();
             StatementRequestResult result = soapClient.sendStatementRequest(user, data);
@@ -58,6 +62,12 @@ public class SendRequestController {
         result.setStatus("ERROR: StatementRequest request parameters is invalid");
         result.setMessage("Parameter " + exception.getParameterName() + " must be shorter than " + exception
                 .getMaxLength() + " characters!");
+        return result;
+    }
+
+    private SOAPConnectionStatus userIsNotAuthorized () {
+        SOAPConnectionStatus result = new SOAPConnectionStatus();
+        result.setStatus("ERROR: user is not authorized\n");
         return result;
     }
 
