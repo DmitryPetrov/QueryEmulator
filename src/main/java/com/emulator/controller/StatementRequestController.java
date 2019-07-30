@@ -32,7 +32,7 @@ public class StatementRequestController {
         try {
             data.check();
             StatementRequestResult result = soapClient.sendStatementRequest(user, data);
-            httpSession.setAttribute("StatementRequestResult", result);
+            httpSession.setAttribute("requestId", result.getRequestId());
             return statementRequestSucceeded(result.getRequestId());
         } catch (SOAPServerStatementRequestException e) {
             e.printStackTrace();
