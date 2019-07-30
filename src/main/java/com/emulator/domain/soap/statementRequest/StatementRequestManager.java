@@ -70,6 +70,8 @@ public class StatementRequestManager {
             exception.setSoapMessages(soapMessages);
             throw exception;
         }
+
+        result.setRequestId(SOAPServerMessage);
         return result;
     }
 

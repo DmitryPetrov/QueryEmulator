@@ -32,7 +32,8 @@ public class StatementRequestController {
         try {
             data.check();
             StatementRequestResult result = soapClient.sendStatementRequest(user, data);
-            return statementRequestSucceeded(user.getSessionId());
+            httpSession.setAttribute("StatementRequestResult", result);
+            return statementRequestSucceeded(result.getRequestId());
         } catch (SOAPServerStatementRequestException e) {
             e.printStackTrace();
             return statementRequestFailed(e);
@@ -45,7 +46,7 @@ public class StatementRequestController {
     private SOAPConnectionStatus statementRequestSucceeded(String message) {
         SOAPConnectionStatus result = new SOAPConnectionStatus();
         result.setStatus("OK");
-        result.setMessage("StatementRequest to SOAP server is success. message=" + message);
+        result.setMessage("StatementRequest to SOAP server is success. requestID=" + message);
         return result;
     }
 
