@@ -40,7 +40,7 @@ public class StatementRequestManager {
         JAXBElement<SendRequestsResponse> statementRequestResponseElement;
 
         statementRequestResponseElement = (JAXBElement<SendRequestsResponse>) webServiceTemplate
-                .marshalSendAndReceive("http://localhost:8081/", statementRequestElement);
+                .marshalSendAndReceive(statementRequestElement);
         SendRequestsResponse response = statementRequestResponseElement.getValue();
 
         return getStatementRequestResult(response);
