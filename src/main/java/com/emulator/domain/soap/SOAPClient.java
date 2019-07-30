@@ -23,7 +23,8 @@ public class SOAPClient {
     @Autowired
     StatementRequestManager statementRequestManager;
 
-    public StatementRequestResult sendStatementRequest(AppUser user, StatementRequestData data) throws SOAPServerStatementRequestException {
+    public StatementRequestResult sendStatementRequest(AppUser user, StatementRequestData data) throws
+            SOAPServerStatementRequestException {
         return statementRequestManager.runStatementRequest(user, data);
     }
 }
