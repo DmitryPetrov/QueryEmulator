@@ -21,10 +21,10 @@ public class StatementRequestData {
     private final String ORG_NAME_DEFAULT_VALUE = "ПАО МРСК Северного Кавказа";
     private final String TEMPLATE_DEFAULT_VALUE = "";
     private final String TO_DATE_DEFAULT_VALUE = "2018-05-14T00:00:00.715+03:00";
-    private final String ACCOUNT_DEFAULT_VALUE = "40702810800000005897";
-    private final String BANK_BIC_DEFAULT_VALUE = "044030861";
-    private final String BANK_NAME_DEFAULT_VALUE = "АО &quot;АБ &quot;РОССИЯ&quot";
-    private final String ACCOUNT_ORG_NAME_DEFAULT_VALUE = "ПАО МРСК Северного Кавказа";
+    private final String ACC_ACCOUNT_DEFAULT_VALUE = "40702810800000005897";
+    private final String ACC_BANK_BIC_DEFAULT_VALUE = "044030861";
+    private final String ACC_BANK_NAME_DEFAULT_VALUE = "АО &quot;АБ &quot;РОССИЯ&quot";
+    private final String ACC_ORG_NAME_DEFAULT_VALUE = "ПАО МРСК Северного Кавказа";
     private final String SING_COLLECTION_BANK_MESSAGE_DEFAULT_VALUE = "";
     private final String DIGEST_NAME_DEFAULT_VALUE = "";
     private final String SIGN_DEFAULT_VALUE = "";
@@ -46,10 +46,10 @@ public class StatementRequestData {
     private String orgName = "";
     private String template = "";
     private String toDate = "";
-    private String account = "";
-    private String bankBIC = "";
-    private String bankName = "";
-    private String accountOrgName = "";
+    private String accAccount = "";
+    private String accBankBIC = "";
+    private String accBankName = "";
+    private String accOrgName = "";
     private String signCollectionBankMessage = "";
     private String digestName = "";
     private String sign = "";
@@ -91,10 +91,10 @@ public class StatementRequestData {
         validateStringLength("orgId", this.orgId, 36);
         validateStringLength("orgInn", this.orgInn, 15);
         validateStringLength("orgName", this.orgName, 355);
-        validateStringLength("account", this.account, 20);
-        validateStringLength("bankBIC", this.bankBIC, 64);
-        validateStringLength("bankName", this.bankName, 500);
-        validateStringLength("accountOrgName", this.accountOrgName, 355);
+        validateStringLength("accAccount", this.accAccount, 20);
+        validateStringLength("accBankBIC", this.accBankBIC, 64);
+        validateStringLength("accBankName", this.accBankName, 500);
+        validateStringLength("accOrgName", this.accOrgName, 355);
         validateStringLength("digestName", this.digestName, 255);
     }
 
@@ -235,36 +235,36 @@ public class StatementRequestData {
         this.toDate = validate(toDate, TO_DATE_DEFAULT_VALUE);
     }
 
-    public String getAccount() {
-        return account;
+    public String getAccAccount() {
+        return accAccount;
     }
 
-    public void setAccount(String account) {
-        this.account = validate(account, ACCOUNT_DEFAULT_VALUE);
+    public void setAccAccount(String accAccount) {
+        this.accAccount = validate(accAccount, ACC_ACCOUNT_DEFAULT_VALUE);
     }
 
-    public String getBankBIC() {
-        return bankBIC;
+    public String getAccBankBIC() {
+        return accBankBIC;
     }
 
-    public void setBankBIC(String bankBIC) {
-        this.bankBIC = validate(bankBIC, BANK_BIC_DEFAULT_VALUE);
+    public void setAccBankBIC(String accBankBIC) {
+        this.accBankBIC = validate(accBankBIC, ACC_BANK_BIC_DEFAULT_VALUE);
     }
 
-    public String getBankName() {
-        return bankName;
+    public String getAccBankName() {
+        return accBankName;
     }
 
-    public void setBankName(String bankName) {
-        this.bankName = validate(bankName, BANK_NAME_DEFAULT_VALUE);
+    public void setAccBankName(String accBankName) {
+        this.accBankName = validate(accBankName, ACC_BANK_NAME_DEFAULT_VALUE);
     }
 
-    public String getAccountOrgName() {
-        return accountOrgName;
+    public String getAccOrgName() {
+        return accOrgName;
     }
 
-    public void setAccountOrgName(String accountOrgName) {
-        this.accountOrgName = validate(accountOrgName, ACCOUNT_ORG_NAME_DEFAULT_VALUE);
+    public void setAccOrgName(String accOrgName) {
+        this.accOrgName = validate(accOrgName, ACC_ORG_NAME_DEFAULT_VALUE);
     }
 
     public String getSignCollectionBankMessage() {

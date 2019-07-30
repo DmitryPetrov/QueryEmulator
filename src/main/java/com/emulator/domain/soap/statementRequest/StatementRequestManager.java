@@ -170,19 +170,21 @@ public class StatementRequestManager {
         Element acc = doc.createElement("Acc");
         accounts.appendChild(acc);
 
-        Element account = doc.createElement("account");
-        account.appendChild(doc.createTextNode(data.getAccount()));
-        acc.appendChild(account);
+        Element accAccount = doc.createElement("account");
+        accAccount.appendChild(doc.createTextNode(data.getAccAccount()));
+        acc.appendChild(accAccount);
 
-        Element bankBIC = doc.createElement("bankBIC");
-        bankBIC.appendChild(doc.createTextNode(data.getBankBIC()));
-        acc.appendChild(bankBIC);
+        Element accBankBIC = doc.createElement("bankBIC");
+        accBankBIC.appendChild(doc.createTextNode(data.getAccBankBIC()));
+        acc.appendChild(accBankBIC);
 
-        Element bankName = doc.createElement("bankName");
-        bankName.appendChild(doc.createTextNode(data.getBankName()));
-        acc.appendChild(bankName);
+        Element accBankName = doc.createElement("bankName");
+        accBankName.appendChild(doc.createTextNode(data.getAccBankName()));
+        acc.appendChild(accBankName);
 
-        acc.appendChild(orgName);
+        Element accOrgName = doc.createElement("orgName");
+        accOrgName.appendChild(doc.createTextNode(data.getAccBankName()));
+        acc.appendChild(accOrgName);
 
         return requestElement;
     }
