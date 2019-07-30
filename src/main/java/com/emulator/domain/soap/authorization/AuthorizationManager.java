@@ -105,6 +105,7 @@ public class AuthorizationManager {
 
             SOAPServerLoginException exception = new SOAPServerLoginException(exceptionMessage);
             exception.setSoapMessages(soapMessages);
+            exception.setSoapResponse(responseStr);
             throw exception;
         }
 

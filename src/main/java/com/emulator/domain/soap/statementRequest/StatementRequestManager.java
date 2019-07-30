@@ -49,9 +49,9 @@ public class StatementRequestManager {
     private StatementRequestResult getStatementRequestResult(SendRequestsResponse response) throws SOAPServerStatementRequestException {
         StatementRequestResult result = new StatementRequestResult();
 
-        String SOAPServerMessage = response.getReturn().get(0);
+        String responseStr = response.getReturn().get(0);
 
-        if (SOAPServerMessage.contains("NONEXISTENT SESSION"))
+        if (responseStr.contains("NONEXISTENT SESSION"))
         {
             String soapMessages = "";
             for (String message : soapMassageTrace) {
@@ -62,16 +62,17 @@ public class StatementRequestManager {
             soapMassageTrace.clear();
 
             String exceptionMessage = "";
-            exceptionMessage += SOAPServerMessage;
+            exceptionMessage += responseStr;
             exceptionMessage += "\n>>>>SAOP Messages:";
             exceptionMessage += soapMessages;
 
             SOAPServerStatementRequestException exception = new SOAPServerStatementRequestException(exceptionMessage);
             exception.setSoapMessages(soapMessages);
+            exception.setSoapResponse(responseStr);
             throw exception;
         }
 
-        result.setRequestId(SOAPServerMessage);
+        result.setRequestId(responseStr);
         return result;
     }
 

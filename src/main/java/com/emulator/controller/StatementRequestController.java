@@ -52,23 +52,24 @@ public class StatementRequestController {
 
     private SOAPConnectionStatus statementRequestFailed(SOAPServerStatementRequestException exception) {
         SOAPConnectionStatus result = new SOAPConnectionStatus();
-        result.setStatus("StatementRequest ERROR");
-        result.setMessage("StatementRequest to SOAP server is fail.");
+        result.setStatus("ERROR");
+        result.setMessage("StatementRequest to SOAP server is fail. message=" + exception.getSoapResponse());
         result.setSoapMessages("<SoapMessages>" + exception.getSoapMessages() + "</SoapMessages>");
         return result;
     }
 
     private SOAPConnectionStatus requestParametersIsInvalid(RequestParameterLengthException exception) {
         SOAPConnectionStatus result = new SOAPConnectionStatus();
-        result.setStatus("ERROR: StatementRequest request parameters is invalid");
-        result.setMessage("Parameter " + exception.getParameterName() + " must be shorter than " + exception
-                .getMaxLength() + " characters!");
+        result.setStatus("ERROR");
+        result.setMessage("StatementRequest request parameters is invalid. Parameter " + exception.getParameterName()
+                + " must be shorter than " + exception.getMaxLength() + " characters!");
         return result;
     }
 
-    private SOAPConnectionStatus userIsNotAuthorized () {
+    private SOAPConnectionStatus userIsNotAuthorized() {
         SOAPConnectionStatus result = new SOAPConnectionStatus();
-        result.setStatus("ERROR: user is not authorized\n");
+        result.setStatus("ERROR");
+        result.setMessage("User is not authorized");
         return result;
     }
 
