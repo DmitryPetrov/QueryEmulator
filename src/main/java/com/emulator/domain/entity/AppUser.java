@@ -3,7 +3,7 @@ package com.emulator.domain.entity;
 import com.emulator.domain.soap.authorization.login.LoginResult;
 import com.emulator.domain.soap.exception.RequestParameterLengthException;
 
-public class AppUser implements RequestParameters {
+public class AppUser extends RequestParameters {
 
     private final String USERNAME_DEFAULT_VALUE = "testui";
     private final String PASSWORD_DEFAULT_VALUE = "L8UWRF";
@@ -16,26 +16,10 @@ public class AppUser implements RequestParameters {
 
     }
 
-    private String validate(String value, String defaultValue) {
-        if ((value == null) || (value.equals("(initialState)"))) {
-            return defaultValue;
-        }
-        return value;
-    }
-
-    private void validateStringLength(String paramName, String string, int maxLength) throws RequestParameterLengthException {
-        if (string.length() > maxLength) {
-            RequestParameterLengthException exception = new RequestParameterLengthException("String is too long");
-            exception.setMaxLength(maxLength);
-            exception.setParameterName(paramName);
-            throw exception;
-        }
-    }
-
     @Override
     public void check() throws RequestParameterLengthException {
-        validateStringLength("userName", this.userName, 255);
-        validateStringLength("password", this.password, 255);
+        checkStringLength("userName", this.userName, 255);
+        checkStringLength("password", this.password, 255);
     }
 
     public String getUserName() {
@@ -43,7 +27,7 @@ public class AppUser implements RequestParameters {
     }
 
     public void setUserName(String userName) {
-        this.userName = validate(userName, USERNAME_DEFAULT_VALUE);
+        this.userName = checkNull(userName, USERNAME_DEFAULT_VALUE);
     }
 
     public String getPassword() {
@@ -51,7 +35,7 @@ public class AppUser implements RequestParameters {
     }
 
     public void setPassword(String password) {
-        this.password = validate(password, PASSWORD_DEFAULT_VALUE);
+        this.password = checkNull(password, PASSWORD_DEFAULT_VALUE);
     }
 
     public String getSessionId() {

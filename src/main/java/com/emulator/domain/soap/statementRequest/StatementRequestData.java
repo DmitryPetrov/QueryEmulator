@@ -3,7 +3,7 @@ package com.emulator.domain.soap.statementRequest;
 import com.emulator.domain.entity.RequestParameters;
 import com.emulator.domain.soap.exception.RequestParameterLengthException;
 
-public class StatementRequestData implements RequestParameters {
+public class StatementRequestData extends RequestParameters {
 
     private final String ACCEPT_DATE_DEFAULT_VALUE = "";
     private final String BANK_MESSAGE_DEFAULT_VALUE = "";
@@ -66,38 +66,22 @@ public class StatementRequestData implements RequestParameters {
 
     public final String statementRequestAttrXmlns = "http://bssys.com/sbns/integration";
 
-    private String validate(String value, String defaultValue) {
-        if ((value == null) || (value.equals("(initialState)"))) {
-            return defaultValue;
-        }
-        return value;
-    }
-
-    private void validateStringLength(String paramName, String string, int maxLength) throws RequestParameterLengthException {
-        if (string.length() > maxLength) {
-            RequestParameterLengthException exception = new RequestParameterLengthException("String is too long");
-            exception.setMaxLength(maxLength);
-            exception.setParameterName(paramName);
-            throw exception;
-        }
-    }
-
     @Override
     public void check() throws RequestParameterLengthException {
-        validateStringLength("bankMessageAuthor", this.bankMessageAuthor, 1024);
-        validateStringLength("docId", this.docId, 36);
-        validateStringLength("docNumber", this.docNumber, 64);
-        validateStringLength("docTypeVersion", this.docTypeVersion, 12);
-        validateStringLength("externalId", this.externalId, 64);
-        validateStringLength("externalUPGId", this.externalUPGId, 64);
-        validateStringLength("orgId", this.orgId, 36);
-        validateStringLength("orgInn", this.orgInn, 15);
-        validateStringLength("orgName", this.orgName, 355);
-        validateStringLength("accAccount", this.accAccount, 20);
-        validateStringLength("accBankBIC", this.accBankBIC, 64);
-        validateStringLength("accBankName", this.accBankName, 500);
-        validateStringLength("accOrgName", this.accOrgName, 355);
-        validateStringLength("digestName", this.digestName, 255);
+        checkStringLength("bankMessageAuthor", this.bankMessageAuthor, 1024);
+        checkStringLength("docId", this.docId, 36);
+        checkStringLength("docNumber", this.docNumber, 64);
+        checkStringLength("docTypeVersion", this.docTypeVersion, 12);
+        checkStringLength("externalId", this.externalId, 64);
+        checkStringLength("externalUPGId", this.externalUPGId, 64);
+        checkStringLength("orgId", this.orgId, 36);
+        checkStringLength("orgInn", this.orgInn, 15);
+        checkStringLength("orgName", this.orgName, 355);
+        checkStringLength("accAccount", this.accAccount, 20);
+        checkStringLength("accBankBIC", this.accBankBIC, 64);
+        checkStringLength("accBankName", this.accBankName, 500);
+        checkStringLength("accOrgName", this.accOrgName, 355);
+        checkStringLength("digestName", this.digestName, 255);
     }
 
     public String getAcceptDate() {
@@ -105,7 +89,7 @@ public class StatementRequestData implements RequestParameters {
     }
 
     public void setAcceptDate(String acceptDate) {
-        this.acceptDate = validate(acceptDate, ACCEPT_DATE_DEFAULT_VALUE);
+        this.acceptDate = checkNull(acceptDate, ACCEPT_DATE_DEFAULT_VALUE);
     }
 
     public String getBankMessage() {
@@ -113,7 +97,7 @@ public class StatementRequestData implements RequestParameters {
     }
 
     public void setBankMessage(String bankMessage) {
-        this.bankMessage = validate(bankMessage, BANK_MESSAGE_DEFAULT_VALUE);
+        this.bankMessage = checkNull(bankMessage, BANK_MESSAGE_DEFAULT_VALUE);
     }
 
     public String getBankMessageAuthor() {
@@ -121,7 +105,7 @@ public class StatementRequestData implements RequestParameters {
     }
 
     public void setBankMessageAuthor(String bankMessageAuthor) {
-        this.bankMessageAuthor = validate(bankMessageAuthor, BANK_MESSAGE_AUTHOR_DEFAULT_VALUE);
+        this.bankMessageAuthor = checkNull(bankMessageAuthor, BANK_MESSAGE_AUTHOR_DEFAULT_VALUE);
     }
 
     public String getDocDate() {
@@ -129,7 +113,7 @@ public class StatementRequestData implements RequestParameters {
     }
 
     public void setDocDate(String docDate) {
-        this.docDate = validate(docDate, DOC_DATE_DEFAULT_VALUE);
+        this.docDate = checkNull(docDate, DOC_DATE_DEFAULT_VALUE);
     }
 
     public String getDocId() {
@@ -137,7 +121,7 @@ public class StatementRequestData implements RequestParameters {
     }
 
     public void setDocId(String docId) {
-        this.docId = validate(docId, DOC_ID_DEFAULT_VALUE);
+        this.docId = checkNull(docId, DOC_ID_DEFAULT_VALUE);
     }
 
     public String getDocNumber() {
@@ -145,7 +129,7 @@ public class StatementRequestData implements RequestParameters {
     }
 
     public void setDocNumber(String docNumber) {
-        this.docNumber = validate(docNumber, DOC_NUMBER_DEFAULT_VALUE);
+        this.docNumber = checkNull(docNumber, DOC_NUMBER_DEFAULT_VALUE);
     }
 
 
@@ -154,7 +138,7 @@ public class StatementRequestData implements RequestParameters {
     }
 
     public void setDocTypeVersion(String docTypeVersion) {
-        this.docTypeVersion = validate(docTypeVersion, DOC_TYPE_VERSION_DEFAULT_VALUE);
+        this.docTypeVersion = checkNull(docTypeVersion, DOC_TYPE_VERSION_DEFAULT_VALUE);
     }
 
     public String getExternalId() {
@@ -162,7 +146,7 @@ public class StatementRequestData implements RequestParameters {
     }
 
     public void setExternalId(String externalId) {
-        this.externalId = validate(externalId, EXTERNAL_ID_DEFAULT_VALUE);
+        this.externalId = checkNull(externalId, EXTERNAL_ID_DEFAULT_VALUE);
     }
 
     public String getExternalUPGId() {
@@ -170,7 +154,7 @@ public class StatementRequestData implements RequestParameters {
     }
 
     public void setExternalUPGId(String externalUPGId) {
-        this.externalUPGId = validate(externalUPGId, EXTERNAL_UPG_ID_DEFAULT_VALUE);
+        this.externalUPGId = checkNull(externalUPGId, EXTERNAL_UPG_ID_DEFAULT_VALUE);
     }
 
     public String getFromDate() {
@@ -178,7 +162,7 @@ public class StatementRequestData implements RequestParameters {
     }
 
     public void setFromDate(String fromDate) {
-        this.fromDate = validate(fromDate, FROM_DATE_DEFAULT_VALUE);
+        this.fromDate = checkNull(fromDate, FROM_DATE_DEFAULT_VALUE);
     }
 
     public String getLastModifyDate() {
@@ -186,7 +170,7 @@ public class StatementRequestData implements RequestParameters {
     }
 
     public void setLastModifyDate(String lastModifyDate) {
-        this.lastModifyDate = validate(lastModifyDate, LAST_MODIFY_DATE_DEFAULT_VALUE);
+        this.lastModifyDate = checkNull(lastModifyDate, LAST_MODIFY_DATE_DEFAULT_VALUE);
     }
 
     public String getMessageOnlyForBank() {
@@ -194,7 +178,7 @@ public class StatementRequestData implements RequestParameters {
     }
 
     public void setMessageOnlyForBank(String messageOnlyForBank) {
-        this.messageOnlyForBank = validate(lastModifyDate, MESSAGE_ONLY_FOR_BANK_DEFAULT_VALUE);
+        this.messageOnlyForBank = checkNull(lastModifyDate, MESSAGE_ONLY_FOR_BANK_DEFAULT_VALUE);
     }
 
     public String getOrgId() {
@@ -202,7 +186,7 @@ public class StatementRequestData implements RequestParameters {
     }
 
     public void setOrgId(String orgId) {
-        this.orgId = validate(orgId, ORG_ID_DEFAULT_VALUE);
+        this.orgId = checkNull(orgId, ORG_ID_DEFAULT_VALUE);
     }
 
     public String getOrgInn() {
@@ -210,7 +194,7 @@ public class StatementRequestData implements RequestParameters {
     }
 
     public void setOrgInn(String orgInn) {
-        this.orgInn = validate(orgInn, ORG_INN_DEFAULT_VALUE);
+        this.orgInn = checkNull(orgInn, ORG_INN_DEFAULT_VALUE);
     }
 
     public String getOrgName() {
@@ -218,7 +202,7 @@ public class StatementRequestData implements RequestParameters {
     }
 
     public void setOrgName(String orgName) {
-        this.orgName = validate(orgName, ORG_NAME_DEFAULT_VALUE);
+        this.orgName = checkNull(orgName, ORG_NAME_DEFAULT_VALUE);
     }
 
     public String getTemplate() {
@@ -226,7 +210,7 @@ public class StatementRequestData implements RequestParameters {
     }
 
     public void setTemplate(String template) {
-        this.template = validate(template, TEMPLATE_DEFAULT_VALUE);
+        this.template = checkNull(template, TEMPLATE_DEFAULT_VALUE);
     }
 
     public String getToDate() {
@@ -234,7 +218,7 @@ public class StatementRequestData implements RequestParameters {
     }
 
     public void setToDate(String toDate) {
-        this.toDate = validate(toDate, TO_DATE_DEFAULT_VALUE);
+        this.toDate = checkNull(toDate, TO_DATE_DEFAULT_VALUE);
     }
 
     public String getAccAccount() {
@@ -242,7 +226,7 @@ public class StatementRequestData implements RequestParameters {
     }
 
     public void setAccAccount(String accAccount) {
-        this.accAccount = validate(accAccount, ACC_ACCOUNT_DEFAULT_VALUE);
+        this.accAccount = checkNull(accAccount, ACC_ACCOUNT_DEFAULT_VALUE);
     }
 
     public String getAccBankBIC() {
@@ -250,7 +234,7 @@ public class StatementRequestData implements RequestParameters {
     }
 
     public void setAccBankBIC(String accBankBIC) {
-        this.accBankBIC = validate(accBankBIC, ACC_BANK_BIC_DEFAULT_VALUE);
+        this.accBankBIC = checkNull(accBankBIC, ACC_BANK_BIC_DEFAULT_VALUE);
     }
 
     public String getAccBankName() {
@@ -258,7 +242,7 @@ public class StatementRequestData implements RequestParameters {
     }
 
     public void setAccBankName(String accBankName) {
-        this.accBankName = validate(accBankName, ACC_BANK_NAME_DEFAULT_VALUE);
+        this.accBankName = checkNull(accBankName, ACC_BANK_NAME_DEFAULT_VALUE);
     }
 
     public String getAccOrgName() {
@@ -266,7 +250,7 @@ public class StatementRequestData implements RequestParameters {
     }
 
     public void setAccOrgName(String accOrgName) {
-        this.accOrgName = validate(accOrgName, ACC_ORG_NAME_DEFAULT_VALUE);
+        this.accOrgName = checkNull(accOrgName, ACC_ORG_NAME_DEFAULT_VALUE);
     }
 
     public String getSignCollectionBankMessage() {
@@ -274,7 +258,7 @@ public class StatementRequestData implements RequestParameters {
     }
 
     public void setSignCollectionBankMessage(String signCollectionBankMessage) {
-        this.signCollectionBankMessage = validate(signCollectionBankMessage, SING_COLLECTION_BANK_MESSAGE_DEFAULT_VALUE);
+        this.signCollectionBankMessage = checkNull(signCollectionBankMessage, SING_COLLECTION_BANK_MESSAGE_DEFAULT_VALUE);
     }
 
     public String getDigestName() {
@@ -282,7 +266,7 @@ public class StatementRequestData implements RequestParameters {
     }
 
     public void setDigestName(String digestName) {
-        this.digestName = validate(digestName, DIGEST_NAME_DEFAULT_VALUE);
+        this.digestName = checkNull(digestName, DIGEST_NAME_DEFAULT_VALUE);
     }
 
     public String getSign() {
@@ -290,6 +274,6 @@ public class StatementRequestData implements RequestParameters {
     }
 
     public void setSign(String sign) {
-        this.sign = validate(sign, SIGN_DEFAULT_VALUE);
+        this.sign = checkNull(sign, SIGN_DEFAULT_VALUE);
     }
 }
