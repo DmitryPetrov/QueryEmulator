@@ -14,7 +14,6 @@ import javax.servlet.http.HttpSession;
 
 
 @Controller
-@SessionAttributes("user")
 public class AuthorizationController extends AbstractController{
 
     @Autowired

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 
 @Controller
-@SessionAttributes("user")
 public class StatementRequestController extends AbstractController{
 
     @Autowired
