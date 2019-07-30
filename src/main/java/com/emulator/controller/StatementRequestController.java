@@ -16,7 +16,7 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 @SessionAttributes("user")
-public class SendRequestController {
+public class StatementRequestController {
 
     @Autowired
     private SOAPClient soapClient;
