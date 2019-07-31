@@ -27,7 +27,7 @@ public class StatementRequestData extends RequestParameters {
     private final String ACC_BANK_NAME_DEFAULT_VALUE = "АО \"АБ \"РОССИЯ\"";
     private final String ACC_ORG_NAME_DEFAULT_VALUE = "ПАО МРСК Северного Кавказа";
     private final String SING_COLLECTION_BANK_MESSAGE_DEFAULT_VALUE = "";
-    private final String DIGEST_NAME_DEFAULT_VALUE = "";
+    private final String SING_COLLECTION_DIGEST_NAME_DEFAULT_VALUE = "";
     private final String SIGN_DEFAULT_VALUE = "";
 
     private String acceptDate = "";
@@ -52,7 +52,7 @@ public class StatementRequestData extends RequestParameters {
     private String accBankName = "";
     private String accOrgName = "";
     private String signCollectionBankMessage = "";
-    private String digestName = "";
+    private String signCollectionDigestName = "";
     private String sign = "";
 
     public final String requestAttrRequestId = "1852ccae-e9b2-48bf-adbd-6027653f194d";
@@ -81,7 +81,7 @@ public class StatementRequestData extends RequestParameters {
         checkStringLength("accBankBIC", this.accBankBIC, 64);
         checkStringLength("accBankName", this.accBankName, 500);
         checkStringLength("accOrgName", this.accOrgName, 355);
-        checkStringLength("digestName", this.digestName, 255);
+        checkStringLength("signCollectionDigestName", this.signCollectionDigestName, 255);
     }
 
     public String getAcceptDate() {
@@ -261,12 +261,12 @@ public class StatementRequestData extends RequestParameters {
         this.signCollectionBankMessage = checkNull(signCollectionBankMessage, SING_COLLECTION_BANK_MESSAGE_DEFAULT_VALUE);
     }
 
-    public String getDigestName() {
-        return digestName;
+    public String getSignCollectionDigestName() {
+        return signCollectionDigestName;
     }
 
-    public void setDigestName(String digestName) {
-        this.digestName = checkNull(digestName, DIGEST_NAME_DEFAULT_VALUE);
+    public void setSignCollectionDigestName(String signCollectionDigestName) {
+        this.signCollectionDigestName = checkNull(signCollectionDigestName, SING_COLLECTION_DIGEST_NAME_DEFAULT_VALUE);
     }
 
     public String getSign() {
