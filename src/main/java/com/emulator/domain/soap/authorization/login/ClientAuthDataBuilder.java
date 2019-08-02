@@ -14,7 +14,7 @@ import java.util.List;
 @Component
 public class ClientAuthDataBuilder {
 
-    private final String USE_2048_BIT_SRP = "false";
+    private final String USE_2048_BIT_SRP = "true";
 
     public ClientAuthData build(AppUser user, PreLoginResult preLoginResult) throws IOException {
         List<String> command = buildCommand(user, preLoginResult);
@@ -65,10 +65,10 @@ public class ClientAuthDataBuilder {
         command.add("java");
         command.add("-jar");
         command.add("srp-1.1-SNAPSHOT-shaded.jar");
-        command.add(user.getUserName());
+        command.add(preLoginResult.getUserHashString());
         command.add(user.getPassword());
-        command.add(preLoginResult.getSalt().toString());
-        command.add(preLoginResult.getBytesFromServer().toString());
+        command.add(preLoginResult.getSaltString());
+        command.add(preLoginResult.getBytesFromServerString());
         command.add(USE_2048_BIT_SRP);
 
         return command;
