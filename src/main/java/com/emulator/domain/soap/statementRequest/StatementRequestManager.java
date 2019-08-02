@@ -183,9 +183,7 @@ public class StatementRequestManager {
         accBankName.appendChild(doc.createTextNode(data.getAccBankName()));
         acc.appendChild(accBankName);
 
-        Element accOrgName = doc.createElement("orgName");
-        accOrgName.appendChild(doc.createTextNode(data.getAccOrgName()));
-        acc.appendChild(accOrgName);
+        acc.appendChild(orgName);
 
         return requestElement;
     }

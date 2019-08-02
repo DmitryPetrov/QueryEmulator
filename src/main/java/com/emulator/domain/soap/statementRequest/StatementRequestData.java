@@ -25,7 +25,6 @@ public class StatementRequestData extends RequestParameters {
     private final String ACC_ACCOUNT_DEFAULT_VALUE = "40702810800000005897";
     private final String ACC_BANK_BIC_DEFAULT_VALUE = "044030861";
     private final String ACC_BANK_NAME_DEFAULT_VALUE = "АО \"АБ \"РОССИЯ\"";
-    private final String ACC_ORG_NAME_DEFAULT_VALUE = "ПАО МРСК Северного Кавказа";
     private final String SING_COLLECTION_BANK_MESSAGE_DEFAULT_VALUE = "";
     private final String SING_COLLECTION_DIGEST_NAME_DEFAULT_VALUE = "";
     private final String SIGN_DEFAULT_VALUE = "";
@@ -50,7 +49,6 @@ public class StatementRequestData extends RequestParameters {
     private String accAccount = "";
     private String accBankBIC = "";
     private String accBankName = "";
-    private String accOrgName = "";
     private String signCollectionBankMessage = "";
     private String signCollectionDigestName = "";
     private String sign = "";
@@ -80,7 +78,6 @@ public class StatementRequestData extends RequestParameters {
         checkStringLength("accAccount", this.accAccount, 20);
         checkStringLength("accBankBIC", this.accBankBIC, 64);
         checkStringLength("accBankName", this.accBankName, 500);
-        checkStringLength("accOrgName", this.accOrgName, 355);
         checkStringLength("signCollectionDigestName", this.signCollectionDigestName, 255);
     }
 
@@ -243,14 +240,6 @@ public class StatementRequestData extends RequestParameters {
 
     public void setAccBankName(String accBankName) {
         this.accBankName = checkNull(accBankName, ACC_BANK_NAME_DEFAULT_VALUE);
-    }
-
-    public String getAccOrgName() {
-        return accOrgName;
-    }
-
-    public void setAccOrgName(String accOrgName) {
-        this.accOrgName = checkNull(accOrgName, ACC_ORG_NAME_DEFAULT_VALUE);
     }
 
     public String getSignCollectionBankMessage() {
