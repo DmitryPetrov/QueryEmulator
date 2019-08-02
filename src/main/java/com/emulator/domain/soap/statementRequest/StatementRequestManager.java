@@ -165,27 +165,39 @@ public class StatementRequestManager {
         toDate.appendChild(doc.createTextNode(data.getToDate()));
         statementRequestElement.appendChild(toDate);
 
-        Element accounts = doc.createElement("accounts");
+        Element accounts = setAccounts(doc, data);
         statementRequestElement.appendChild(accounts);
 
-        Element acc = doc.createElement("Acc");
-        accounts.appendChild(acc);
-
-        Element accAccount = doc.createElement("account");
-        accAccount.appendChild(doc.createTextNode(data.getAccAccount()));
-        acc.appendChild(accAccount);
-
-        Element accBankBIC = doc.createElement("bankBIC");
-        accBankBIC.appendChild(doc.createTextNode(data.getAccBankBIC()));
-        acc.appendChild(accBankBIC);
-
-        Element accBankName = doc.createElement("bankName");
-        accBankName.appendChild(doc.createTextNode(data.getAccBankName()));
-        acc.appendChild(accBankName);
-
-        acc.appendChild(orgName);
-
         return requestElement;
+    }
+
+    private Element setAccounts(Document doc, StatementRequestData data) {
+        Element accounts = doc.createElement("accounts");
+
+        List<StatementRequestDataAccount> accountList = data.getAccounts();
+
+        for(StatementRequestDataAccount accountData: accountList) {
+            Element acc = doc.createElement("Acc");
+            accounts.appendChild(acc);
+
+            Element account = doc.createElement("account");
+            account.appendChild(doc.createTextNode(accountData.getAccount()));
+            acc.appendChild(account);
+
+            Element bankBIC = doc.createElement("bankBIC");
+            bankBIC.appendChild(doc.createTextNode(accountData.getBankBIC()));
+            acc.appendChild(bankBIC);
+
+            Element bankName = doc.createElement("bankName");
+            bankName.appendChild(doc.createTextNode(accountData.getBankName()));
+            acc.appendChild(bankName);
+
+            Element orgName = doc.createElement("orgName");
+            orgName.appendChild(doc.createTextNode(data.getOrgName()));
+            acc.appendChild(orgName);
+        }
+
+        return accounts;
     }
 
     private String toString(Node element) {

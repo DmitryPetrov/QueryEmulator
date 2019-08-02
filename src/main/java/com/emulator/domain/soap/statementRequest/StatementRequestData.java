@@ -3,6 +3,9 @@ package com.emulator.domain.soap.statementRequest;
 import com.emulator.domain.entity.RequestParameters;
 import com.emulator.domain.soap.exception.RequestParameterLengthException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class StatementRequestData extends RequestParameters {
 
     private final String ACCEPT_DATE_DEFAULT_VALUE = "";
@@ -22,9 +25,6 @@ public class StatementRequestData extends RequestParameters {
     private final String ORG_NAME_DEFAULT_VALUE = "ПАО МРСК Северного Кавказа";
     private final String TEMPLATE_DEFAULT_VALUE = "";
     private final String TO_DATE_DEFAULT_VALUE = "2018-05-14T00:00:00.715+03:00";
-    private final String ACC_ACCOUNT_DEFAULT_VALUE = "40702810800000005897";
-    private final String ACC_BANK_BIC_DEFAULT_VALUE = "044030861";
-    private final String ACC_BANK_NAME_DEFAULT_VALUE = "АО \"АБ \"РОССИЯ\"";
     private final String SING_COLLECTION_BANK_MESSAGE_DEFAULT_VALUE = "";
     private final String SING_COLLECTION_DIGEST_NAME_DEFAULT_VALUE = "";
     private final String SIGN_DEFAULT_VALUE = "";
@@ -46,12 +46,10 @@ public class StatementRequestData extends RequestParameters {
     private String orgName = "";
     private String template = "";
     private String toDate = "";
-    private String accAccount = "";
-    private String accBankBIC = "";
-    private String accBankName = "";
     private String signCollectionBankMessage = "";
     private String signCollectionDigestName = "";
     private String sign = "";
+    private List<StatementRequestDataAccount> accounts = new ArrayList<>();
 
     public final String requestAttrRequestId = "1852ccae-e9b2-48bf-adbd-6027653f194d";
     public final String requestAttrVersion = "1";
@@ -75,10 +73,11 @@ public class StatementRequestData extends RequestParameters {
         checkStringLength("orgId", this.orgId, 36);
         checkStringLength("orgInn", this.orgInn, 15);
         checkStringLength("orgName", this.orgName, 355);
-        checkStringLength("accAccount", this.accAccount, 20);
-        checkStringLength("accBankBIC", this.accBankBIC, 64);
-        checkStringLength("accBankName", this.accBankName, 500);
         checkStringLength("signCollectionDigestName", this.signCollectionDigestName, 255);
+
+        for (StatementRequestDataAccount accountData : this.accounts) {
+            accountData.check();
+        }
     }
 
     public String getAcceptDate() {
@@ -218,30 +217,6 @@ public class StatementRequestData extends RequestParameters {
         this.toDate = checkNull(toDate, TO_DATE_DEFAULT_VALUE);
     }
 
-    public String getAccAccount() {
-        return accAccount;
-    }
-
-    public void setAccAccount(String accAccount) {
-        this.accAccount = checkNull(accAccount, ACC_ACCOUNT_DEFAULT_VALUE);
-    }
-
-    public String getAccBankBIC() {
-        return accBankBIC;
-    }
-
-    public void setAccBankBIC(String accBankBIC) {
-        this.accBankBIC = checkNull(accBankBIC, ACC_BANK_BIC_DEFAULT_VALUE);
-    }
-
-    public String getAccBankName() {
-        return accBankName;
-    }
-
-    public void setAccBankName(String accBankName) {
-        this.accBankName = checkNull(accBankName, ACC_BANK_NAME_DEFAULT_VALUE);
-    }
-
     public String getSignCollectionBankMessage() {
         return signCollectionBankMessage;
     }
@@ -264,5 +239,13 @@ public class StatementRequestData extends RequestParameters {
 
     public void setSign(String sign) {
         this.sign = checkNull(sign, SIGN_DEFAULT_VALUE);
+    }
+
+    public List<StatementRequestDataAccount> getAccounts() {
+        return accounts;
+    }
+
+    public void setAccounts(List<StatementRequestDataAccount> accounts) {
+        this.accounts = accounts;
     }
 }
