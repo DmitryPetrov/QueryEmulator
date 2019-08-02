@@ -36,7 +36,7 @@ public class Config {
     @Bean
     public WebServiceTemplate webServiceTemplate(Jaxb2Marshaller marshaller) {
         WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
-        webServiceTemplate.setDefaultUri("http://localhost:8081/");
+        webServiceTemplate.setDefaultUri("https://correqtst00.abr.loc:8443/sbns-upg/upg");
         webServiceTemplate.setMarshaller(marshaller);
         webServiceTemplate.setUnmarshaller(marshaller);
 
