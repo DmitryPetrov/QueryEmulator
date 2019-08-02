@@ -2,11 +2,15 @@ package com.emulator.domain.entity;
 
 import com.emulator.domain.soap.authorization.login.LoginResult;
 import com.emulator.domain.soap.exception.RequestParameterLengthException;
+import com.emulator.domain.soap.statementRequest.StatementRequestData;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AppUser extends RequestParameters {
 
     private final String USERNAME_DEFAULT_VALUE = "testui";
-    private final String PASSWORD_DEFAULT_VALUE = "L8UWRF";
+    private final String PASSWORD_DEFAULT_VALUE = "ZWF5S2";
 
     private String userName = "";
     private String password = "";
