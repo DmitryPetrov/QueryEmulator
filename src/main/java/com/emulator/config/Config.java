@@ -1,6 +1,7 @@
 package com.emulator.config;
 
 import com.emulator.domain.soap.com.bssys.sbns.upg.ObjectFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -34,9 +35,10 @@ public class Config {
     }
 
     @Bean
-    public WebServiceTemplate webServiceTemplate(Jaxb2Marshaller marshaller) {
+    public WebServiceTemplate webServiceTemplate(Jaxb2Marshaller marshaller, @Value("${soapServer.address}") String
+            serverAddress) {
         WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
-        webServiceTemplate.setDefaultUri("https://correqtst00.abr.loc:8443/sbns-upg/upg");
+        webServiceTemplate.setDefaultUri(serverAddress);
         webServiceTemplate.setMarshaller(marshaller);
         webServiceTemplate.setUnmarshaller(marshaller);
 
