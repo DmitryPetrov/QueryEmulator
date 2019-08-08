@@ -57,10 +57,6 @@ public class AuthorizationManager {
     private PreLoginResult getPreLoginResult(PreLoginResponse response) {
         List<byte[]> responseFields = response.getReturn();
 
-        for (String message : soapMassageTrace) {
-            System.out.println(message);
-        }
-
         PreLoginResult result = new PreLoginResult();
         result.setSalt(responseFields.get(0));
         result.setBytesFromServer(responseFields.get(1));
