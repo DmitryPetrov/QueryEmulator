@@ -1,6 +1,8 @@
 package com.emulator.config;
 
 import com.emulator.domain.soap.com.bssys.sbns.upg.ObjectFactory;
+import com.sun.xml.bind.marshaller.CharacterEscapeHandler;
+import com.sun.xml.bind.marshaller.NoEscapeHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +12,10 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 
 import javax.net.ssl.*;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -20,7 +26,9 @@ import javax.xml.transform.TransformerFactory;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Configuration
 @Import(WebConfig.class)
@@ -30,6 +38,18 @@ public class Config {
     Jaxb2Marshaller jaxb2Marshaller() {
         Jaxb2Marshaller jaxb2Marshaller = new Jaxb2Marshaller();
         jaxb2Marshaller.setContextPath("com.emulator.domain.soap.com.bssys.sbns.upg");
+
+        Map<String, Object> marshallerProperties = new HashMap<>();
+        CharacterEscapeHandler escapeHandler = NoEscapeHandler.theInstance;
+        marshallerProperties.put(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        marshallerProperties.put("com.sun.xml.bind.marshaller.CharacterEscapeHandler", escapeHandler);
+        jaxb2Marshaller.setMarshallerProperties(marshallerProperties);
+
+        try {
+            jaxb2Marshaller.afterPropertiesSet();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return jaxb2Marshaller;
     }
@@ -41,6 +61,7 @@ public class Config {
         webServiceTemplate.setDefaultUri(serverAddress);
         webServiceTemplate.setMarshaller(marshaller);
         webServiceTemplate.setUnmarshaller(marshaller);
+        //webServiceTemplate.setTransformerFactoryClass();
 
         ClientInterceptor[] interceptors = new ClientInterceptor[]{interceptor()};
         webServiceTemplate.setInterceptors(interceptors);
@@ -70,6 +91,9 @@ public class Config {
             e.printStackTrace();
         }
         transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+        transformer.setOutputProperty(OutputKeys.CDATA_SECTION_ELEMENTS, "Models");
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
         return transformer;
     }
 

@@ -7,6 +7,8 @@ import com.emulator.domain.soap.com.bssys.sbns.upg.SendRequestsResponse;
 import com.emulator.domain.soap.exception.SOAPServerStatementRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.client.core.WebServiceMessageCallback;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.w3c.dom.*;
 
@@ -30,50 +32,104 @@ public class StatementRequestManager {
     @Autowired
     private List<String> soapMassageTrace;
 
-    public StatementRequestResult runStatementRequest(AppUser user, StatementRequestData data) throws SOAPServerStatementRequestException {
+    public StatementRequestResult runStatementRequest(AppUser user, StatementRequestData data) throws
+            SOAPServerStatementRequestException {
         SendRequests request = factory.createSendRequests();
         request.setSessionId(user.getSessionId());
         List<String> requestData = request.getRequests();
-        requestData.add(buildStatementRequest(data));
+
+        requestData.add(""/*buildStatementRequest(data)*/);
+
+        WebServiceMessageCallback callbackCDATANumTelefono = new WebServiceMessageCallback() {
+            public void doWithMessage(WebServiceMessage message) {
+
+                //Recover the DOMSource dal message soap
+                DOMSource domSource = (DOMSource)message.getPayloadSource();
+
+                //recover set of child nodes of domsource
+                NodeList nodeList = domSource.getNode().getChildNodes();
+
+                //definisco il nome del tag da cercare
+                String nameNumTel = "ns2:requests";//"ns2:sNumTel"; //in this example, but you can define another QName string to recover the target node (or nodes)
+                Node nodeNumTel = null;
+                for (int i = 0; i < nodeList.getLength(); i++) {
+                    System.out.println("nodeList names");
+                    System.out.println(nodeList.item(i).getNodeName());
+                    //search of text node of this tag name
+                    if (nodeList.item(i).getNodeName().compareTo(nameNumTel) == 0) {
+                        nodeNumTel = nodeList.item(i);
+                        break;
+                    }
+                }
+                //recover the string value (in this case of telephone number)
+                String valueNumTelefono = nodeNumTel.getTextContent();
+                //clean of value of target text node
+                nodeNumTel.setTextContent("");
+                //define and inject of CDATA section, in this case encapsulate "+" character
+                CDATASection cdata = nodeNumTel.getOwnerDocument().createCDATASection(buildStatementRequest(data));
+                //create of new text node
+                Text tnode = nodeNumTel.getOwnerDocument().createTextNode(valueNumTelefono);
+                //append of CDATASection (in this point is possible to inject many CDATA section on various parts of string (very usefull)
+                nodeNumTel.appendChild(cdata);
+                nodeNumTel.appendChild(tnode);
+
+                //done!
+            }
+        };
 
         JAXBElement<SendRequests> statementRequestElement = factory.createSendRequests(request);
-        JAXBElement<SendRequestsResponse> statementRequestResponseElement;
+        JAXBElement<SendRequestsResponse> statementRequestResponseElement = null;
 
         statementRequestResponseElement = (JAXBElement<SendRequestsResponse>) webServiceTemplate
-                .marshalSendAndReceive(statementRequestElement);
+                .marshalSendAndReceive(statementRequestElement, callbackCDATANumTelefono );
+
+
         SendRequestsResponse response = statementRequestResponseElement.getValue();
 
         return getStatementRequestResult(response);
     }
 
-    private StatementRequestResult getStatementRequestResult(SendRequestsResponse response) throws SOAPServerStatementRequestException {
+    private StatementRequestResult getStatementRequestResult(SendRequestsResponse response) throws
+            SOAPServerStatementRequestException {
         StatementRequestResult result = new StatementRequestResult();
 
-        String responseStr = response.getReturn().get(0);
+        String responseStr = "";
 
-        if (responseStr.contains("NONEXISTENT SESSION"))
-        {
-            String soapMessages = "";
-            for (String message : soapMassageTrace) {
-                message = message.replaceAll("&lt;", "<br/>&lt;");
-                message = message.replaceAll("&gt;", ">");
-                soapMessages += ("\n" + message);
-            }
-            soapMassageTrace.clear();
-
-            String exceptionMessage = "";
-            exceptionMessage += responseStr;
-            exceptionMessage += "\n>>>>SAOP Messages:";
-            exceptionMessage += soapMessages;
-
-            SOAPServerStatementRequestException exception = new SOAPServerStatementRequestException(exceptionMessage);
-            exception.setSoapMessages(soapMessages);
-            exception.setSoapResponse(responseStr);
-            throw exception;
+        for (String responseLine : response.getReturn()) {
+            responseStr += responseLine;
         }
+
+        checkErrors(responseStr);
 
         result.setRequestId(responseStr);
         return result;
+    }
+
+    private void checkErrors(String response) throws SOAPServerStatementRequestException {
+        System.out.println("StatementRequest response: " + response);
+
+        if (!((response.contains("NONEXISTENT SESSION")) |
+                (response.contains("Error")))) {
+            return;
+        }
+
+        String soapMessages = "";
+        for (String message : soapMassageTrace) {
+            message = message.replaceAll("&lt;", "<br/>&lt;");
+            message = message.replaceAll("&gt;", ">");
+            soapMessages += ("\n" + message);
+        }
+        soapMassageTrace.clear();
+
+        String exceptionMessage = "";
+        exceptionMessage += response;
+        exceptionMessage += "\n>>>>SAOP Messages:";
+        exceptionMessage += soapMessages;
+
+        SOAPServerStatementRequestException exception = new SOAPServerStatementRequestException(exceptionMessage);
+        exception.setSoapMessages(soapMessages);
+        exception.setSoapResponse(response);
+        throw exception;
     }
 
     @Autowired
@@ -83,39 +139,48 @@ public class StatementRequestManager {
     DocumentBuilder docBuilder;
 
     private String buildStatementRequest(StatementRequestData data) {
-        Element xml = buildStatementRequestXml(data);
+        Element xml = buildElementRequest(data);
 
         Document cdataWrapper = docBuilder.newDocument();
         CDATASection cdata = cdataWrapper.createCDATASection(toString(xml));
 
-        return toString(cdata);
+        System.out.println("buildStatementRequest");
+        System.out.println(toString(xml));
+
+        return toString(xml);
     }
 
-    private Element buildStatementRequestXml(StatementRequestData data) {
+    private Element buildElementRequest(StatementRequestData data) {
         Document doc = docBuilder.newDocument();
 
         Element requestElement = doc.createElement("upg:Request");
         doc.appendChild(requestElement);
 
-        Attr upg = doc.createAttribute(data.requestNameSpaceUpg);
-        upg.setValue(data.requestNameSpaceUpgValue);
-        requestElement.setAttributeNode(upg);
+        createAttribute(doc, requestElement, data.requestNameSpaceUpg, data.requestNameSpaceUpgValue);
+        createAttribute(doc, requestElement, data.requestNameSpaceUpgRaif, data.requestNameSpaceUpgRaifValue);
+        createAttribute(doc, requestElement, data.requestNameSpaceXsi, data.requestNameSpaceXsiValue);
+        createAttribute(doc, requestElement, "requestId", data.requestAttrRequestId);
+        createAttribute(doc, requestElement, "version", data.requestAttrVersion);
 
-        Attr upgRaif = doc.createAttribute(data.requestNameSpaceUpgRaif);
-        upgRaif.setValue(data.requestNameSpaceUpgRaifValue);
-        requestElement.setAttributeNode(upgRaif);
-
-        Attr xsi = doc.createAttribute(data.requestNameSpaceXsi);
-        xsi.setValue(data.requestNameSpaceXsiValue);
-        requestElement.setAttributeNode(xsi);
-
-        Attr requestId = doc.createAttribute("requestId");
-        requestId.setValue(data.requestAttrRequestId);
-        requestElement.setAttributeNode(requestId);
-
-        Attr version = doc.createAttribute("version");
-        version.setValue(data.requestAttrVersion);
-        requestElement.setAttributeNode(version);
+//        Attr upg = doc.createAttribute(data.requestNameSpaceUpg);
+//        upg.setValue(data.requestNameSpaceUpgValue);
+//        requestElement.setAttributeNode(upg);
+//
+//        Attr upgRaif = doc.createAttribute(data.requestNameSpaceUpgRaif);
+//        upgRaif.setValue(data.requestNameSpaceUpgRaifValue);
+//        requestElement.setAttributeNode(upgRaif);
+//
+//        Attr xsi = doc.createAttribute(data.requestNameSpaceXsi);
+//        xsi.setValue(data.requestNameSpaceXsiValue);
+//        requestElement.setAttributeNode(xsi);
+//
+//        Attr requestId = doc.createAttribute("requestId");
+//        requestId.setValue(data.requestAttrRequestId);
+//        requestElement.setAttributeNode(requestId);
+//
+//        Attr version = doc.createAttribute("version");
+//        version.setValue(data.requestAttrVersion);
+//        requestElement.setAttributeNode(version);
 
         Element modelsElement = doc.createElement("upg:Models");
         requestElement.appendChild(modelsElement);
@@ -123,8 +188,20 @@ public class StatementRequestManager {
         Element modelElement = doc.createElement("upg:Model");
         modelsElement.appendChild(modelElement);
 
+        String statementRequestElement = buildElementStatementRequest(doc, data);
+        modelElement.appendChild(doc.createTextNode(statementRequestElement));
+
+        return requestElement;
+    }
+
+    private void createAttribute(Document doc, Element element, String attributeName, String attributeValue) {
+        Attr attr = doc.createAttribute(attributeName);
+        attr.setValue(attributeValue);
+        element.setAttributeNode(attr);
+    }
+
+    private String buildElementStatementRequest(Document doc, StatementRequestData data) {
         Element statementRequestElement = doc.createElement("StatementRequest");
-        modelElement.appendChild(statementRequestElement);
 
         Attr xmlns = doc.createAttribute("xmlns");
         xmlns.setValue(data.statementRequestAttrXmlns);
@@ -165,18 +242,18 @@ public class StatementRequestManager {
         toDate.appendChild(doc.createTextNode(data.getToDate()));
         statementRequestElement.appendChild(toDate);
 
-        Element accounts = setAccounts(doc, data);
+        Element accounts = buildElementAccounts(doc, data);
         statementRequestElement.appendChild(accounts);
 
-        return requestElement;
+        return toString(statementRequestElement);
     }
 
-    private Element setAccounts(Document doc, StatementRequestData data) {
+    private Element buildElementAccounts(Document doc, StatementRequestData data) {
         Element accounts = doc.createElement("accounts");
 
         List<StatementRequestDataAccount> accountList = data.getAccounts();
 
-        for(StatementRequestDataAccount accountData: accountList) {
+        for (StatementRequestDataAccount accountData : accountList) {
             Element acc = doc.createElement("Acc");
             accounts.appendChild(acc);
 
