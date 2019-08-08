@@ -1,0 +1,3 @@
+удалить метод interceptor() в com.emulator.config.Config
+переделеть soapMessages в SOAPServerBadResponseException из строки в лист строк
+переделать checked ексепшены в RuntimeException
