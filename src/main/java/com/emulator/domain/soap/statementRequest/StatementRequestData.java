@@ -53,11 +53,8 @@ public class StatementRequestData extends RequestParameters {
 
     public final String requestAttrRequestId = "1852ccae-e9b2-48bf-adbd-6027653f194d";
     public final String requestAttrVersion = "1";
-    public final String requestNameSpaceUpg = "xmlns:upg";
     public final String requestNameSpaceUpgValue = "http://bssys.com/upg/request";
-    public final String requestNameSpaceUpgRaif = "xmlns:upgRaif";
     public final String requestNameSpaceUpgRaifValue = "http://bssys.com/upg/request/raif";
-    public final String requestNameSpaceXsi = "xmlns:xsi";
     public final String requestNameSpaceXsiValue = "http://www.w3.org/2001/XMLSchema-instance";
 
     public final String statementRequestAttrXmlns = "http://bssys.com/sbns/integration";
