@@ -6,12 +6,14 @@ import com.emulator.domain.soap.SOAPClient;
 import com.emulator.domain.soap.exception.SOAPServerBadResponseException;
 import com.emulator.domain.soap.exception.SOAPServerGetRequestStatusException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 
+@Controller
 public class GetRequestStatusController extends AbstractController {
 
     @Autowired
