@@ -1,56 +1,51 @@
 package com.emulator.domain.entity;
 
-import com.emulator.domain.soap.authorization.login.LoginResult;
-import com.emulator.domain.soap.exception.RequestParameterLengthException;
-import com.emulator.domain.soap.statementRequest.StatementRequestData;
+import com.emulator.domain.soap.exception.ParameterIsNullException;
 
-import java.util.ArrayList;
-import java.util.List;
+public class AppUser{
 
-public class AppUser extends RequestParameters {
+    private final String userName;
+    private final String password;
+    private final String sessionId;
 
-    private final String USERNAME_DEFAULT_VALUE = "testui";
-    private final String PASSWORD_DEFAULT_VALUE = "ZWF5S2";
+    public AppUser(String userName, String password, String sessionId) {
+        if (userName == null) {
+            throw new ParameterIsNullException("userName must not be 'null'");
+        }
+        if (password == null) {
+            throw new ParameterIsNullException("password must not be 'null'");
+        }
+        if (sessionId == null) {
+            throw new ParameterIsNullException("sessionId must not be 'null'");
+        }
 
-    private String userName = "";
-    private String password = "";
-    private String sessionId = "";
-
-    public AppUser() {
-
+        this.userName = userName;
+        this.password = password;
+        this.sessionId = sessionId;
     }
 
-    @Override
-    public void check() throws RequestParameterLengthException {
-        checkStringLength("userName", this.userName, 255);
-        checkStringLength("password", this.password, 255);
+    public AppUser(AppUser user, String sessionId) {
+        if (user == null) {
+            throw new ParameterIsNullException("user must not be 'null'");
+        }
+        if (sessionId == null) {
+            throw new ParameterIsNullException("sessionId must not be 'null'");
+        }
+        this.userName = user.getUserName();
+        this.password = user.getPassword();
+        this.sessionId = sessionId;
     }
 
     public String getUserName() {
         return userName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = checkNull(userName, USERNAME_DEFAULT_VALUE);
-    }
-
     public String getPassword() {
         return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = checkNull(password, PASSWORD_DEFAULT_VALUE);
     }
 
     public String getSessionId() {
         return sessionId;
     }
 
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
-    }
-
-    public void setSessionId(LoginResult loginResult) {
-        this.sessionId = loginResult.getSessionId();
-    }
 }

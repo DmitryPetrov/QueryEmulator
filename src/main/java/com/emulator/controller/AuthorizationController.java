@@ -2,6 +2,7 @@ package com.emulator.controller;
 
 import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.frontend.SOAPConnectionStatus;
+import com.emulator.domain.frontend.requestBody.RequestBodyAppUser;
 import com.emulator.domain.soap.SOAPClient;
 import com.emulator.domain.soap.exception.RequestParameterLengthException;
 import com.emulator.domain.soap.exception.SOAPServerBadResponseException;
@@ -21,12 +22,15 @@ public class AuthorizationController extends AbstractController{
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
-    public SOAPConnectionStatus login(HttpSession httpSession, @RequestBody AppUser user) {
+    public SOAPConnectionStatus login(HttpSession httpSession, @RequestBody RequestBodyAppUser requestData) {
         try {
-            user.check();
-            soapClient.authorization(user);
-            httpSession.setAttribute("user", user);
-            return getRequestSuccessResponse(user.getSessionId());
+            requestData.check();
+            AppUser user = requestData.getAppUser();
+
+            AppUser authorizedUser = soapClient.authorization(user);
+
+            httpSession.setAttribute("user", authorizedUser);
+            return getRequestSuccessResponse(authorizedUser.getSessionId());
         } catch (SOAPServerLoginException e) {
             e.printStackTrace();
             return getRequestFailResponse(e);

@@ -19,8 +19,8 @@ public class SOAPClient {
     @Autowired
     AuthorizationManager authManager;
 
-    public void authorization(AppUser user) throws SOAPServerLoginException {
-        authManager.authorization(user);
+    public AppUser authorization(AppUser user) throws SOAPServerLoginException {
+        return authManager.authorization(user);
     }
 
     @Autowired

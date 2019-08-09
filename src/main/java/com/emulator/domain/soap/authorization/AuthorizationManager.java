@@ -29,16 +29,18 @@ public class AuthorizationManager {
     @Autowired
     ClientAuthDataBuilder clientAuthDataBuilder;
 
-    public void authorization(AppUser user) throws SOAPServerLoginException {
+    public AppUser authorization(AppUser user) throws SOAPServerLoginException {
         PreLoginResult preLoginResult = callPreLogin(user);
 
+        AppUser authorizedUser = null;
         try {
             ClientAuthData authData = clientAuthDataBuilder.build(user, preLoginResult);
             LoginResult loginResult = callLogin(user, preLoginResult, authData);
-            user.setSessionId(loginResult);
+            authorizedUser = new AppUser(user, loginResult.getSessionId());
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return authorizedUser;
     }
 
     private PreLoginResult callPreLogin(AppUser user) {
