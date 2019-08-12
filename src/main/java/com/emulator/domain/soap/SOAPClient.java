@@ -13,29 +13,29 @@ import com.emulator.domain.soap.statementRequest.StatementRequestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+
 @Component
 public class SOAPClient {
 
     @Autowired
     AuthorizationManager authManager;
 
-    public AppUser authorization(AppUser user) throws SOAPServerLoginException {
+    public AppUser authorization(AppUser user) throws IOException {
         return authManager.authorization(user);
     }
 
     @Autowired
     StatementRequestManager statementRequestManager;
 
-    public StatementRequestResult sendStatementRequest(AppUser user, StatementRequestData data) throws
-            SOAPServerStatementRequestException {
+    public StatementRequestResult sendStatementRequest(AppUser user, StatementRequestData data) {
         return statementRequestManager.runStatementRequest(user, data);
     }
 
     @Autowired
     GetRequestStatusManager getRequestStatusManager;
 
-    public GetRequestStatusResult sendGetRequestStatus(AppUser user, String requestId) throws
-            SOAPServerGetRequestStatusException {
+    public GetRequestStatusResult sendGetRequestStatus(AppUser user, String requestId) {
         return getRequestStatusManager.runGetRequestStatus(user, requestId);
     }
 }
