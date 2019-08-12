@@ -1,10 +1,9 @@
-package com.emulator.domain.frontend;
+package com.emulator.domain.frontend.response;
 
-public class SOAPConnectionStatus {
+public class ResponseBodyData {
 
     private String status;
     private String message;
-    private String soapMessages;
 
     public String getStatus() {
         return status;
@@ -22,11 +21,5 @@ public class SOAPConnectionStatus {
         this.message = message;
     }
 
-    public String getSoapMessages() {
-        return soapMessages;
-    }
 
-    public void setSoapMessages(String soapMessages) {
-        this.soapMessages = soapMessages;
-    }
 }

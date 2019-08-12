@@ -4,6 +4,16 @@ import com.emulator.domain.soap.exception.RequestParameterLengthException;
 
 public abstract class RequestParameters {
 
+    private String requestId = "";
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
+    }
+
     abstract public void check() throws RequestParameterLengthException;
 
     protected String checkNull(String value, String defaultValue) {
