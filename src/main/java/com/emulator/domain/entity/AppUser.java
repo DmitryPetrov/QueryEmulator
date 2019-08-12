@@ -1,6 +1,6 @@
 package com.emulator.domain.entity;
 
-import com.emulator.domain.soap.exception.ParameterIsNullException;
+import com.emulator.exception.ParameterIsNullException;
 
 public class AppUser{
 

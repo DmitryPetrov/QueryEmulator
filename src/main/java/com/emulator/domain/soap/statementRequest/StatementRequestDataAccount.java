@@ -1,7 +1,7 @@
 package com.emulator.domain.soap.statementRequest;
 
 import com.emulator.domain.entity.RequestParameters;
-import com.emulator.domain.soap.exception.RequestParameterLengthException;
+import com.emulator.exception.RequestParameterLengthException;
 
 public class StatementRequestDataAccount extends RequestParameters {
 

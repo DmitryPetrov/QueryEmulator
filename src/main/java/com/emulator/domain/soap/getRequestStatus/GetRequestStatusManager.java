@@ -2,7 +2,7 @@ package com.emulator.domain.soap.getRequestStatus;
 
 import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.soap.com.bssys.sbns.upg.*;
-import com.emulator.domain.soap.exception.SOAPServerGetRequestStatusException;
+import com.emulator.exception.SOAPServerGetRequestStatusException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.client.core.WebServiceTemplate;

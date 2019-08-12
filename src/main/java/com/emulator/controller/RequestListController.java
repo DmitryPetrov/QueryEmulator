@@ -5,7 +5,7 @@ import com.emulator.domain.entity.RequestParameters;
 import com.emulator.domain.frontend.response.ResponseBodyData;
 import com.emulator.domain.frontend.response.ResponseBodyRequestList;
 import com.emulator.domain.frontend.response.ResponseBodySOAPRequestStatus;
-import com.emulator.domain.soap.exception.SOAPServerBadResponseException;
+import com.emulator.exception.SOAPServerBadResponseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

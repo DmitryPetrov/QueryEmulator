@@ -2,9 +2,9 @@ package com.emulator.domain.soap;
 
 import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.soap.authorization.AuthorizationManager;
-import com.emulator.domain.soap.exception.SOAPServerGetRequestStatusException;
-import com.emulator.domain.soap.exception.SOAPServerLoginException;
-import com.emulator.domain.soap.exception.SOAPServerStatementRequestException;
+import com.emulator.exception.SOAPServerGetRequestStatusException;
+import com.emulator.exception.SOAPServerLoginException;
+import com.emulator.exception.SOAPServerStatementRequestException;
 import com.emulator.domain.soap.getRequestStatus.GetRequestStatusManager;
 import com.emulator.domain.soap.getRequestStatus.GetRequestStatusResult;
 import com.emulator.domain.soap.statementRequest.StatementRequestData;

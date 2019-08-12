@@ -1,6 +1,6 @@
 package com.emulator.domain.entity;
 
-import com.emulator.domain.soap.exception.RequestParameterLengthException;
+import com.emulator.exception.RequestParameterLengthException;
 
 public abstract class RequestParameters {
 

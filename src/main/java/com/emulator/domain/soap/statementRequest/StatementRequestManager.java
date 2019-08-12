@@ -4,7 +4,7 @@ import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.soap.com.bssys.sbns.upg.ObjectFactory;
 import com.emulator.domain.soap.com.bssys.sbns.upg.SendRequests;
 import com.emulator.domain.soap.com.bssys.sbns.upg.SendRequestsResponse;
-import com.emulator.domain.soap.exception.SOAPServerStatementRequestException;
+import com.emulator.exception.SOAPServerStatementRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.client.core.WebServiceTemplate;

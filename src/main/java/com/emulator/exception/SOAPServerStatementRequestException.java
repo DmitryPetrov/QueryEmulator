@@ -1,4 +1,4 @@
-package com.emulator.domain.soap.exception;
+package com.emulator.exception;
 
 public class SOAPServerStatementRequestException extends SOAPServerBadResponseException {
 

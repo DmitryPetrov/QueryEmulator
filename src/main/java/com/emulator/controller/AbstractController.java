@@ -2,8 +2,8 @@ package com.emulator.controller;
 
 import com.emulator.domain.frontend.response.ResponseBodyData;
 import com.emulator.domain.frontend.response.ResponseBodySOAPRequestStatus;
-import com.emulator.domain.soap.exception.RequestParameterLengthException;
-import com.emulator.domain.soap.exception.SOAPServerBadResponseException;
+import com.emulator.exception.RequestParameterLengthException;
+import com.emulator.exception.SOAPServerBadResponseException;
 
 public abstract class AbstractController {
 
