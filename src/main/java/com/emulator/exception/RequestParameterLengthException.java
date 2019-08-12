@@ -1,6 +1,6 @@
 package com.emulator.exception;
 
-public class RequestParameterLengthException extends Exception {
+public class RequestParameterLengthException extends RuntimeException {
 
     private String parameterName;
     private int maxLength;
