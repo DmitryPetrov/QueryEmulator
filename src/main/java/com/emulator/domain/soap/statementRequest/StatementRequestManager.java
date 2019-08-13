@@ -26,7 +26,9 @@ public class StatementRequestManager {
     public StatementRequestResult runStatementRequest(AppUser user, StatementRequestData data) throws
             SOAPServerStatementRequestException {
         String statementRequestMessage = requestMessageBuilder.build(data);
+
         MessageHandler messageHandler = new MessageHandler(NODE_NAME_WITH_REQUEST_MESSAGE, statementRequestMessage);
+
         JAXBElement<SendRequests> request = buildRequest(user);
         JAXBElement<SendRequestsResponse> response = null;
 
@@ -50,8 +52,6 @@ public class StatementRequestManager {
 
     private StatementRequestResult getResult(JAXBElement<SendRequestsResponse> response) throws
             SOAPServerStatementRequestException {
-        StatementRequestResult result = new StatementRequestResult();
-
         String responseMessage = "";
         for (String responseLine : response.getValue().getReturn()) {
             responseMessage += responseLine;
@@ -59,11 +59,12 @@ public class StatementRequestManager {
 
         checkErrors(responseMessage);
 
+        StatementRequestResult result = new StatementRequestResult();
         result.setRequestId(responseMessage);
         return result;
     }
 
-    private void checkErrors(String response) throws SOAPServerStatementRequestException {
+    private void checkErrors(String response) {
         System.out.println("StatementRequest response: " + response);
 
         if ((response.contains("NONEXISTENT SESSION"))
