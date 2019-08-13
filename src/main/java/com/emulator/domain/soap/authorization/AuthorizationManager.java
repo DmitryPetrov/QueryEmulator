@@ -18,43 +18,45 @@ import java.util.List;
 
 @Component
 public class AuthorizationManager {
-    @Autowired
-    private ObjectFactory factory;
 
     @Autowired
     private WebServiceTemplate webServiceTemplate;
 
     @Autowired
-    private SoapMessageList soapMessageList;
-
-    @Autowired
     private ClientAuthDataBuilder clientAuthDataBuilder;
 
     public AppUser authorization(AppUser user) throws IOException {
-        PreLoginResult preLoginResult = callPreLogin(user);
+        PreLoginResult preLoginResult = runPreLogin(user);
 
         ClientAuthData authData = clientAuthDataBuilder.build(user, preLoginResult);
-        LoginResult loginResult = callLogin(user, preLoginResult, authData);
+        LoginResult loginResult = runLogin(user, preLoginResult, authData);
         AppUser authorizedUser = new AppUser(user, loginResult.getSessionId());
 
         return authorizedUser;
     }
 
-    private PreLoginResult callPreLogin(AppUser user) {
-        PreLogin request = factory.createPreLogin();
-        request.setUserLogin(user.getUserName());
-        JAXBElement<PreLogin> preLoginElement = factory.createPreLogin(request);
-        JAXBElement<PreLoginResponse> preLoginResponseElement;
+    private PreLoginResult runPreLogin(AppUser user) {
+        JAXBElement<PreLogin> request = buildRequest(user);
+        JAXBElement<PreLoginResponse> response;
 
-        preLoginResponseElement = (JAXBElement<PreLoginResponse>) webServiceTemplate
-                .marshalSendAndReceive(preLoginElement);
-        PreLoginResponse response = preLoginResponseElement.getValue();
+        response = (JAXBElement<PreLoginResponse>) webServiceTemplate
+                .marshalSendAndReceive(request);
 
         return getPreLoginResult(response);
     }
 
-    private PreLoginResult getPreLoginResult(PreLoginResponse response) {
-        List<byte[]> responseFields = response.getReturn();
+    @Autowired
+    private ObjectFactory factory;
+
+    private JAXBElement<PreLogin> buildRequest(AppUser user) {
+        PreLogin request = factory.createPreLogin();
+        request.setUserLogin(user.getUserName());
+
+        return factory.createPreLogin(request);
+    }
+
+    private PreLoginResult getPreLoginResult(JAXBElement<PreLoginResponse> response) {
+        List<byte[]> responseFields = response.getValue().getReturn();
 
         PreLoginResult result = new PreLoginResult();
         result.setSalt(responseFields.get(0));
@@ -66,40 +68,58 @@ public class AuthorizationManager {
         return result;
     }
 
-    private LoginResult callLogin(AppUser user, PreLoginResult preLoginResult, ClientAuthData authData) throws
-            SOAPServerLoginException {
+    private LoginResult runLogin(AppUser user, PreLoginResult preLoginResult, ClientAuthData authData) {
+        JAXBElement<Login> request = buildRequest(user, preLoginResult, authData);
+        JAXBElement<LoginResponse> response;
+
+        response = (JAXBElement<LoginResponse>) webServiceTemplate
+                .marshalSendAndReceive(request);
+
+        return getLoginResult(response);
+    }
+
+    private JAXBElement<Login> buildRequest(AppUser user, PreLoginResult preLoginResult, ClientAuthData authData) {
         Login request = factory.createLogin();
         request.setUserLogin(user.getUserName());
         request.setPreloginId(preLoginResult.getPreLoginIdString());
         List<byte[]> clientAuthData = request.getClientAuthData();
         clientAuthData.add(authData.getPasswordHash());
         clientAuthData.add(authData.getExtPasswordData());
-        JAXBElement<Login> loginElement = factory.createLogin(request);
-        JAXBElement<LoginResponse> loginResponseElement;
 
-        loginResponseElement = (JAXBElement<LoginResponse>) webServiceTemplate
-                .marshalSendAndReceive(loginElement);
-        LoginResponse response = loginResponseElement.getValue();
-
-        return getLoginResult(response);
+        return factory.createLogin(request);
     }
 
-    private LoginResult getLoginResult(LoginResponse response) throws SOAPServerLoginException {
-        String responseStr = response.getReturn();
-        if (responseStr.equals("BAD_CREDENTIALS")) {
-            String exceptionMessage = responseStr;
-            exceptionMessage += "\n>>>>SAOP Messages:";
-            exceptionMessage += soapMessageList.getAsString();
+    private LoginResult getLoginResult(JAXBElement<LoginResponse> response) {
+        String responseMessage = response.getValue().getReturn();
 
-            SOAPServerLoginException exception = new SOAPServerLoginException(exceptionMessage);
-            exception.setSoapMessages(soapMessageList.getAsString());
-            exception.setSoapResponse(responseStr);
-            throw exception;
-        }
+        checkErrors(responseMessage);
 
         LoginResult loginResult = new LoginResult();
-        loginResult.setSessionId(responseStr);
+        loginResult.setSessionId(responseMessage);
         return loginResult;
+    }
+
+    private void checkErrors(String response) {
+        System.out.println("StatementRequest response: " + response);
+
+        if ((response.contains("BAD_CREDENTIALS"))
+                || (response.contains("Error"))) {
+            handleError(response);
+        }
+    }
+
+    @Autowired
+    private SoapMessageList soapMessageList;
+
+    private void handleError(String responseMessage) {
+        String exceptionMessage = responseMessage;
+        exceptionMessage += "\n>>>>SAOP Messages:";
+        exceptionMessage += soapMessageList.getAsString();
+
+        SOAPServerLoginException exception = new SOAPServerLoginException(exceptionMessage);
+        exception.setSoapMessages(soapMessageList.getAsString());
+        exception.setSoapResponse(responseMessage);
+        throw exception;
     }
 
 }
