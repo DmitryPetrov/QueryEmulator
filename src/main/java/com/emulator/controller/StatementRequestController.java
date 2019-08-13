@@ -1,6 +1,5 @@
 package com.emulator.controller;
 
-
 import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.entity.RequestParameters;
 import com.emulator.domain.frontend.response.ResponseBodyData;
