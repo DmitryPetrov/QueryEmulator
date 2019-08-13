@@ -42,8 +42,7 @@ public class GetRequestStatusManager {
 
     private GetRequestStatusResult getGetRequestStatusResult(JAXBElement<GetRequestStatusResponse> response)
             throws IOException, SAXException {
-        responseHandler.setSoapResponse(response);
-        return responseHandler.parse();
+        return responseHandler.getResult(response);
     }
 
 

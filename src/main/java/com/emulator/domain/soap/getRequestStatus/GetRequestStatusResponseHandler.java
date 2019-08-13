@@ -2,6 +2,7 @@ package com.emulator.domain.soap.getrequeststatus;
 
 import com.emulator.domain.soap.SoapMessageList;
 import com.emulator.domain.soap.com.bssys.sbns.upg.GetRequestStatusResponse;
+import com.emulator.exception.ParameterIsNullException;
 import com.emulator.exception.SOAPServerGetRequestStatusException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,38 +19,30 @@ import java.io.InputStream;
 public class GetRequestStatusResponseHandler {
 
     private static String MODEL_NODE_NAME = "upg:Model";
+    private static int MODEL_NODE_INDEX = 0;
 
-    private JAXBElement<GetRequestStatusResponse> response;
-
-    public void setSoapResponse(JAXBElement<GetRequestStatusResponse> response) {
-        this.response = response;
-    }
-
-    @Autowired
-    DocumentBuilder docBuilder;
-
-    private Document toDocument(String response) throws IOException, SAXException {
-        InputStream inputStream = new ByteArrayInputStream(response.getBytes());
-        return docBuilder.parse(inputStream);
-    }
-
-    private String toString(JAXBElement<GetRequestStatusResponse> response){
-        String result = "";
-        for (String responseLine : response.getValue().getReturn()) {
-            result += responseLine;
+    public GetRequestStatusResult getResult(JAXBElement<GetRequestStatusResponse> response) throws IOException,
+            SAXException {
+        if (response == null) {
+            throw new ParameterIsNullException("GetRequestStatusResponseHandler.response must not be 'null'");
         }
-        return result;
+        String responseMessage = toString(response);
+        return parse(responseMessage);
     }
 
-    public GetRequestStatusResult parse() throws IOException, SAXException {
-        String responseMessage = toString(response);
+    public GetRequestStatusResult parse(String responseMessage) throws IOException, SAXException {
         checkErrors(responseMessage);
 
         Document document = toDocument(responseMessage);
         Element response = document.getDocumentElement();
 
-        NamedNodeMap attributes = response.getAttributes();
+        return getResult(response);
+    }
+
+    private GetRequestStatusResult getResult(Element response) throws IOException, SAXException {
         GetRequestStatusResult result = new GetRequestStatusResult();
+
+        NamedNodeMap attributes = response.getAttributes();
 
         result.setNamespaceUpg(getAttrValue(attributes, result.NAMESPACE_UPG_NAME));
         result.setNamespaceUpgRussia(getAttrValue(attributes, result.NAMESPACE_UPG_RUSSIA_NAME));
@@ -60,18 +53,40 @@ public class GetRequestStatusResponseHandler {
         result.setAttrSender(getAttrValue(attributes, result.ATTR_SENDER_NAME));
         result.setAttrVersion(getAttrValue(attributes, result.ATTR_VERSION_NAME));
 
-        Node model = document.getDocumentElement().getElementsByTagName(MODEL_NODE_NAME).item(0);
-        Document document2 = toDocument(model.getTextContent());
+        Node model = response.getElementsByTagName(MODEL_NODE_NAME).item(MODEL_NODE_INDEX);
+        setStatusResponse(model.getTextContent(), result);
 
-        GetRequestStatusResultStateResponse getRequestStatusResultStateResponse = result.getGetRequestStatusResultStateResponse();
+        return result;
+    }
 
-        getRequestStatusResultStateResponse.setAttrXmlns(getAttrValue(document2.getDocumentElement().getAttributes(), getRequestStatusResultStateResponse.ATTR_XMLNS_NAME ));
-        getRequestStatusResultStateResponse.setBankMessage(getNodeValue(document2, getRequestStatusResultStateResponse.BANK_MESSAGE_NAME));
-        getRequestStatusResultStateResponse.setDocId(getNodeValue(document2, getRequestStatusResultStateResponse.DOC_ID_NAME));
-        getRequestStatusResultStateResponse.setDocType(getNodeValue(document2, getRequestStatusResultStateResponse.DOC_TYPE_NAME));
-        getRequestStatusResultStateResponse.setExtId(getNodeValue(document2, getRequestStatusResultStateResponse.EXT_ID_NAME));
-        getRequestStatusResultStateResponse.setState(getNodeValue(document2, getRequestStatusResultStateResponse.STATE_NAME));
+    private void setStatusResponse(String xml, GetRequestStatusResult result) throws
+            IOException, SAXException {
+        Document document = toDocument(xml);
+        GetRequestStatusResultStateResponse stateResponse = result.getGetRequestStatusResultStateResponse();
 
+        NamedNodeMap attributes = document.getDocumentElement().getAttributes();
+        stateResponse.setAttrXmlns(getAttrValue(attributes, stateResponse.ATTR_XMLNS_NAME));
+
+        stateResponse.setBankMessage(getNodeValue(document, stateResponse.BANK_MESSAGE_NAME));
+        stateResponse.setDocId(getNodeValue(document, stateResponse.DOC_ID_NAME));
+        stateResponse.setDocType(getNodeValue(document, stateResponse.DOC_TYPE_NAME));
+        stateResponse.setExtId(getNodeValue(document, stateResponse.EXT_ID_NAME));
+        stateResponse.setState(getNodeValue(document, stateResponse.STATE_NAME));
+    }
+
+    @Autowired
+    DocumentBuilder docBuilder;
+
+    private Document toDocument(String response) throws IOException, SAXException {
+        InputStream inputStream = new ByteArrayInputStream(response.getBytes());
+        return docBuilder.parse(inputStream);
+    }
+
+    private String toString(JAXBElement<GetRequestStatusResponse> response) {
+        String result = "";
+        for (String responseLine : response.getValue().getReturn()) {
+            result += responseLine;
+        }
         return result;
     }
 
@@ -91,7 +106,6 @@ public class GetRequestStatusResponseHandler {
             handleError(response);
         }
     }
-
 
     @Autowired
     private SoapMessageList soapMessageList;
