@@ -1,4 +1,4 @@
-package com.emulator.domain.soap.statementRequest;
+package com.emulator.domain.soap.statementrequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

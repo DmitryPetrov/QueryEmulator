@@ -1,4 +1,4 @@
-package com.emulator.domain.soap.getRequestStatus;
+package com.emulator.domain.soap.getrequeststatus;
 
 import com.emulator.exception.ParameterIsNullException;
 
@@ -99,7 +99,7 @@ public class GetRequestStatusResult {
 
     public void setGetRequestStatusResultStateResponse(GetRequestStatusResultStateResponse getRequestStatusResultStateResponse) {
         if(getRequestStatusResultStateResponse == null) {
-            throw new ParameterIsNullException("com.emulator.domain.soap.getRequestStatus.GetRequestStatusResult must not be null.");
+            throw new ParameterIsNullException("com.emulator.domain.soap.getrequeststatus.GetRequestStatusResult must not be null.");
         }
         this.getRequestStatusResultStateResponse = getRequestStatusResultStateResponse;
     }

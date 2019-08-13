@@ -1,4 +1,4 @@
-package com.emulator.domain.soap.getRequestStatus;
+package com.emulator.domain.soap.getrequeststatus;
 
 public class GetRequestStatusResultStateResponse {
 

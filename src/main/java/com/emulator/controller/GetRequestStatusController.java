@@ -5,7 +5,7 @@ import com.emulator.domain.entity.RequestParameters;
 import com.emulator.domain.frontend.response.ResponseBodyData;
 import com.emulator.domain.frontend.response.ResponseBodySOAPRequestStatus;
 import com.emulator.domain.soap.SOAPClient;
-import com.emulator.domain.soap.getRequestStatus.GetRequestStatusResult;
+import com.emulator.domain.soap.getrequeststatus.GetRequestStatusResult;
 import com.emulator.exception.BadRequestParameterException;
 import com.emulator.exception.SOAPServerBadResponseException;
 import com.emulator.exception.SOAPServerGetRequestStatusException;

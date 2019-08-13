@@ -2,11 +2,11 @@ package com.emulator.domain.soap;
 
 import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.soap.authorization.AuthorizationManager;
-import com.emulator.domain.soap.getRequestStatus.GetRequestStatusManager;
-import com.emulator.domain.soap.getRequestStatus.GetRequestStatusResult;
-import com.emulator.domain.soap.statementRequest.StatementRequestData;
-import com.emulator.domain.soap.statementRequest.StatementRequestManager;
-import com.emulator.domain.soap.statementRequest.StatementRequestResult;
+import com.emulator.domain.soap.getrequeststatus.GetRequestStatusManager;
+import com.emulator.domain.soap.getrequeststatus.GetRequestStatusResult;
+import com.emulator.domain.soap.statementrequest.StatementRequestData;
+import com.emulator.domain.soap.statementrequest.StatementRequestManager;
+import com.emulator.domain.soap.statementrequest.StatementRequestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;

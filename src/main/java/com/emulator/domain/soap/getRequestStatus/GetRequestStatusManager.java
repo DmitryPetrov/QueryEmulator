@@ -1,4 +1,4 @@
-package com.emulator.domain.soap.getRequestStatus;
+package com.emulator.domain.soap.getrequeststatus;
 
 import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.soap.com.bssys.sbns.upg.*;

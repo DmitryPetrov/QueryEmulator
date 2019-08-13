@@ -1,4 +1,4 @@
-package com.emulator.domain.soap.statementRequest;
+package com.emulator.domain.soap.statementrequest;
 
 import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.soap.SoapMessageList;
