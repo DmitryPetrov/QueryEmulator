@@ -1,6 +1,7 @@
 package com.emulator.domain.soap.statementRequest;
 
 import com.emulator.domain.entity.AppUser;
+import com.emulator.domain.soap.SoapMessageList;
 import com.emulator.domain.soap.com.bssys.sbns.upg.ObjectFactory;
 import com.emulator.domain.soap.com.bssys.sbns.upg.SendRequests;
 import com.emulator.domain.soap.com.bssys.sbns.upg.SendRequestsResponse;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.ws.client.core.WebServiceTemplate;
 
 import javax.xml.bind.JAXBElement;
-import java.util.List;
 
 @Component
 public class StatementRequestManager {
@@ -74,22 +74,15 @@ public class StatementRequestManager {
 
 
     @Autowired
-    private List<String> soapMassageTrace;
+    private SoapMessageList soapMessageList;
 
     private void handleError(String response) {
-        String soapMessages = "";
-        for (String message : soapMassageTrace) {
-            soapMessages += ("\n" + message);
-        }
-        soapMassageTrace.clear();
-
-        String exceptionMessage = "";
-        exceptionMessage += response;
+        String exceptionMessage = response;
         exceptionMessage += "\n>>>>SAOP Messages:";
-        exceptionMessage += soapMessages;
+        exceptionMessage += soapMessageList.getAsString();
 
         SOAPServerStatementRequestException exception = new SOAPServerStatementRequestException(exceptionMessage);
-        exception.setSoapMessages(soapMessages);
+        exception.setSoapMessages(soapMessageList.getAsString());
         exception.setSoapResponse(response);
         throw exception;
     }

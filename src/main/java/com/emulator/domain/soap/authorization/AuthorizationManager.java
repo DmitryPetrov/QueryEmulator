@@ -1,6 +1,7 @@
 package com.emulator.domain.soap.authorization;
 
 import com.emulator.domain.entity.AppUser;
+import com.emulator.domain.soap.SoapMessageList;
 import com.emulator.domain.soap.authorization.login.ClientAuthData;
 import com.emulator.domain.soap.authorization.login.ClientAuthDataBuilder;
 import com.emulator.domain.soap.authorization.login.LoginResult;
@@ -24,7 +25,7 @@ public class AuthorizationManager {
     WebServiceTemplate webServiceTemplate;
 
     @Autowired
-    private List<String> soapMassageTrace;
+    private SoapMessageList soapMessageList;
 
     @Autowired
     ClientAuthDataBuilder clientAuthDataBuilder;
@@ -86,19 +87,12 @@ public class AuthorizationManager {
     private LoginResult getLoginResult(LoginResponse response) throws SOAPServerLoginException {
         String responseStr = response.getReturn();
         if (responseStr.equals("BAD_CREDENTIALS")) {
-            String soapMessages = "";
-            for (String message : soapMassageTrace) {
-                soapMessages += ("\n" + message);
-            }
-            soapMassageTrace.clear();
-
-            String exceptionMessage = "";
-            exceptionMessage += responseStr;
+            String exceptionMessage = responseStr;
             exceptionMessage += "\n>>>>SAOP Messages:";
-            exceptionMessage += soapMessages;
+            exceptionMessage += soapMessageList.getAsString();
 
             SOAPServerLoginException exception = new SOAPServerLoginException(exceptionMessage);
-            exception.setSoapMessages(soapMessages);
+            exception.setSoapMessages(soapMessageList.getAsString());
             exception.setSoapResponse(responseStr);
             throw exception;
         }

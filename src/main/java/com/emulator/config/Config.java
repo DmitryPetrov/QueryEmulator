@@ -86,11 +86,6 @@ public class Config {
         return docBuilder;
     }
 
-    @Bean(name = "soapMessageTrace")
-    public List<String> soapMessageTrace() {
-        return new ArrayList<>();
-    }
-
     private void disableSslVerification() {
         try {
             // Create a trust manager that does not validate certificate chains

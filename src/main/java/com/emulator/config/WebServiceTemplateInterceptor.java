@@ -1,5 +1,6 @@
 package com.emulator.config;
 
+import com.emulator.domain.soap.SoapMessageList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
@@ -7,7 +8,6 @@ import org.springframework.ws.context.MessageContext;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.List;
 
 public class WebServiceTemplateInterceptor implements ClientInterceptor {
 
@@ -35,7 +35,7 @@ public class WebServiceTemplateInterceptor implements ClientInterceptor {
     }
 
     @Autowired
-    private List<String> soapMessageTrace;
+    private SoapMessageList soapMessageList;
 
     private void printResponse(MessageContext messageContext) {
         try {
@@ -43,7 +43,7 @@ public class WebServiceTemplateInterceptor implements ClientInterceptor {
             messageContext.getResponse().writeTo(stream);
             String responseStr = new String(stream.toByteArray());
 
-            soapMessageTrace.add(responseStr);
+            soapMessageList.add(responseStr);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -55,7 +55,7 @@ public class WebServiceTemplateInterceptor implements ClientInterceptor {
             messageContext.getRequest().writeTo(stream);
             String responseStr = new String(stream.toByteArray());
 
-            soapMessageTrace.add(responseStr);
+            soapMessageList.add(responseStr);
         } catch (IOException e) {
             e.printStackTrace();
         }

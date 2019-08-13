@@ -1,5 +1,6 @@
 package com.emulator.domain.soap.getRequestStatus;
 
+import com.emulator.domain.soap.SoapMessageList;
 import com.emulator.domain.soap.com.bssys.sbns.upg.GetRequestStatusResponse;
 import com.emulator.exception.SOAPServerGetRequestStatusException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,6 @@ import javax.xml.parsers.DocumentBuilder;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 @Component
 public class GetRequestStatusResponseHandler {
@@ -94,22 +94,15 @@ public class GetRequestStatusResponseHandler {
 
 
     @Autowired
-    private List<String> soapMassageTrace;
+    private SoapMessageList soapMessageList;
 
     private void handleError(String response) {
-        String soapMessages = "";
-        for (String message : soapMassageTrace) {
-            soapMessages += ("\n" + message);
-        }
-        soapMassageTrace.clear();
-
-        String exceptionMessage = "";
-        exceptionMessage += response;
+        String exceptionMessage = response;
         exceptionMessage += "\n>>>>SAOP Messages:";
-        exceptionMessage += soapMessages;
+        exceptionMessage += soapMessageList.getAsString();
 
         SOAPServerGetRequestStatusException exception = new SOAPServerGetRequestStatusException(exceptionMessage);
-        exception.setSoapMessages(soapMessages);
+        exception.setSoapMessages(soapMessageList.getAsString());
         exception.setSoapResponse(response);
         throw exception;
     }
