@@ -11,7 +11,7 @@ public class ResponseBodyRequestList extends ResponseBodyData{
 
     public List<RequestParameters> getRequestList() {
         if (this.requestList == null) {
-            return new ArrayList<>();
+            this.requestList = new ArrayList<>();
         }
         return requestList;
     }
