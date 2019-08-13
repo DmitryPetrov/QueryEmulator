@@ -44,7 +44,7 @@ public class StatementRequestMessageBuilder {
 
 
     @Autowired
-    DocumentBuilder docBuilder;
+    private DocumentBuilder docBuilder;
 
     public String build(StatementRequestData data) {
         return buildStatementRequest(data);
@@ -133,7 +133,7 @@ public class StatementRequestMessageBuilder {
 
 
     @Autowired
-    Transformer transformer;
+    private Transformer transformer;
 
     private String toString(Node element) {
         DOMSource source = new DOMSource(element);

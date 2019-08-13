@@ -97,9 +97,11 @@ public class GetRequestStatusResult {
         return getRequestStatusResultStateResponse;
     }
 
-    public void setGetRequestStatusResultStateResponse(GetRequestStatusResultStateResponse getRequestStatusResultStateResponse) {
-        if(getRequestStatusResultStateResponse == null) {
-            throw new ParameterIsNullException("com.emulator.domain.soap.getrequeststatus.GetRequestStatusResult must not be null.");
+    public void setGetRequestStatusResultStateResponse(GetRequestStatusResultStateResponse
+                                                               getRequestStatusResultStateResponse) {
+        if (getRequestStatusResultStateResponse == null) {
+            throw new ParameterIsNullException("com.emulator.domain.soap.getrequeststatus.GetRequestStatusResult must" +
+                    " not be null.");
         }
         this.getRequestStatusResultStateResponse = getRequestStatusResultStateResponse;
     }

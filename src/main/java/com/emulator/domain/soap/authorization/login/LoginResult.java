@@ -2,7 +2,7 @@ package com.emulator.domain.soap.authorization.login;
 
 public class LoginResult {
 
-    private String sessionId;
+    private String sessionId = "";
 
     public String getSessionId() {
         return sessionId;

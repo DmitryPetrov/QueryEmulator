@@ -19,16 +19,16 @@ import java.util.List;
 @Component
 public class AuthorizationManager {
     @Autowired
-    ObjectFactory factory;
+    private ObjectFactory factory;
 
     @Autowired
-    WebServiceTemplate webServiceTemplate;
+    private WebServiceTemplate webServiceTemplate;
 
     @Autowired
     private SoapMessageList soapMessageList;
 
     @Autowired
-    ClientAuthDataBuilder clientAuthDataBuilder;
+    private ClientAuthDataBuilder clientAuthDataBuilder;
 
     public AppUser authorization(AppUser user) throws IOException {
         PreLoginResult preLoginResult = callPreLogin(user);

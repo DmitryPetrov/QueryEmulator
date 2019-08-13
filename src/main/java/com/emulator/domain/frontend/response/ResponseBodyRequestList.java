@@ -5,7 +5,7 @@ import com.emulator.domain.entity.RequestParameters;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ResponseBodyRequestList extends ResponseBodyData{
+public class ResponseBodyRequestList extends ResponseBodyData {
 
     private List<RequestParameters> requestList;
 

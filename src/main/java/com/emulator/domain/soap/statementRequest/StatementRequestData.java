@@ -219,7 +219,8 @@ public class StatementRequestData extends RequestParameters {
     }
 
     public void setSignCollectionBankMessage(String signCollectionBankMessage) {
-        this.signCollectionBankMessage = checkNull(signCollectionBankMessage, SING_COLLECTION_BANK_MESSAGE_DEFAULT_VALUE);
+        this.signCollectionBankMessage = checkNull(signCollectionBankMessage,
+                SING_COLLECTION_BANK_MESSAGE_DEFAULT_VALUE);
     }
 
     public String getSignCollectionDigestName() {

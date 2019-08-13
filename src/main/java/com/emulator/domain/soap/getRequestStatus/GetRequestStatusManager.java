@@ -14,10 +14,10 @@ import java.io.IOException;
 public class GetRequestStatusManager {
 
     @Autowired
-    ObjectFactory factory;
+    private ObjectFactory factory;
 
     @Autowired
-    WebServiceTemplate webServiceTemplate;
+    private WebServiceTemplate webServiceTemplate;
 
     public GetRequestStatusResult runGetRequestStatus(AppUser user, String requestId) throws IOException,
             SAXException {
@@ -38,7 +38,7 @@ public class GetRequestStatusManager {
     }
 
     @Autowired
-    GetRequestStatusResponseHandler responseHandler;
+    private GetRequestStatusResponseHandler responseHandler;
 
     private GetRequestStatusResult getGetRequestStatusResult(JAXBElement<GetRequestStatusResponse> response)
             throws IOException, SAXException {

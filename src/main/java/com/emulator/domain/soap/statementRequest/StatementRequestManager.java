@@ -18,10 +18,10 @@ public class StatementRequestManager {
     private static final String NODE_NAME_WITH_REQUEST_MESSAGE = "ns2:requests";
 
     @Autowired
-    WebServiceTemplate webServiceTemplate;
+    private WebServiceTemplate webServiceTemplate;
 
     @Autowired
-    StatementRequestMessageBuilder requestMessageBuilder;
+    private StatementRequestMessageBuilder requestMessageBuilder;
 
     public StatementRequestResult runStatementRequest(AppUser user, StatementRequestData data) throws
             SOAPServerStatementRequestException {
@@ -38,7 +38,7 @@ public class StatementRequestManager {
 
 
     @Autowired
-    ObjectFactory factory;
+    private ObjectFactory factory;
 
     private JAXBElement<SendRequests> buildRequest(AppUser user) {
         SendRequests request = factory.createSendRequests();
