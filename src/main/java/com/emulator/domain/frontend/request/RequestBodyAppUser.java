@@ -1,4 +1,4 @@
-package com.emulator.domain.frontend.requestBody;
+package com.emulator.domain.frontend.request;
 
 import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.entity.RequestParameters;

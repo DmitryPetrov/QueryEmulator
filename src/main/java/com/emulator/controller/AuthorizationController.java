@@ -2,7 +2,7 @@ package com.emulator.controller;
 
 import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.entity.RequestParameters;
-import com.emulator.domain.frontend.requestBody.RequestBodyAppUser;
+import com.emulator.domain.frontend.request.RequestBodyAppUser;
 import com.emulator.domain.frontend.response.ResponseBodyData;
 import com.emulator.domain.frontend.response.ResponseBodySOAPRequestStatus;
 import com.emulator.domain.soap.SOAPClient;
