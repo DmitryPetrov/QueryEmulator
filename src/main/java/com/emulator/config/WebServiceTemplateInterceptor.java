@@ -13,19 +13,19 @@ public class WebServiceTemplateInterceptor implements ClientInterceptor {
 
     @Override
     public boolean handleRequest(MessageContext messageContext) throws WebServiceClientException {
-        printRequest(messageContext);
+        saveRequestMessage(messageContext);
         return true;
     }
 
     @Override
     public boolean handleResponse(MessageContext messageContext) throws WebServiceClientException {
-        printResponse(messageContext);
+        saveResponseMessage(messageContext);
         return true;
     }
 
     @Override
     public boolean handleFault(MessageContext messageContext) throws WebServiceClientException {
-        printResponse(messageContext);
+        saveResponseMessage(messageContext);
         return true;
     }
 
@@ -37,24 +37,20 @@ public class WebServiceTemplateInterceptor implements ClientInterceptor {
     @Autowired
     private SoapMessageList soapMessageList;
 
-    private void printResponse(MessageContext messageContext) {
-        try {
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+    private void saveResponseMessage(MessageContext messageContext) {
+        try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
             messageContext.getResponse().writeTo(stream);
             String responseStr = new String(stream.toByteArray());
-
             soapMessageList.add(responseStr);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void printRequest(MessageContext messageContext) {
-        try {
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+    private void saveRequestMessage(MessageContext messageContext) {
+        try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
             messageContext.getRequest().writeTo(stream);
             String responseStr = new String(stream.toByteArray());
-
             soapMessageList.add(responseStr);
         } catch (IOException e) {
             e.printStackTrace();
