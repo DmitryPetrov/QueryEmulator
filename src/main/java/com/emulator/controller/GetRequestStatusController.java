@@ -5,6 +5,7 @@ import com.emulator.domain.entity.RequestParameters;
 import com.emulator.domain.frontend.response.ResponseBodyData;
 import com.emulator.domain.frontend.response.ResponseBodySOAPRequestStatus;
 import com.emulator.domain.soap.SOAPClient;
+import com.emulator.domain.soap.getRequestStatus.GetRequestStatusResult;
 import com.emulator.exception.BadRequestParameterException;
 import com.emulator.exception.SOAPServerBadResponseException;
 import com.emulator.exception.SOAPServerGetRequestStatusException;
@@ -36,8 +37,8 @@ public class GetRequestStatusController extends AbstractController {
 
             checkRequestId(httpSession, requestId);
 
-            soapClient.sendGetRequestStatus(user, requestId);
-            return getSOAPRequestSuccessResponse("requestId");
+            GetRequestStatusResult result = soapClient.sendGetRequestStatus(user, requestId);
+            return getSOAPRequestSuccessResponse(result);
         } catch (SOAPServerGetRequestStatusException e) {
             e.printStackTrace();
             return getSOAPRequestFailResponse(e);
@@ -50,11 +51,17 @@ public class GetRequestStatusController extends AbstractController {
         }
     }
 
+    protected ResponseBodySOAPRequestStatus getSOAPRequestSuccessResponse(GetRequestStatusResult requestResult) {
+        ResponseBodySOAPRequestStatus result = getSOAPRequestSuccessResponse("");
+        result.setObject(requestResult);
+        return result;
+    }
+
     @Override
     protected ResponseBodySOAPRequestStatus getSOAPRequestSuccessResponse(String message) {
         ResponseBodySOAPRequestStatus result = new ResponseBodySOAPRequestStatus();
         result.setStatus("OK");
-        result.setMessage("GetRequestStatus to SOAP server is success. requestID=" + message);
+        result.setMessage("GetRequestStatus to SOAP server is success." + message);
         return result;
     }
 

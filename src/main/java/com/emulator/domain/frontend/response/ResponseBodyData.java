@@ -4,6 +4,7 @@ public class ResponseBodyData {
 
     private String status;
     private String message;
+    private Object object;
 
     public String getStatus() {
         return status;
@@ -21,5 +22,11 @@ public class ResponseBodyData {
         this.message = message;
     }
 
+    public Object getObject() {
+        return object;
+    }
 
+    public void setObject(Object object) {
+        this.object = object;
+    }
 }
