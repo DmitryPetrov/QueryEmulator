@@ -76,7 +76,7 @@ public class StatementRequestManager {
     @Autowired
     private List<String> soapMassageTrace;
 
-    private void handleError(String response) throws SOAPServerStatementRequestException {
+    private void handleError(String response) {
         String soapMessages = "";
         for (String message : soapMassageTrace) {
             soapMessages += ("\n" + message);
