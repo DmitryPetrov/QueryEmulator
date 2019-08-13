@@ -10,13 +10,13 @@ public class AppUser{
 
     public AppUser(String userName, String password, String sessionId) {
         if (userName == null) {
-            throw new ParameterIsNullException("userName must not be 'null'");
+            throw new ParameterIsNullException("AppUser.userName must not be 'null'");
         }
         if (password == null) {
-            throw new ParameterIsNullException("password must not be 'null'");
+            throw new ParameterIsNullException("AppUser.password must not be 'null'");
         }
         if (sessionId == null) {
-            throw new ParameterIsNullException("sessionId must not be 'null'");
+            throw new ParameterIsNullException("AppUser.sessionId must not be 'null'");
         }
 
         this.userName = userName;
@@ -26,10 +26,10 @@ public class AppUser{
 
     public AppUser(AppUser user, String sessionId) {
         if (user == null) {
-            throw new ParameterIsNullException("user must not be 'null'");
+            throw new ParameterIsNullException("AppUser.AppUser must not be 'null'");
         }
         if (sessionId == null) {
-            throw new ParameterIsNullException("sessionId must not be 'null'");
+            throw new ParameterIsNullException("AppUser.sessionId must not be 'null'");
         }
         this.userName = user.getUserName();
         this.password = user.getPassword();
