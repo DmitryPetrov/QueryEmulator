@@ -35,3 +35,6 @@ build/
 src/main/resources/static/main.js
 src/main/resources/static/dev.js
 src/main/resources/static/prod.js
+
+#
+src/main/java/com/emulator/domain/soap/com/bssys/sbns/upg/
