@@ -21,7 +21,7 @@ public class StatementRequestManager {
     private WebServiceTemplate webServiceTemplate;
 
     @Autowired
-    private StatementRequestMessageBuilder requestMessageBuilder;
+    private MessageBuilder requestMessageBuilder;
 
     public StatementRequestResult runStatementRequest(AppUser user, StatementRequestData data) throws
             SOAPServerStatementRequestException {

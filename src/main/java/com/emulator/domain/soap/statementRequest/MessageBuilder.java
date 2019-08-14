@@ -13,7 +13,7 @@ import java.io.StringWriter;
 import java.util.List;
 
 @Component
-public class StatementRequestMessageBuilder {
+public class MessageBuilder {
 
     private static final String REQUEST_NODE = "upg:Request";
     private static final String MODELS_NODE = "upg:Models";
