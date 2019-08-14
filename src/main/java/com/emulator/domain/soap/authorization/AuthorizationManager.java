@@ -100,7 +100,7 @@ public class AuthorizationManager {
     }
 
     private void checkErrors(String response) {
-        System.out.println("StatementRequest response: " + response);
+        System.out.println("Authorization response: " + response);
 
         if ((response.contains("BAD_CREDENTIALS"))
                 || (response.contains("Error"))) {
