@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 @Component
-class GetRequestStatusResponseHandler {
+class ResponseHandler {
 
     private static String MODEL_NODE_NAME = "upg:Model";
     private static int MODEL_NODE_INDEX = 0;

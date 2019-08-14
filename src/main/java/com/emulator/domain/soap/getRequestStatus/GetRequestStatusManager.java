@@ -38,7 +38,7 @@ public class GetRequestStatusManager {
     }
 
     @Autowired
-    private GetRequestStatusResponseHandler responseHandler;
+    private ResponseHandler responseHandler;
 
     private GetRequestStatusResult getGetRequestStatusResult(JAXBElement<GetRequestStatusResponse> response)
             throws IOException, SAXException {
