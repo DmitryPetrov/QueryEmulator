@@ -16,12 +16,12 @@ import java.io.IOException;
 import java.io.InputStream;
 
 @Component
-public class GetRequestStatusResponseHandler {
+class GetRequestStatusResponseHandler {
 
     private static String MODEL_NODE_NAME = "upg:Model";
     private static int MODEL_NODE_INDEX = 0;
 
-    public GetRequestStatusResult getResult(JAXBElement<GetRequestStatusResponse> response) throws IOException,
+    GetRequestStatusResult getResult(JAXBElement<GetRequestStatusResponse> response) throws IOException,
             SAXException {
         if (response == null) {
             throw new ParameterIsNullException("GetRequestStatusResponseHandler.response must not be 'null'");
@@ -30,7 +30,7 @@ public class GetRequestStatusResponseHandler {
         return parse(responseMessage);
     }
 
-    public GetRequestStatusResult parse(String responseMessage) throws IOException, SAXException {
+    private GetRequestStatusResult parse(String responseMessage) throws IOException, SAXException {
         checkErrors(responseMessage);
 
         Document document = toDocument(responseMessage);
@@ -62,7 +62,7 @@ public class GetRequestStatusResponseHandler {
     private void setStatusResponse(String xml, GetRequestStatusResult result) throws
             IOException, SAXException {
         Document document = toDocument(xml);
-        GetRequestStatusResultStateResponse stateResponse = result.getGetRequestStatusResultStateResponse();
+        StateResponse stateResponse = result.getStateResponse();
 
         NamedNodeMap attributes = document.getDocumentElement().getAttributes();
         stateResponse.setAttrXmlns(getAttrValue(attributes, stateResponse.ATTR_XMLNS_NAME));
