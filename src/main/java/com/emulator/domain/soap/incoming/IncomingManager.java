@@ -1,11 +1,11 @@
-package com.emulator.domain.soap.statementrequest;
+package com.emulator.domain.soap.incoming;
 
 import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.soap.SoapMessageList;
 import com.emulator.domain.soap.com.bssys.sbns.upg.ObjectFactory;
 import com.emulator.domain.soap.com.bssys.sbns.upg.SendRequests;
 import com.emulator.domain.soap.com.bssys.sbns.upg.SendRequestsResponse;
-import com.emulator.exception.SoapServerStatementRequestException;
+import com.emulator.exception.SoapServerIncomingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.client.core.WebServiceTemplate;
@@ -13,9 +13,7 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 import javax.xml.bind.JAXBElement;
 
 @Component
-public class StatementRequestManager {
-
-    private static final String NODE_NAME_WITH_REQUEST_MESSAGE = "ns2:requests";
+public class IncomingManager {
 
     @Autowired
     private WebServiceTemplate webServiceTemplate;
@@ -23,16 +21,14 @@ public class StatementRequestManager {
     @Autowired
     private MessageBuilder requestMessageBuilder;
 
-    public StatementRequestResult runStatementRequest(AppUser user, StatementRequestData data) {
-        String statementRequestMessage = requestMessageBuilder.build(data);
+    public IncomingResult runIncoming(AppUser user, IncomingData data) {
+        String requestMessage = requestMessageBuilder.build(data);
 
-        MessageHandler messageHandler = new MessageHandler(NODE_NAME_WITH_REQUEST_MESSAGE, statementRequestMessage);
-
-        JAXBElement<SendRequests> request = buildRequest(user);
+        JAXBElement<SendRequests> request = buildRequest(user, requestMessage);
         JAXBElement<SendRequestsResponse> response = null;
 
         response = (JAXBElement<SendRequestsResponse>) webServiceTemplate
-                .marshalSendAndReceive(request, messageHandler);
+                .marshalSendAndReceive(request);
 
         return getResult(response);
     }
@@ -41,15 +37,15 @@ public class StatementRequestManager {
     @Autowired
     private ObjectFactory factory;
 
-    private JAXBElement<SendRequests> buildRequest(AppUser user) {
+    private JAXBElement<SendRequests> buildRequest(AppUser user, String message) {
         SendRequests request = factory.createSendRequests();
         request.setSessionId(user.getSessionId());
-        request.getRequests().add("");
+        request.getRequests().add(message);
 
         return factory.createSendRequests(request);
     }
 
-    private StatementRequestResult getResult(JAXBElement<SendRequestsResponse> response) {
+    private IncomingResult getResult(JAXBElement<SendRequestsResponse> response) {
         String responseMessage = "";
         for (String responseLine : response.getValue().getReturn()) {
             responseMessage += responseLine;
@@ -57,13 +53,13 @@ public class StatementRequestManager {
 
         checkErrors(responseMessage);
 
-        StatementRequestResult result = new StatementRequestResult();
+        IncomingResult result = new IncomingResult();
         result.setRequestId(responseMessage);
         return result;
     }
 
     private void checkErrors(String response) {
-        System.out.println("StatementRequest response: " + response);
+        System.out.println("Incoming response: " + response);
 
         if ((response.contains("NONEXISTENT SESSION"))
                 || (response.contains("Error"))) {
@@ -80,11 +76,10 @@ public class StatementRequestManager {
         exceptionMessage += "\n>>>>SAOP Messages:";
         exceptionMessage += soapMessageList.getAsString();
 
-        SoapServerStatementRequestException exception = new SoapServerStatementRequestException(exceptionMessage);
+        SoapServerIncomingException exception = new SoapServerIncomingException(exceptionMessage);
         exception.setSoapMessages(soapMessageList.getAsString());
         exception.setSoapResponse(response);
         throw exception;
     }
-
 
 }

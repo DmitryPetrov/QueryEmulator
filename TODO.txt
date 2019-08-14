@@ -1,2 +1,7 @@
 удалить метод interceptor() в com.emulator.config.Config
-savepoint
+StatementRequestData дефолтные параметры в объявлении переменных
+StatementRequestData файнал поля для максимальных длин строк
+перенести фанал поля из statementrequest.MessageBuilder в StatementRequestData
+StatementRequestData вызывать checkStringLength() с переменными
+сделать Incoming.docType как enum
+RequestParameters throws декларации
