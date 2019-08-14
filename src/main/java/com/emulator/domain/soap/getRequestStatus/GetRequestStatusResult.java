@@ -24,7 +24,7 @@ public class GetRequestStatusResult {
     private String attrSender = "";
     private String attrVersion = "";
 
-    private GetRequestStatusResultStateResponse getRequestStatusResultStateResponse;
+    private StateResponse stateResponse;
 
     public String getNamespaceUpg() {
         return namespaceUpg;
@@ -90,19 +90,19 @@ public class GetRequestStatusResult {
         this.attrVersion = attrVersion;
     }
 
-    public GetRequestStatusResultStateResponse getGetRequestStatusResultStateResponse() {
-        if (getRequestStatusResultStateResponse == null) {
-            this.getRequestStatusResultStateResponse = new GetRequestStatusResultStateResponse();
+    public StateResponse getStateResponse() {
+        if (stateResponse == null) {
+            this.stateResponse = new StateResponse();
         }
-        return getRequestStatusResultStateResponse;
+        return stateResponse;
     }
 
-    public void setGetRequestStatusResultStateResponse(GetRequestStatusResultStateResponse
-                                                               getRequestStatusResultStateResponse) {
-        if (getRequestStatusResultStateResponse == null) {
+    public void setStateResponse(StateResponse
+                                         stateResponse) {
+        if (stateResponse == null) {
             throw new ParameterIsNullException("com.emulator.domain.soap.getrequeststatus.GetRequestStatusResult must" +
                     " not be null.");
         }
-        this.getRequestStatusResultStateResponse = getRequestStatusResultStateResponse;
+        this.stateResponse = stateResponse;
     }
 }

@@ -1,6 +1,6 @@
 package com.emulator.domain.soap.getrequeststatus;
 
-public class GetRequestStatusResultStateResponse {
+public class StateResponse {
 
     public final String ATTR_XMLNS_NAME = "xmlns";
 
