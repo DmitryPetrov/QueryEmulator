@@ -14,7 +14,7 @@ class MessageHandler implements WebServiceMessageCallback {
     private String nodeName;
     private String message;
 
-    public MessageHandler(String nodeName, String message) {
+    MessageHandler(String nodeName, String message) {
         this.nodeName = nodeName;
         this.message = message;
     }
