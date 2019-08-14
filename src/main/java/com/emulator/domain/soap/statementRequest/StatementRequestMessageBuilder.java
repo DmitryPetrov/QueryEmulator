@@ -104,8 +104,8 @@ public class StatementRequestMessageBuilder {
         Element accounts = doc.createElement(ACCOUNTS_NODE);
         parentElement.appendChild(accounts);
 
-        List<StatementRequestDataAccount> accountList = data.getAccounts();
-        for (StatementRequestDataAccount accountData : accountList) {
+        List<DataAccount> accountList = data.getAccounts();
+        for (DataAccount accountData : accountList) {
             Element acc = doc.createElement(ACC_NODE);
             accounts.appendChild(acc);
 

@@ -49,7 +49,7 @@ public class StatementRequestData extends RequestParameters {
     private String signCollectionBankMessage = "";
     private String signCollectionDigestName = "";
     private String sign = "";
-    private List<StatementRequestDataAccount> accounts = new ArrayList<>();
+    private List<DataAccount> accounts = new ArrayList<>();
 
     public final String requestAttrRequestId = "1852ccae-e9b2-48bf-adbd-6027653f194d";
     public final String requestAttrVersion = "1";
@@ -72,7 +72,7 @@ public class StatementRequestData extends RequestParameters {
         checkStringLength("orgName", this.orgName, 355);
         checkStringLength("signCollectionDigestName", this.signCollectionDigestName, 255);
 
-        for (StatementRequestDataAccount accountData : this.accounts) {
+        for (DataAccount accountData : this.accounts) {
             accountData.check();
         }
     }
@@ -239,11 +239,11 @@ public class StatementRequestData extends RequestParameters {
         this.sign = checkNull(sign, SIGN_DEFAULT_VALUE);
     }
 
-    public List<StatementRequestDataAccount> getAccounts() {
+    public List<DataAccount> getAccounts() {
         return accounts;
     }
 
-    public void setAccounts(List<StatementRequestDataAccount> accounts) {
+    public void setAccounts(List<DataAccount> accounts) {
         this.accounts = accounts;
     }
 }

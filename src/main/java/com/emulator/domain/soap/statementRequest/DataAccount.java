@@ -3,7 +3,7 @@ package com.emulator.domain.soap.statementrequest;
 import com.emulator.domain.entity.RequestParameters;
 import com.emulator.exception.RequestParameterLengthException;
 
-public class StatementRequestDataAccount extends RequestParameters {
+public class DataAccount extends RequestParameters {
 
     private final String ACCOUNT_DEFAULT_VALUE = "40702810800000005897";
     private final String BANK_BIC_DEFAULT_VALUE = "044030861";
