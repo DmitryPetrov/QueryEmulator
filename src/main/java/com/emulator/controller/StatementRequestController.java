@@ -3,12 +3,12 @@ package com.emulator.controller;
 import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.entity.RequestParameters;
 import com.emulator.domain.frontend.response.ResponseBodyData;
-import com.emulator.exception.SOAPServerBadResponseException;
+import com.emulator.exception.SoapServerBadResponseException;
 import com.emulator.domain.soap.statementrequest.StatementRequestData;
-import com.emulator.domain.frontend.response.ResponseBodySOAPRequestStatus;
-import com.emulator.domain.soap.SOAPClient;
+import com.emulator.domain.frontend.response.ResponseBodySoapRequestStatus;
+import com.emulator.domain.soap.SoapClient;
 import com.emulator.exception.RequestParameterLengthException;
-import com.emulator.exception.SOAPServerStatementRequestException;
+import com.emulator.exception.SoapServerStatementRequestException;
 import com.emulator.domain.soap.statementrequest.StatementRequestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,7 +21,7 @@ import java.util.List;
 public class StatementRequestController extends AbstractController {
 
     @Autowired
-    private SOAPClient soapClient;
+    private SoapClient soapClient;
 
     @RequestMapping(value = "/sendRequests/statementRequest", method = RequestMethod.POST)
     @ResponseBody
@@ -39,10 +39,10 @@ public class StatementRequestController extends AbstractController {
             List<RequestParameters> requestList = (List<RequestParameters>) httpSession.getAttribute("requestList");
             requestList.add(data);
 
-            return getSOAPRequestSuccessResponse(result.getRequestId());
-        } catch (SOAPServerStatementRequestException e) {
+            return getSoapRequestSuccessResponse(result.getRequestId());
+        } catch (SoapServerStatementRequestException e) {
             e.printStackTrace();
-            return getSOAPRequestFailResponse(e);
+            return getSoapRequestFailResponse(e);
         } catch (RequestParameterLengthException e) {
             e.printStackTrace();
             return getParameterLengthErrorResponse(e);
@@ -53,18 +53,18 @@ public class StatementRequestController extends AbstractController {
     }
 
     @Override
-    protected ResponseBodySOAPRequestStatus getSOAPRequestSuccessResponse(String message) {
-        ResponseBodySOAPRequestStatus result = new ResponseBodySOAPRequestStatus();
+    protected ResponseBodySoapRequestStatus getSoapRequestSuccessResponse(String message) {
+        ResponseBodySoapRequestStatus result = new ResponseBodySoapRequestStatus();
         result.setStatus("OK");
-        result.setMessage("StatementRequest to SOAP server is success. requestID=" + message);
+        result.setMessage("StatementRequest to Soap server is success. requestID=" + message);
         return result;
     }
 
     @Override
-    protected ResponseBodySOAPRequestStatus getSOAPRequestFailResponse(SOAPServerBadResponseException exception) {
-        ResponseBodySOAPRequestStatus result = new ResponseBodySOAPRequestStatus();
+    protected ResponseBodySoapRequestStatus getSoapRequestFailResponse(SoapServerBadResponseException exception) {
+        ResponseBodySoapRequestStatus result = new ResponseBodySoapRequestStatus();
         result.setStatus("ERROR");
-        result.setMessage("StatementRequest to SOAP server is fail. message=" + exception.getSoapResponse());
+        result.setMessage("StatementRequest to Soap server is fail. message=" + exception.getSoapResponse());
         result.setSoapMessages("<SoapMessages>" + exception.getSoapMessages() + "</SoapMessages>");
         return result;
     }

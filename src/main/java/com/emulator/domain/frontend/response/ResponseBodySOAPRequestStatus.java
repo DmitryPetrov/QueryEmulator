@@ -1,6 +1,6 @@
 package com.emulator.domain.frontend.response;
 
-public class ResponseBodySOAPRequestStatus extends ResponseBodyData {
+public class ResponseBodySoapRequestStatus extends ResponseBodyData {
 
     private String soapMessages;
 

@@ -1,12 +1,12 @@
 package com.emulator.exception;
 
-public abstract class SOAPServerBadResponseException extends RuntimeException {
+public abstract class SoapServerBadResponseException extends RuntimeException {
 
     private String message;
     private String soapMessages;
     private String soapResponse;
 
-    public SOAPServerBadResponseException(String message) {
+    public SoapServerBadResponseException(String message) {
         super(message);
         this.message = message;
     }

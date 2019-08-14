@@ -7,7 +7,7 @@ import com.emulator.domain.soap.authorization.login.ClientAuthDataBuilder;
 import com.emulator.domain.soap.authorization.login.LoginResult;
 import com.emulator.domain.soap.authorization.prelogin.PreLoginResult;
 import com.emulator.domain.soap.com.bssys.sbns.upg.*;
-import com.emulator.exception.SOAPServerLoginException;
+import com.emulator.exception.SoapServerLoginException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.client.core.WebServiceTemplate;
@@ -116,7 +116,7 @@ public class AuthorizationManager {
         exceptionMessage += "\n>>>>SAOP Messages:";
         exceptionMessage += soapMessageList.getAsString();
 
-        SOAPServerLoginException exception = new SOAPServerLoginException(exceptionMessage);
+        SoapServerLoginException exception = new SoapServerLoginException(exceptionMessage);
         exception.setSoapMessages(soapMessageList.getAsString());
         exception.setSoapResponse(responseMessage);
         throw exception;

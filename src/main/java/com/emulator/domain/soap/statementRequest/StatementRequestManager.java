@@ -5,7 +5,7 @@ import com.emulator.domain.soap.SoapMessageList;
 import com.emulator.domain.soap.com.bssys.sbns.upg.ObjectFactory;
 import com.emulator.domain.soap.com.bssys.sbns.upg.SendRequests;
 import com.emulator.domain.soap.com.bssys.sbns.upg.SendRequestsResponse;
-import com.emulator.exception.SOAPServerStatementRequestException;
+import com.emulator.exception.SoapServerStatementRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.client.core.WebServiceTemplate;
@@ -24,7 +24,7 @@ public class StatementRequestManager {
     private MessageBuilder requestMessageBuilder;
 
     public StatementRequestResult runStatementRequest(AppUser user, StatementRequestData data) throws
-            SOAPServerStatementRequestException {
+            SoapServerStatementRequestException {
         String statementRequestMessage = requestMessageBuilder.build(data);
 
         MessageHandler messageHandler = new MessageHandler(NODE_NAME_WITH_REQUEST_MESSAGE, statementRequestMessage);
@@ -51,7 +51,7 @@ public class StatementRequestManager {
     }
 
     private StatementRequestResult getResult(JAXBElement<SendRequestsResponse> response) throws
-            SOAPServerStatementRequestException {
+            SoapServerStatementRequestException {
         String responseMessage = "";
         for (String responseLine : response.getValue().getReturn()) {
             responseMessage += responseLine;
@@ -82,7 +82,7 @@ public class StatementRequestManager {
         exceptionMessage += "\n>>>>SAOP Messages:";
         exceptionMessage += soapMessageList.getAsString();
 
-        SOAPServerStatementRequestException exception = new SOAPServerStatementRequestException(exceptionMessage);
+        SoapServerStatementRequestException exception = new SoapServerStatementRequestException(exceptionMessage);
         exception.setSoapMessages(soapMessageList.getAsString());
         exception.setSoapResponse(response);
         throw exception;

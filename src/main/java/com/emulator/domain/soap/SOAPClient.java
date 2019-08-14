@@ -14,7 +14,7 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 
 @Component
-public class SOAPClient {
+public class SoapClient {
 
     @Autowired
     AuthorizationManager authManager;

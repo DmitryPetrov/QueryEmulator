@@ -3,7 +3,7 @@ package com.emulator.domain.soap.getrequeststatus;
 import com.emulator.domain.soap.SoapMessageList;
 import com.emulator.domain.soap.com.bssys.sbns.upg.GetRequestStatusResponse;
 import com.emulator.exception.ParameterIsNullException;
-import com.emulator.exception.SOAPServerGetRequestStatusException;
+import com.emulator.exception.SoapServerGetRequestStatusException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.*;
@@ -115,7 +115,7 @@ class ResponseHandler {
         exceptionMessage += "\n>>>>SAOP Messages:";
         exceptionMessage += soapMessageList.getAsString();
 
-        SOAPServerGetRequestStatusException exception = new SOAPServerGetRequestStatusException(exceptionMessage);
+        SoapServerGetRequestStatusException exception = new SoapServerGetRequestStatusException(exceptionMessage);
         exception.setSoapMessages(soapMessageList.getAsString());
         exception.setSoapResponse(response);
         throw exception;

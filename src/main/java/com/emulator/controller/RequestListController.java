@@ -4,8 +4,8 @@ import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.entity.RequestParameters;
 import com.emulator.domain.frontend.response.ResponseBodyData;
 import com.emulator.domain.frontend.response.ResponseBodyRequestList;
-import com.emulator.domain.frontend.response.ResponseBodySOAPRequestStatus;
-import com.emulator.exception.SOAPServerBadResponseException;
+import com.emulator.domain.frontend.response.ResponseBodySoapRequestStatus;
+import com.emulator.exception.SoapServerBadResponseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,12 +44,12 @@ public class RequestListController extends AbstractController{
     }
 
     @Override
-    protected ResponseBodySOAPRequestStatus getSOAPRequestSuccessResponse(String sessionId) {
+    protected ResponseBodySoapRequestStatus getSoapRequestSuccessResponse(String sessionId) {
         return null;
     }
 
     @Override
-    protected ResponseBodySOAPRequestStatus getSOAPRequestFailResponse(SOAPServerBadResponseException exception) {
+    protected ResponseBodySoapRequestStatus getSoapRequestFailResponse(SoapServerBadResponseException exception) {
         return null;
     }
 

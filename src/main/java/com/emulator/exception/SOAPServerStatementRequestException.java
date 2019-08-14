@@ -1,8 +1,8 @@
 package com.emulator.exception;
 
-public class SOAPServerStatementRequestException extends SOAPServerBadResponseException {
+public class SoapServerStatementRequestException extends SoapServerBadResponseException {
 
-    public SOAPServerStatementRequestException(String message) {
+    public SoapServerStatementRequestException(String message) {
         super(message);
     }
 
