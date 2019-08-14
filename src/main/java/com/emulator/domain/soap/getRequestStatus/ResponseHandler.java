@@ -17,6 +17,7 @@ import java.io.InputStream;
 
 @Component
 class ResponseHandler {
+    private static String NOT_PROCESSED_YET = "NOT PROCESSED YET";
 
     private static String MODEL_NODE_NAME = "upg:Model";
     private static int MODEL_NODE_INDEX = 0;
@@ -32,6 +33,12 @@ class ResponseHandler {
 
     private GetRequestStatusResult parse(String responseMessage) throws IOException, SAXException {
         checkErrors(responseMessage);
+
+        if (responseMessage.contains(NOT_PROCESSED_YET)) {
+            GetRequestStatusResult result = new GetRequestStatusResult();
+            result.setNotProcessedYet(true);
+            return result;
+        }
 
         Document document = toDocument(responseMessage);
         Element response = document.getDocumentElement();

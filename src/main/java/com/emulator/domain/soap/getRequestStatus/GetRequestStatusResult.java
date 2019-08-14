@@ -24,6 +24,8 @@ public class GetRequestStatusResult {
     private String attrSender = "";
     private String attrVersion = "";
 
+    private boolean notProcessedYet = false;
+
     private StateResponse stateResponse;
 
     public String getNamespaceUpg() {
@@ -90,6 +92,14 @@ public class GetRequestStatusResult {
         this.attrVersion = attrVersion;
     }
 
+    public boolean isNotProcessedYet() {
+        return notProcessedYet;
+    }
+
+    public void setNotProcessedYet(boolean notProcessedYet) {
+        this.notProcessedYet = true;
+    }
+
     public StateResponse getStateResponse() {
         if (stateResponse == null) {
             this.stateResponse = new StateResponse();
@@ -97,11 +107,10 @@ public class GetRequestStatusResult {
         return stateResponse;
     }
 
-    public void setStateResponse(StateResponse
-                                         stateResponse) {
+    public void setStateResponse(StateResponse stateResponse) {
         if (stateResponse == null) {
-            throw new ParameterIsNullException("com.emulator.domain.soap.getrequeststatus.GetRequestStatusResult must" +
-                    " not be null.");
+            throw new ParameterIsNullException("com.emulator.domain.soap.getrequeststatus.GetRequestStatusResult" +
+                    ".StateResponse must not be null.");
         }
         this.stateResponse = stateResponse;
     }
