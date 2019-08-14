@@ -13,7 +13,7 @@ import java.io.StringWriter;
 import java.util.List;
 
 @Component
-public class MessageBuilder {
+class MessageBuilder {
 
     private static final String REQUEST_NODE = "upg:Request";
     private static final String MODELS_NODE = "upg:Models";
@@ -46,7 +46,7 @@ public class MessageBuilder {
     @Autowired
     private DocumentBuilder docBuilder;
 
-    public String build(StatementRequestData data) {
+    String build(StatementRequestData data) {
         return buildStatementRequest(data);
     }
 
