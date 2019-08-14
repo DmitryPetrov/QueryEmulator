@@ -1,5 +1,1 @@
 удалить метод interceptor() в com.emulator.config.Config
-переделеть soapMessages в SOAPServerBadResponseException из строки в лист строк
-вынести ексепшены в пакет domain
-дефолтные поля аттрибутов StatementRequestData
-сделать наследников RequestParameters immutables
