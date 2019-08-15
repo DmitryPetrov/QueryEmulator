@@ -17,7 +17,7 @@ import java.util.List;
 @Controller
 public class RequestListController extends AbstractController{
 
-    @RequestMapping(value = "/requestsList", method = RequestMethod.GET)
+    @RequestMapping(value = "/requestList", method = RequestMethod.GET)
     @ResponseBody
     public ResponseBodyData runGetRequestStatus(HttpSession httpSession) {
         try {

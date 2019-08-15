@@ -4,6 +4,9 @@ import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.soap.authorization.AuthorizationManager;
 import com.emulator.domain.soap.getrequeststatus.GetRequestStatusManager;
 import com.emulator.domain.soap.getrequeststatus.GetRequestStatusResult;
+import com.emulator.domain.soap.incoming.IncomingData;
+import com.emulator.domain.soap.incoming.IncomingManager;
+import com.emulator.domain.soap.incoming.IncomingResult;
 import com.emulator.domain.soap.statementrequest.StatementRequestData;
 import com.emulator.domain.soap.statementrequest.StatementRequestManager;
 import com.emulator.domain.soap.statementrequest.StatementRequestResult;
@@ -36,5 +39,12 @@ public class SoapClient {
     public GetRequestStatusResult sendGetRequestStatus(AppUser user, String requestId) throws IOException,
             SAXException {
         return getRequestStatusManager.runGetRequestStatus(user, requestId);
+    }
+
+    @Autowired
+    IncomingManager incomingManager;
+
+    public IncomingResult sendIncoming(AppUser user, IncomingData data) {
+        return incomingManager.runIncoming(user, data);
     }
 }

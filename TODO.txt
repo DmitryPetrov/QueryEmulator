@@ -5,3 +5,5 @@ StatementRequestData файнал поля для максимальных дл�
 StatementRequestData вызывать checkStringLength() с переменными
 сделать Incoming.docType как enum
 RequestParameters throws декларации
+сделать переменную в application.properties, которая будет включать и выключать
+        печать soap сообщений в sout

@@ -39,20 +39,20 @@ public class IncomingData extends RequestParameters {
 
 
     private String attrRequestId = "";
-    private String attrVersion = VERSION_ATTR_DEFAULT_VALUE;
-    private String attrSender = SENDER_ATTR_DEFAULT_VALUE;
-    private String attrReceiver = RECEIVER_ATTR_DEFAULT_VALUE;
-    private String namespaceUpg = UPG_NAMESPACE_DEFAULT_VALUE;
-    private String namespaceXsi = XSI_NAMESPACE_DEFAULT_VALUE;
+    private String attrVersion = "";
+    private String attrSender = "";
+    private String attrReceiver = "";
+    private String namespaceUpg = "";
+    private String namespaceXsi = "";
 
-    private String attrStateRequest = STATE_REQUEST_ATTR_DEFAULT_VALUE;
-    private String attrIncomingId = INCOMING_ID_ATTR_DEFAULT_VALUE;
-    private String attrTimestamp = TIMESTAMP_ATTR_DEFAULT_VALUE;
+    private String attrStateRequest = "";
+    private String attrIncomingId = "";
+    private String attrTimestamp = "";
     private List<String> docTypes;
 
     {
         docTypes = new ArrayList<>();
-        docTypes.add(DOC_TYPE_DEFAULT_VALUE);
+        docTypes.add("");
     }
 
     @Override
@@ -62,5 +62,90 @@ public class IncomingData extends RequestParameters {
         for (String docType: docTypes) {
             checkStringLength(DOC_TYPE_NODE_NAME, docType, DOC_TYPE_MAX_LENGTH);
         }
+    }
+
+    public String getAttrRequestId() {
+        return attrRequestId;
+    }
+
+    public void setAttrRequestId(String attrRequestId) {
+        this.attrRequestId = checkNull(attrRequestId, RECEIVER_ATTR_DEFAULT_VALUE);
+    }
+
+    public String getAttrVersion() {
+        return attrVersion;
+    }
+
+    public void setAttrVersion(String attrVersion) {
+        this.attrVersion = checkNull(attrVersion, VERSION_ATTR_DEFAULT_VALUE);
+    }
+
+    public String getAttrSender() {
+        return attrSender;
+    }
+
+    public void setAttrSender(String attrSender) {
+        this.attrSender = checkNull(attrSender, SENDER_ATTR_DEFAULT_VALUE);
+    }
+
+    public String getAttrReceiver() {
+        return attrReceiver;
+    }
+
+    public void setAttrReceiver(String attrReceiver) {
+        this.attrReceiver = checkNull(attrReceiver, RECEIVER_ATTR_DEFAULT_VALUE);
+    }
+
+    public String getNamespaceUpg() {
+        return namespaceUpg;
+    }
+
+    public void setNamespaceUpg(String namespaceUpg) {
+        this.namespaceUpg = checkNull(namespaceUpg, UPG_NAMESPACE_DEFAULT_VALUE);
+    }
+
+    public String getNamespaceXsi() {
+        return namespaceXsi;
+    }
+
+    public void setNamespaceXsi(String namespaceXsi) {
+        this.namespaceXsi = checkNull(namespaceXsi, XSI_NAMESPACE_DEFAULT_VALUE);
+    }
+
+    public String getAttrStateRequest() {
+        return attrStateRequest;
+    }
+
+    public void setAttrStateRequest(String attrStateRequest) {
+        this.attrStateRequest = checkNull(attrStateRequest, STATE_REQUEST_ATTR_DEFAULT_VALUE);
+    }
+
+    public String getAttrIncomingId() {
+        return attrIncomingId;
+    }
+
+    public void setAttrIncomingId(String attrIncomingId) {
+        this.attrIncomingId = checkNull(attrIncomingId, INCOMING_ID_ATTR_DEFAULT_VALUE);
+    }
+
+    public String getAttrTimestamp() {
+        return attrTimestamp;
+    }
+
+    public void setAttrTimestamp(String attrTimestamp) {
+        this.attrTimestamp = checkNull(attrTimestamp, TIMESTAMP_ATTR_DEFAULT_VALUE);
+    }
+
+    public List<String> getDocTypes() {
+        return docTypes;
+    }
+
+    public void setDocTypes(List<String> docTypes) {
+        List<String> checkedDocTypes = new ArrayList<>();
+        for (int i = 0; i < docTypes.size(); i++) {
+            String docType = checkNull(docTypes.get(i), DOC_TYPE_DEFAULT_VALUE);
+            checkedDocTypes.add(docType);
+        }
+        this.docTypes = checkedDocTypes;
     }
 }

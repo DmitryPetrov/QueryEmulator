@@ -11,6 +11,8 @@ public class SoapMessageList {
     private List<String> messageList = new ArrayList<>();
 
     public void add(String message) {
+        System.out.println(">>>>SoapMessageList");
+        System.out.println(message);
         messageList.add(message);
     }
 

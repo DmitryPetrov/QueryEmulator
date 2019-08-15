@@ -12,7 +12,7 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.StringWriter;
 import java.util.List;
 
-@Component
+@Component("StatementRequestMessageBuilder")
 class MessageBuilder {
 
     private static final String REQUEST_NODE = "upg:Request";

@@ -5,8 +5,10 @@ import com.emulator.domain.soap.SoapMessageList;
 import com.emulator.domain.soap.com.bssys.sbns.upg.ObjectFactory;
 import com.emulator.domain.soap.com.bssys.sbns.upg.SendRequests;
 import com.emulator.domain.soap.com.bssys.sbns.upg.SendRequestsResponse;
+import com.emulator.domain.soap.RequestMessageHandler;
 import com.emulator.exception.SoapServerIncomingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.client.core.WebServiceTemplate;
 
@@ -19,16 +21,19 @@ public class IncomingManager {
     private WebServiceTemplate webServiceTemplate;
 
     @Autowired
+    @Qualifier("IncomingMessageBuilder")
     private MessageBuilder requestMessageBuilder;
 
     public IncomingResult runIncoming(AppUser user, IncomingData data) {
         String requestMessage = requestMessageBuilder.build(data);
 
+        RequestMessageHandler requestMessageHandler = new RequestMessageHandler("ns2:requests", requestMessage);
+
         JAXBElement<SendRequests> request = buildRequest(user, requestMessage);
         JAXBElement<SendRequestsResponse> response = null;
 
         response = (JAXBElement<SendRequestsResponse>) webServiceTemplate
-                .marshalSendAndReceive(request);
+                .marshalSendAndReceive(request, requestMessageHandler);
 
         return getResult(response);
     }
@@ -40,7 +45,7 @@ public class IncomingManager {
     private JAXBElement<SendRequests> buildRequest(AppUser user, String message) {
         SendRequests request = factory.createSendRequests();
         request.setSessionId(user.getSessionId());
-        request.getRequests().add(message);
+        request.getRequests().add("");
 
         return factory.createSendRequests(request);
     }

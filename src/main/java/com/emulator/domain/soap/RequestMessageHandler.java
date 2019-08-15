@@ -1,4 +1,4 @@
-package com.emulator.domain.soap.statementrequest;
+package com.emulator.domain.soap;
 
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.WebServiceMessageCallback;
@@ -9,12 +9,12 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.transform.dom.DOMSource;
 
-class MessageHandler implements WebServiceMessageCallback {
+public class RequestMessageHandler implements WebServiceMessageCallback {
 
     private String nodeName;
     private String message;
 
-    MessageHandler(String nodeName, String message) {
+    public RequestMessageHandler(String nodeName, String message) {
         this.nodeName = nodeName;
         this.message = message;
     }

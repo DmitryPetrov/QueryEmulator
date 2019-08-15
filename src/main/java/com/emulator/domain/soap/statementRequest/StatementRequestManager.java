@@ -1,12 +1,14 @@
 package com.emulator.domain.soap.statementrequest;
 
 import com.emulator.domain.entity.AppUser;
+import com.emulator.domain.soap.RequestMessageHandler;
 import com.emulator.domain.soap.SoapMessageList;
 import com.emulator.domain.soap.com.bssys.sbns.upg.ObjectFactory;
 import com.emulator.domain.soap.com.bssys.sbns.upg.SendRequests;
 import com.emulator.domain.soap.com.bssys.sbns.upg.SendRequestsResponse;
 import com.emulator.exception.SoapServerStatementRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.client.core.WebServiceTemplate;
 
@@ -21,18 +23,19 @@ public class StatementRequestManager {
     private WebServiceTemplate webServiceTemplate;
 
     @Autowired
+    @Qualifier("StatementRequestMessageBuilder")
     private MessageBuilder requestMessageBuilder;
 
     public StatementRequestResult runStatementRequest(AppUser user, StatementRequestData data) {
         String statementRequestMessage = requestMessageBuilder.build(data);
 
-        MessageHandler messageHandler = new MessageHandler(NODE_NAME_WITH_REQUEST_MESSAGE, statementRequestMessage);
+        RequestMessageHandler requestMessageHandler = new RequestMessageHandler(NODE_NAME_WITH_REQUEST_MESSAGE, statementRequestMessage);
 
         JAXBElement<SendRequests> request = buildRequest(user);
         JAXBElement<SendRequestsResponse> response = null;
 
         response = (JAXBElement<SendRequestsResponse>) webServiceTemplate
-                .marshalSendAndReceive(request, messageHandler);
+                .marshalSendAndReceive(request, requestMessageHandler);
 
         return getResult(response);
     }
