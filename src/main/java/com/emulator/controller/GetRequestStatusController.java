@@ -3,7 +3,6 @@ package com.emulator.controller;
 import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.entity.RequestParameters;
 import com.emulator.domain.frontend.response.ResponseBodyData;
-import com.emulator.domain.frontend.response.ResponseBodySoapRequestStatus;
 import com.emulator.domain.soap.SoapClient;
 import com.emulator.domain.soap.SoapMessageList;
 import com.emulator.domain.soap.getrequeststatus.GetRequestStatusResult;
@@ -52,8 +51,8 @@ public class GetRequestStatusController extends AbstractController {
         }
     }
 
-    protected ResponseBodySoapRequestStatus getSoapRequestSuccessResponse(GetRequestStatusResult requestResult) {
-        ResponseBodySoapRequestStatus result = getSoapRequestSuccessResponse("");
+    protected ResponseBodyData getSoapRequestSuccessResponse(GetRequestStatusResult requestResult) {
+        ResponseBodyData result = getSoapRequestSuccessResponse("");
         result.setObject(requestResult);
         return result;
     }
@@ -62,8 +61,8 @@ public class GetRequestStatusController extends AbstractController {
     SoapMessageList soapMessageList;
 
     @Override
-    protected ResponseBodySoapRequestStatus getSoapRequestSuccessResponse(String message) {
-        ResponseBodySoapRequestStatus result = new ResponseBodySoapRequestStatus();
+    protected ResponseBodyData getSoapRequestSuccessResponse(String message) {
+        ResponseBodyData result = new ResponseBodyData();
         result.setStatus("OK");
         result.setMessage("GetRequestStatus to Soap server is success." + message);
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
@@ -72,8 +71,8 @@ public class GetRequestStatusController extends AbstractController {
     }
 
     @Override
-    protected ResponseBodySoapRequestStatus getSoapRequestFailResponse(SoapServerBadResponseException exception) {
-        ResponseBodySoapRequestStatus result = new ResponseBodySoapRequestStatus();
+    protected ResponseBodyData getSoapRequestFailResponse(SoapServerBadResponseException exception) {
+        ResponseBodyData result = new ResponseBodyData();
         result.setStatus("ERROR");
         result.setMessage("GetRequestStatus to Soap server is fail. message=" + exception.getSoapResponse());
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());

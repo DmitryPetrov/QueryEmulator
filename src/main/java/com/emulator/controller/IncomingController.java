@@ -3,7 +3,6 @@ package com.emulator.controller;
 import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.entity.RequestParameters;
 import com.emulator.domain.frontend.response.ResponseBodyData;
-import com.emulator.domain.frontend.response.ResponseBodySoapRequestStatus;
 import com.emulator.domain.soap.SoapClient;
 import com.emulator.domain.soap.SoapMessageList;
 import com.emulator.domain.soap.incoming.IncomingData;
@@ -64,8 +63,8 @@ public class IncomingController extends AbstractController {
     SoapMessageList soapMessageList;
 
     @Override
-    protected ResponseBodySoapRequestStatus getSoapRequestSuccessResponse(String message) {
-        ResponseBodySoapRequestStatus result = new ResponseBodySoapRequestStatus();
+    protected ResponseBodyData getSoapRequestSuccessResponse(String message) {
+        ResponseBodyData result = new ResponseBodyData();
         result.setStatus("OK");
         result.setMessage("Incoming request to Soap server is success. requestID=" + message);
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
@@ -74,8 +73,8 @@ public class IncomingController extends AbstractController {
     }
 
     @Override
-    protected ResponseBodySoapRequestStatus getSoapRequestFailResponse(SoapServerBadResponseException exception) {
-        ResponseBodySoapRequestStatus result = new ResponseBodySoapRequestStatus();
+    protected ResponseBodyData getSoapRequestFailResponse(SoapServerBadResponseException exception) {
+        ResponseBodyData result = new ResponseBodyData();
         result.setStatus("ERROR");
         result.setMessage("Incoming request to Soap server is fail. message=" + exception.getSoapResponse());
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());

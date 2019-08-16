@@ -4,7 +4,6 @@ import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.entity.RequestParameters;
 import com.emulator.domain.frontend.request.RequestBodyAppUser;
 import com.emulator.domain.frontend.response.ResponseBodyData;
-import com.emulator.domain.frontend.response.ResponseBodySoapRequestStatus;
 import com.emulator.domain.soap.SoapClient;
 import com.emulator.domain.soap.SoapMessageList;
 import com.emulator.exception.RequestParameterLengthException;
@@ -55,8 +54,8 @@ public class AuthorizationController extends AbstractController{
     SoapMessageList soapMessageList;
 
     @Override
-    protected ResponseBodySoapRequestStatus getSoapRequestSuccessResponse(String sessionId) {
-        ResponseBodySoapRequestStatus result = new ResponseBodySoapRequestStatus();
+    protected ResponseBodyData getSoapRequestSuccessResponse(String sessionId) {
+        ResponseBodyData result = new ResponseBodyData();
         result.setStatus("OK");
         result.setMessage("LogIn to Soap server is success. sessionID=" + sessionId);
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
@@ -65,8 +64,8 @@ public class AuthorizationController extends AbstractController{
     }
 
     @Override
-    protected ResponseBodySoapRequestStatus getSoapRequestFailResponse(SoapServerBadResponseException exception) {
-        ResponseBodySoapRequestStatus result = new ResponseBodySoapRequestStatus();
+    protected ResponseBodyData getSoapRequestFailResponse(SoapServerBadResponseException exception) {
+        ResponseBodyData result = new ResponseBodyData();
         result.setStatus("ERROR");
         result.setMessage("LogIn to Soap server is fail. Message=" + exception.getSoapResponse());
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());

@@ -5,6 +5,7 @@ import com.emulator.exception.RequestParameterLengthException;
 public abstract class RequestParameters {
 
     private String requestId = "";
+    private String requestName = "";
 
     public String getRequestId() {
         return requestId;
@@ -12,6 +13,14 @@ public abstract class RequestParameters {
 
     public void setRequestId(String requestId) {
         this.requestId = requestId;
+    }
+
+    public String getRequestName() {
+        return requestName;
+    }
+
+    public void setRequestName(String requestName) {
+        this.requestName = requestName;
     }
 
     abstract public void check() throws RequestParameterLengthException;

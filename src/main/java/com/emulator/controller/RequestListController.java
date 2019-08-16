@@ -3,8 +3,6 @@ package com.emulator.controller;
 import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.entity.RequestParameters;
 import com.emulator.domain.frontend.response.ResponseBodyData;
-import com.emulator.domain.frontend.response.ResponseBodyRequestList;
-import com.emulator.domain.frontend.response.ResponseBodySoapRequestStatus;
 import com.emulator.exception.SoapServerBadResponseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,8 +33,8 @@ public class RequestListController extends AbstractController{
         }
     }
 
-    private ResponseBodyRequestList getSuccessResponse(List<RequestParameters> requestList) {
-        ResponseBodyRequestList response = new ResponseBodyRequestList();
+    private ResponseBodyData getSuccessResponse(List<RequestParameters> requestList) {
+        ResponseBodyData response = new ResponseBodyData();
         response.setStatus("OK");
         response.setMessage("Request list");
         response.setRequestList(requestList);
@@ -44,12 +42,12 @@ public class RequestListController extends AbstractController{
     }
 
     @Override
-    protected ResponseBodySoapRequestStatus getSoapRequestSuccessResponse(String sessionId) {
+    protected ResponseBodyData getSoapRequestSuccessResponse(String sessionId) {
         return null;
     }
 
     @Override
-    protected ResponseBodySoapRequestStatus getSoapRequestFailResponse(SoapServerBadResponseException exception) {
+    protected ResponseBodyData getSoapRequestFailResponse(SoapServerBadResponseException exception) {
         return null;
     }
 

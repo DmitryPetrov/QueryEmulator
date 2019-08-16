@@ -3,17 +3,19 @@ package com.emulator.controller;
 import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.entity.RequestParameters;
 import com.emulator.domain.frontend.response.ResponseBodyData;
-import com.emulator.domain.soap.SoapMessageList;
-import com.emulator.exception.SoapServerBadResponseException;
-import com.emulator.domain.soap.statementrequest.StatementRequestData;
-import com.emulator.domain.frontend.response.ResponseBodySoapRequestStatus;
 import com.emulator.domain.soap.SoapClient;
-import com.emulator.exception.RequestParameterLengthException;
-import com.emulator.exception.SoapServerStatementRequestException;
+import com.emulator.domain.soap.SoapMessageList;
+import com.emulator.domain.soap.statementrequest.StatementRequestData;
 import com.emulator.domain.soap.statementrequest.StatementRequestResult;
+import com.emulator.exception.RequestParameterLengthException;
+import com.emulator.exception.SoapServerBadResponseException;
+import com.emulator.exception.SoapServerStatementRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -60,8 +62,8 @@ public class StatementRequestController extends AbstractController {
     SoapMessageList soapMessageList;
 
     @Override
-    protected ResponseBodySoapRequestStatus getSoapRequestSuccessResponse(String message) {
-        ResponseBodySoapRequestStatus result = new ResponseBodySoapRequestStatus();
+    protected ResponseBodyData getSoapRequestSuccessResponse(String message) {
+        ResponseBodyData result = new ResponseBodyData();
         result.setStatus("OK");
         result.setMessage("StatementRequest to Soap server is success. requestID=" + message);
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
@@ -70,8 +72,8 @@ public class StatementRequestController extends AbstractController {
     }
 
     @Override
-    protected ResponseBodySoapRequestStatus getSoapRequestFailResponse(SoapServerBadResponseException exception) {
-        ResponseBodySoapRequestStatus result = new ResponseBodySoapRequestStatus();
+    protected ResponseBodyData getSoapRequestFailResponse(SoapServerBadResponseException exception) {
+        ResponseBodyData result = new ResponseBodyData();
         result.setStatus("ERROR");
         result.setMessage("StatementRequest to Soap server is fail. message=" + exception.getSoapResponse());
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
