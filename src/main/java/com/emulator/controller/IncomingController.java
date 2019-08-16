@@ -5,6 +5,7 @@ import com.emulator.domain.entity.RequestParameters;
 import com.emulator.domain.frontend.response.ResponseBodyData;
 import com.emulator.domain.frontend.response.ResponseBodySoapRequestStatus;
 import com.emulator.domain.soap.SoapClient;
+import com.emulator.domain.soap.SoapMessageList;
 import com.emulator.domain.soap.incoming.IncomingData;
 import com.emulator.domain.soap.incoming.IncomingResult;
 import com.emulator.exception.RequestParameterLengthException;
@@ -23,6 +24,9 @@ import java.util.List;
 @Controller
 public class IncomingController extends AbstractController {
 
+    private static final String REQUEST_NAME = "Incoming";
+
+
     @Autowired
     private SoapClient soapClient;
 
@@ -39,6 +43,7 @@ public class IncomingController extends AbstractController {
             IncomingResult result = soapClient.sendIncoming(user, data);
 
             data.setRequestId(result.getRequestId());
+            data.setRequestName(REQUEST_NAME);
             List<RequestParameters> requestList = (List<RequestParameters>) httpSession.getAttribute("requestList");
             requestList.add(data);
 
@@ -55,11 +60,16 @@ public class IncomingController extends AbstractController {
         }
     }
 
+    @Autowired
+    SoapMessageList soapMessageList;
+
     @Override
     protected ResponseBodySoapRequestStatus getSoapRequestSuccessResponse(String message) {
         ResponseBodySoapRequestStatus result = new ResponseBodySoapRequestStatus();
         result.setStatus("OK");
         result.setMessage("Incoming request to Soap server is success. requestID=" + message);
+        result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
+        soapMessageList.clearLastRequestMessageList();
         return result;
     }
 
@@ -68,7 +78,8 @@ public class IncomingController extends AbstractController {
         ResponseBodySoapRequestStatus result = new ResponseBodySoapRequestStatus();
         result.setStatus("ERROR");
         result.setMessage("Incoming request to Soap server is fail. message=" + exception.getSoapResponse());
-        result.setSoapMessages("<SoapMessages>" + exception.getSoapMessages() + "</SoapMessages>");
+        result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
+        soapMessageList.clearLastRequestMessageList();
         return result;
     }
 }

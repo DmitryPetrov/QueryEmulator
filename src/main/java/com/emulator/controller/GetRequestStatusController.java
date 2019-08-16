@@ -5,6 +5,7 @@ import com.emulator.domain.entity.RequestParameters;
 import com.emulator.domain.frontend.response.ResponseBodyData;
 import com.emulator.domain.frontend.response.ResponseBodySoapRequestStatus;
 import com.emulator.domain.soap.SoapClient;
+import com.emulator.domain.soap.SoapMessageList;
 import com.emulator.domain.soap.getrequeststatus.GetRequestStatusResult;
 import com.emulator.exception.BadRequestParameterException;
 import com.emulator.exception.SoapServerBadResponseException;
@@ -57,11 +58,16 @@ public class GetRequestStatusController extends AbstractController {
         return result;
     }
 
+    @Autowired
+    SoapMessageList soapMessageList;
+
     @Override
     protected ResponseBodySoapRequestStatus getSoapRequestSuccessResponse(String message) {
         ResponseBodySoapRequestStatus result = new ResponseBodySoapRequestStatus();
         result.setStatus("OK");
         result.setMessage("GetRequestStatus to Soap server is success." + message);
+        result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
+        soapMessageList.clearLastRequestMessageList();
         return result;
     }
 
@@ -70,7 +76,8 @@ public class GetRequestStatusController extends AbstractController {
         ResponseBodySoapRequestStatus result = new ResponseBodySoapRequestStatus();
         result.setStatus("ERROR");
         result.setMessage("GetRequestStatus to Soap server is fail. message=" + exception.getSoapResponse());
-        result.setSoapMessages("<SoapMessages>" + exception.getSoapMessages() + "</SoapMessages>");
+        result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
+        soapMessageList.clearLastRequestMessageList();
         return result;
     }
 
