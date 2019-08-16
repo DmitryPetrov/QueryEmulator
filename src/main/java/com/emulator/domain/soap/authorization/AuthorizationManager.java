@@ -114,10 +114,10 @@ public class AuthorizationManager {
     private void handleError(String responseMessage) {
         String exceptionMessage = responseMessage;
         exceptionMessage += "\n>>>>SAOP Messages:";
-        exceptionMessage += soapMessageList.getAsString();
+        exceptionMessage += soapMessageList.getLastRequestAsString();
 
         SoapServerLoginException exception = new SoapServerLoginException(exceptionMessage);
-        exception.setSoapMessages(soapMessageList.getAsString());
+        exception.setSoapMessages(soapMessageList.getLastRequestAsString());
         exception.setSoapResponse(responseMessage);
         throw exception;
     }

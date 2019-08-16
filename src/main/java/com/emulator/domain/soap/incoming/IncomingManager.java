@@ -79,10 +79,10 @@ public class IncomingManager {
     private void handleError(String response) {
         String exceptionMessage = response;
         exceptionMessage += "\n>>>>SAOP Messages:";
-        exceptionMessage += soapMessageList.getAsString();
+        exceptionMessage += soapMessageList.getLastRequestAsString();
 
         SoapServerIncomingException exception = new SoapServerIncomingException(exceptionMessage);
-        exception.setSoapMessages(soapMessageList.getAsString());
+        exception.setSoapMessages(soapMessageList.getLastRequestAsString());
         exception.setSoapResponse(response);
         throw exception;
     }
