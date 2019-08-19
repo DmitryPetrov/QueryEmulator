@@ -1,6 +1,7 @@
 package com.emulator.domain.soap.incoming;
 
 import com.emulator.domain.entity.RequestParameters;
+import com.emulator.domain.frontend.response.Incoming.IncomingDataDto;
 import com.emulator.exception.RequestParameterLengthException;
 
 import java.util.ArrayList;
@@ -147,5 +148,24 @@ public class IncomingData extends RequestParameters {
             checkedDocTypes.add(docType);
         }
         this.docTypes = checkedDocTypes;
+    }
+
+    public IncomingDataDto getDto() {
+        IncomingDataDto dto = new IncomingDataDto();
+        dto.setAttrIncomingId(this.getAttrIncomingId());
+        dto.setAttrReceiver(this.getAttrReceiver());
+        dto.setAttrRequestId(this.getAttrRequestId());
+        dto.setAttrSender(this.getAttrSender());
+        dto.setAttrStateRequest(this.getAttrStateRequest());
+        dto.setAttrTimestamp(this.getAttrTimestamp());
+        dto.setAttrVersion(this.getAttrVersion());
+
+        List<String> docTypesDto = new ArrayList<>(getDocTypes().size());
+        for (String docType: getDocTypes()) {
+            docTypesDto.add(docType);
+        }
+        dto.setDocTypes(docTypesDto);
+
+        return dto;
     }
 }
