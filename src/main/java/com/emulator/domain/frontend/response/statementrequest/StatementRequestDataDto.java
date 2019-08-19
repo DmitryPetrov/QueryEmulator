@@ -5,7 +5,7 @@ import com.emulator.domain.frontend.response.DataTransferObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StatementRequestDto extends DataTransferObject {
+public class StatementRequestDataDto extends DataTransferObject {
 
     private String attrRequestId = "";
     private String attrVersion = "";

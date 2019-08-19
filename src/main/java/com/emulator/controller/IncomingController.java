@@ -2,6 +2,8 @@ package com.emulator.controller;
 
 import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.entity.RequestParameters;
+import com.emulator.domain.frontend.response.DataTransferObject;
+import com.emulator.domain.frontend.response.Incoming.IncomingDataDto;
 import com.emulator.domain.frontend.response.ResponseBodyData;
 import com.emulator.domain.soap.SoapClient;
 import com.emulator.domain.soap.SoapMessageList;
@@ -41,10 +43,11 @@ public class IncomingController extends AbstractController {
             data.check();
             IncomingResult result = soapClient.sendIncoming(user, data);
 
-            data.setRequestId(result.getRequestId());
-            data.setRequestName(REQUEST_NAME);
-            List<RequestParameters> requestList = (List<RequestParameters>) httpSession.getAttribute("requestList");
-            requestList.add(data);
+            IncomingDataDto dto =  data.getDto();
+            dto.setRequestId(result.getRequestId());
+            dto.setRequestName(REQUEST_NAME);
+            List<DataTransferObject> requestList = (List<DataTransferObject>) httpSession.getAttribute("requestList");
+            requestList.add(dto);
 
             return getSoapRequestSuccessResponse(result.getRequestId());
         } catch (SoapServerIncomingException e) {

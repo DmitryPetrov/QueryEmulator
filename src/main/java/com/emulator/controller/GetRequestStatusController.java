@@ -2,7 +2,9 @@ package com.emulator.controller;
 
 import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.entity.RequestParameters;
+import com.emulator.domain.frontend.response.DataTransferObject;
 import com.emulator.domain.frontend.response.ResponseBodyData;
+import com.emulator.domain.frontend.response.getrequeststatus.GetRequestStatusResultDto;
 import com.emulator.domain.soap.SoapClient;
 import com.emulator.domain.soap.SoapMessageList;
 import com.emulator.domain.soap.getrequeststatus.GetRequestStatusResult;
@@ -38,7 +40,9 @@ public class GetRequestStatusController extends AbstractController {
             checkRequestId(httpSession, requestId);
 
             GetRequestStatusResult result = soapClient.sendGetRequestStatus(user, requestId);
-            return getSoapRequestSuccessResponse(result);
+            GetRequestStatusResultDto dto = result.getDto();
+
+            return getSoapRequestSuccessResponse(dto);
         } catch (SoapServerGetRequestStatusException e) {
             e.printStackTrace();
             return getSoapRequestFailResponse(e);
@@ -51,7 +55,7 @@ public class GetRequestStatusController extends AbstractController {
         }
     }
 
-    protected ResponseBodyData getSoapRequestSuccessResponse(GetRequestStatusResult requestResult) {
+    protected ResponseBodyData getSoapRequestSuccessResponse(GetRequestStatusResultDto requestResult) {
         ResponseBodyData result = getSoapRequestSuccessResponse("");
         result.setObject(requestResult);
         return result;
@@ -90,8 +94,8 @@ public class GetRequestStatusController extends AbstractController {
     private void checkRequestId(HttpSession httpSession, String requestId) {
         boolean requestFound = false;
 
-        List<RequestParameters> requestList = (List<RequestParameters>) httpSession.getAttribute("requestList");
-        for (RequestParameters request: requestList) {
+        List<DataTransferObject> requestList = (List<DataTransferObject>) httpSession.getAttribute("requestList");
+        for (DataTransferObject request: requestList) {
             if (request.getRequestId().equals(requestId)){
                 requestFound = true;
             }

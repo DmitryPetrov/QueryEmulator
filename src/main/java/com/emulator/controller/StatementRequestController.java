@@ -1,8 +1,9 @@
 package com.emulator.controller;
 
 import com.emulator.domain.entity.AppUser;
-import com.emulator.domain.entity.RequestParameters;
+import com.emulator.domain.frontend.response.DataTransferObject;
 import com.emulator.domain.frontend.response.ResponseBodyData;
+import com.emulator.domain.frontend.response.statementrequest.StatementRequestDataDto;
 import com.emulator.domain.soap.SoapClient;
 import com.emulator.domain.soap.SoapMessageList;
 import com.emulator.domain.soap.statementrequest.StatementRequestData;
@@ -38,12 +39,14 @@ public class StatementRequestController extends AbstractController {
             }
 
             data.check();
+
             StatementRequestResult result = soapClient.sendStatementRequest(user, data);
 
-            data.setRequestId(result.getRequestId());
-            data.setRequestName(REQUEST_NAME);
-            List<RequestParameters> requestList = (List<RequestParameters>) httpSession.getAttribute("requestList");
-            requestList.add(data);
+            StatementRequestDataDto dto = data.getDto();
+            dto.setRequestId(result.getRequestId());
+            dto.setRequestName(REQUEST_NAME);
+            List<DataTransferObject> requestList = (List<DataTransferObject>) httpSession.getAttribute("requestList");
+            requestList.add(dto);
 
             return getSoapRequestSuccessResponse(result.getRequestId());
         } catch (SoapServerStatementRequestException e) {

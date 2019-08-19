@@ -2,7 +2,7 @@ package com.emulator.domain.soap.statementrequest;
 
 import com.emulator.domain.entity.RequestParameters;
 import com.emulator.domain.frontend.response.statementrequest.DataAccountDto;
-import com.emulator.domain.frontend.response.statementrequest.StatementRequestDto;
+import com.emulator.domain.frontend.response.statementrequest.StatementRequestDataDto;
 import com.emulator.exception.RequestParameterLengthException;
 
 import java.util.ArrayList;
@@ -219,6 +219,9 @@ public class StatementRequestData extends RequestParameters {
     }
 
     public SignCollection getSignCollection() {
+        if (this.signCollection == null) {
+            this.signCollection = new SignCollection();
+        }
         return signCollection;
     }
 
@@ -226,8 +229,8 @@ public class StatementRequestData extends RequestParameters {
         this.signCollection = signCollection;
     }
 
-    public StatementRequestDto getDto() {
-        StatementRequestDto dto = new StatementRequestDto();
+    public StatementRequestDataDto getDto() {
+        StatementRequestDataDto dto = new StatementRequestDataDto();
 
         dto.setAttrRequestId(this.requestAttrRequestId);
         dto.setAttrVersion(this.requestAttrVersion);

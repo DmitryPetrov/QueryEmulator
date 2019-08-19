@@ -1,8 +1,8 @@
 package com.emulator.controller;
 
 import com.emulator.domain.entity.AppUser;
-import com.emulator.domain.entity.RequestParameters;
 import com.emulator.domain.frontend.request.RequestBodyAppUser;
+import com.emulator.domain.frontend.response.DataTransferObject;
 import com.emulator.domain.frontend.response.ResponseBodyData;
 import com.emulator.domain.soap.SoapClient;
 import com.emulator.domain.soap.SoapMessageList;
@@ -35,7 +35,7 @@ public class AuthorizationController extends AbstractController{
             AppUser authorizedUser = soapClient.authorization(user);
 
             httpSession.setAttribute("user", authorizedUser);
-            httpSession.setAttribute("requestList", new ArrayList<RequestParameters>());
+            httpSession.setAttribute("requestList", new ArrayList<DataTransferObject>());
 
             return getSoapRequestSuccessResponse(authorizedUser.getSessionId());
         } catch (SoapServerLoginException e) {

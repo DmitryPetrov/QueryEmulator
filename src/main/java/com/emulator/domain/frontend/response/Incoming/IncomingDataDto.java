@@ -1,8 +1,10 @@
 package com.emulator.domain.frontend.response.Incoming;
 
+import com.emulator.domain.frontend.response.DataTransferObject;
+
 import java.util.List;
 
-public class IncomingDataDto {
+public class IncomingDataDto extends DataTransferObject {
 
     private String attrRequestId = "";
     private String attrVersion = "";

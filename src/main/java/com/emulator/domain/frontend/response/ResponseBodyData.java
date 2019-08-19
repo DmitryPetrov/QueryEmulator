@@ -1,7 +1,5 @@
 package com.emulator.domain.frontend.response;
 
-import com.emulator.domain.entity.RequestParameters;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,11 +7,14 @@ public class ResponseBodyData {
 
     private String status;
     private String message;
-    private Object object;
-    private List<RequestParameters> requestList;
+    private DataTransferObject object;
+    private List<DataTransferObject> requestList;
     private List<String> soapMessageList;
 
     public List<String> getSoapMessageList() {
+        if (soapMessageList == null) {
+            setSoapMessageList(new ArrayList<>());
+        }
         return soapMessageList;
     }
 
@@ -22,6 +23,9 @@ public class ResponseBodyData {
     }
 
     public String getStatus() {
+        if (status == null) {
+            setStatus("");
+        }
         return status;
     }
 
@@ -30,6 +34,9 @@ public class ResponseBodyData {
     }
 
     public String getMessage() {
+        if (message == null) {
+            setMessage("");
+        }
         return message;
     }
 
@@ -37,22 +44,25 @@ public class ResponseBodyData {
         this.message = message;
     }
 
-    public Object getObject() {
+    public DataTransferObject getObject() {
+        if (object == null) {
+            setObject(new DataTransferObject());
+        }
         return object;
     }
 
-    public void setObject(Object object) {
+    public void setObject(DataTransferObject object) {
         this.object = object;
     }
 
-    public List<RequestParameters> getRequestList() {
+    public List<DataTransferObject> getRequestList() {
         if (this.requestList == null) {
-            this.requestList = new ArrayList<>();
+            setRequestList(new ArrayList<>());
         }
         return requestList;
     }
 
-    public void setRequestList(List<RequestParameters> requestList) {
+    public void setRequestList(List<DataTransferObject> requestList) {
         this.requestList = requestList;
     }
 }
