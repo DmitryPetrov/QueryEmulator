@@ -1,5 +1,6 @@
 package com.emulator.domain.soap.getrequeststatus;
 
+import com.emulator.domain.frontend.response.getrequeststatus.GetRequestStatusResultDto;
 import com.emulator.exception.ParameterIsNullException;
 
 public class GetRequestStatusResult {
@@ -113,5 +114,18 @@ public class GetRequestStatusResult {
                     ".StateResponse must not be null.");
         }
         this.stateResponse = stateResponse;
+    }
+
+    public GetRequestStatusResultDto getDto() {
+        GetRequestStatusResultDto dto = new GetRequestStatusResultDto();
+        dto.setAttrCreateTime(this.getAttrCreateTime());
+        dto.setAttrRequestId(this.getAttrRequestId());
+        dto.setAttrResponseId(this.getAttrResponseId());
+        dto.setAttrSender(this.getAttrSender());
+        dto.setAttrVersion(this.getAttrVersion());
+        dto.setNotProcessedYet(this.isNotProcessedYet());
+        dto.setStateResponse(this.getStateResponse().getDto());
+
+        return dto;
     }
 }
