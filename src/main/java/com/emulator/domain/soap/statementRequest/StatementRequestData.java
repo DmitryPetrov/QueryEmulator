@@ -225,5 +225,39 @@ public class StatementRequestData extends RequestParameters {
     public void setSignCollection(SignCollection signCollection) {
         this.signCollection = signCollection;
     }
-    
+
+    public StatementRequestDto getDto() {
+        StatementRequestDto dto = new StatementRequestDto();
+
+        dto.setAttrRequestId(this.requestAttrRequestId);
+        dto.setAttrVersion(this.requestAttrVersion);
+        dto.setAcceptDate(this.getAcceptDate());
+        dto.setBankMessage(this.getBankMessage());
+        dto.setBankMessageAuthor(this.getBankMessageAuthor());
+        dto.setDocDate(this.getDocDate());
+        dto.setDocId(this.getDocId());
+        dto.setDocNumber(this.getDocNumber());
+        dto.setDocTypeVersion(this.getDocTypeVersion());
+        dto.setExternalId(this.getExternalId());
+        dto.setExternalUPGId(this.getExternalUPGId());
+        dto.setFromDate(this.getFromDate());
+        dto.setLastModifyDate(this.getLastModifyDate());
+        dto.setMessageOnlyForBank(this.getMessageOnlyForBank());
+        dto.setOrgId(this.getOrgId());
+        dto.setOrgInn(this.getOrgInn());
+        dto.setOrgName(this.getOrgName());
+        dto.setTemplate(this.getTemplate());
+        dto.setToDate(this.getToDate());
+
+        List<DataAccountDto> accountsDto = new ArrayList<>(getAccounts().size());
+        for (DataAccount account: getAccounts()) {
+            accountsDto.add(account.getDto());
+        }
+        dto.setAccounts(accountsDto);
+
+        dto.setSignCollection(this.getSignCollection().getDto());
+
+        return dto;
+    }
+
 }

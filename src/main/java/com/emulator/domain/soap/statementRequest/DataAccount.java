@@ -1,6 +1,7 @@
 package com.emulator.domain.soap.statementrequest;
 
 import com.emulator.domain.entity.RequestParameters;
+import com.emulator.domain.frontend.response.statementrequest.DataAccountDto;
 import com.emulator.exception.RequestParameterLengthException;
 
 public class DataAccount extends RequestParameters {
@@ -42,5 +43,13 @@ public class DataAccount extends RequestParameters {
 
     public void setBankName(String bankName) {
         this.bankName = checkNull(bankName, BANK_NAME_DEFAULT_VALUE);
+    }
+
+    public DataAccountDto getDto() {
+        DataAccountDto dto = new DataAccountDto();
+        dto.setAccount(this.getAccount());
+        dto.setBankBIC(this.getBankBIC());
+        dto.setBankName(this.getBankName());
+        return dto;
     }
 }
