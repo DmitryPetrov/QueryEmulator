@@ -1,6 +1,8 @@
 package com.emulator.domain.soap.statementrequest;
 
 import com.emulator.domain.entity.RequestParameters;
+import com.emulator.domain.frontend.response.statementrequest.DataAccountDto;
+import com.emulator.domain.frontend.response.statementrequest.StatementRequestDto;
 import com.emulator.exception.RequestParameterLengthException;
 
 import java.util.ArrayList;
@@ -25,9 +27,6 @@ public class StatementRequestData extends RequestParameters {
     private final String ORG_NAME_DEFAULT_VALUE = "ПАО МРСК Северного Кавказа";
     private final String TEMPLATE_DEFAULT_VALUE = "";
     private final String TO_DATE_DEFAULT_VALUE = "2018-05-14T00:00:00.715+03:00";
-    private final String SING_COLLECTION_BANK_MESSAGE_DEFAULT_VALUE = "";
-    private final String SING_COLLECTION_DIGEST_NAME_DEFAULT_VALUE = "";
-    private final String SIGN_DEFAULT_VALUE = "";
 
     private String acceptDate = "";
     private String bankMessage = "";
@@ -46,10 +45,8 @@ public class StatementRequestData extends RequestParameters {
     private String orgName = "";
     private String template = "";
     private String toDate = "";
-    private String signCollectionBankMessage = "";
-    private String signCollectionDigestName = "";
-    private String sign = "";
     private List<DataAccount> accounts = new ArrayList<>();
+    private SignCollection signCollection;
 
     public final String requestAttrRequestId = "1852ccae-e9b2-48bf-adbd-6027653f194d";
     public final String requestAttrVersion = "1";
@@ -70,7 +67,6 @@ public class StatementRequestData extends RequestParameters {
         checkStringLength("orgId", this.orgId, 36);
         checkStringLength("orgInn", this.orgInn, 15);
         checkStringLength("orgName", this.orgName, 355);
-        checkStringLength("signCollectionDigestName", this.signCollectionDigestName, 255);
 
         for (DataAccount accountData : this.accounts) {
             accountData.check();
@@ -214,31 +210,6 @@ public class StatementRequestData extends RequestParameters {
         this.toDate = checkNull(toDate, TO_DATE_DEFAULT_VALUE);
     }
 
-    public String getSignCollectionBankMessage() {
-        return signCollectionBankMessage;
-    }
-
-    public void setSignCollectionBankMessage(String signCollectionBankMessage) {
-        this.signCollectionBankMessage = checkNull(signCollectionBankMessage,
-                SING_COLLECTION_BANK_MESSAGE_DEFAULT_VALUE);
-    }
-
-    public String getSignCollectionDigestName() {
-        return signCollectionDigestName;
-    }
-
-    public void setSignCollectionDigestName(String signCollectionDigestName) {
-        this.signCollectionDigestName = checkNull(signCollectionDigestName, SING_COLLECTION_DIGEST_NAME_DEFAULT_VALUE);
-    }
-
-    public String getSign() {
-        return sign;
-    }
-
-    public void setSign(String sign) {
-        this.sign = checkNull(sign, SIGN_DEFAULT_VALUE);
-    }
-
     public List<DataAccount> getAccounts() {
         return accounts;
     }
@@ -246,4 +217,13 @@ public class StatementRequestData extends RequestParameters {
     public void setAccounts(List<DataAccount> accounts) {
         this.accounts = accounts;
     }
+
+    public SignCollection getSignCollection() {
+        return signCollection;
+    }
+
+    public void setSignCollection(SignCollection signCollection) {
+        this.signCollection = signCollection;
+    }
+    
 }
