@@ -1,13 +1,13 @@
 package com.emulator.controller;
 
 import com.emulator.domain.entity.AppUser;
-import com.emulator.domain.frontend.response.DataTransferObject;
 import com.emulator.domain.frontend.response.ResponseBodyData;
-import com.emulator.domain.frontend.response.statementrequest.StatementRequestDataDto;
+import com.emulator.domain.soap.requests.statementrequest.dto.StatementRequestDto;
 import com.emulator.domain.soap.SoapClient;
 import com.emulator.domain.soap.SoapMessageList;
-import com.emulator.domain.soap.statementrequest.StatementRequestData;
-import com.emulator.domain.soap.statementrequest.StatementRequestResult;
+import com.emulator.domain.soap.requestchain.RequestChain;
+import com.emulator.domain.soap.requests.statementrequest.StatementRequestData;
+import com.emulator.domain.soap.requests.statementrequest.StatementRequestResult;
 import com.emulator.exception.RequestParameterLengthException;
 import com.emulator.exception.SoapServerBadResponseException;
 import com.emulator.exception.SoapServerStatementRequestException;
@@ -38,16 +38,16 @@ public class StatementRequestController extends AbstractController {
                 return getUserIsNotAuthorizedResponse();
             }
 
+            RequestChain chain = getRequestChain();
+
             data.check();
 
             StatementRequestResult result = soapClient.sendStatementRequest(user, data);
+            StatementRequestDto dto = getDto(data, result);
+            chain.setStatementRequest(dto);
 
-            StatementRequestDataDto dto = data.getDto();
-            dto.setRequestId(dto.getAttrRequestId());
-            dto.setResponseId(result.getResponseId());
-            dto.setRequestName(REQUEST_NAME);
-            List<DataTransferObject> requestList = (List<DataTransferObject>) httpSession.getAttribute("requestList");
-            requestList.add(dto);
+            List<RequestChain> requestList = (List<RequestChain>) httpSession.getAttribute("requestList");
+            requestList.add(chain);
 
             return getSoapRequestSuccessResponse(result.getResponseId());
         } catch (SoapServerStatementRequestException e) {
@@ -83,6 +83,11 @@ public class StatementRequestController extends AbstractController {
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
         soapMessageList.clearLastRequestMessageList();
         return result;
+    }
+
+    private RequestChain getRequestChain() {
+        RequestChain chain = new RequestChain();
+        return chain;
     }
 
 }

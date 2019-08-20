@@ -1,13 +1,14 @@
 package com.emulator.controller;
 
 import com.emulator.domain.entity.AppUser;
-import com.emulator.domain.frontend.response.DataTransferObject;
 import com.emulator.domain.frontend.response.ResponseBodyData;
-import com.emulator.domain.frontend.response.getrequeststatus.GetRequestStatusResultDto;
+import com.emulator.domain.soap.requests.getrequeststatus.dto.GetRequestStatusDto;
 import com.emulator.domain.soap.SoapClient;
 import com.emulator.domain.soap.SoapMessageList;
-import com.emulator.domain.soap.getrequeststatus.GetRequestStatusResult;
+import com.emulator.domain.soap.requests.getrequeststatus.GetRequestStatusResult;
+import com.emulator.domain.soap.requestchain.RequestChain;
 import com.emulator.exception.BadRequestParameterException;
+import com.emulator.exception.RequestChainIsNotExistException;
 import com.emulator.exception.SoapServerBadResponseException;
 import com.emulator.exception.SoapServerGetRequestStatusException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +23,6 @@ import java.util.List;
 
 @Controller
 public class GetRequestStatusController extends AbstractController {
-
-    private static final String REQUEST_NAME = "Get Request Status";
-    private static final String NOT_PROCESSED_YET_STATUS = "NOT PROCESSED YET";
-
 
     @Autowired
     private SoapClient soapClient;
@@ -43,13 +40,9 @@ public class GetRequestStatusController extends AbstractController {
             checkResponseId(httpSession, responseId);
 
             GetRequestStatusResult result = soapClient.sendGetRequestStatus(user, responseId);
-            GetRequestStatusResultDto dto = result.getDto();
-            dto.setRequestId(result.getAttrRequestId());
-            dto.setResponseId(result.getAttrResponseId());
-            dto.setRequestName(REQUEST_NAME);
-            if (result.isNotProcessedYet()) {
-                dto.getStateResponse().setState(NOT_PROCESSED_YET_STATUS);
-            }
+            GetRequestStatusDto dto = getDto(result);
+            RequestChain chain = getRequestChain(httpSession, responseId);
+            chain.setGetRequestStatus(dto);
 
             return getSoapRequestSuccessResponse(dto);
         } catch (SoapServerGetRequestStatusException e) {
@@ -64,7 +57,7 @@ public class GetRequestStatusController extends AbstractController {
         }
     }
 
-    protected ResponseBodyData getSoapRequestSuccessResponse(GetRequestStatusResultDto requestResult) {
+    protected ResponseBodyData getSoapRequestSuccessResponse(GetRequestStatusDto requestResult) {
         ResponseBodyData result = getSoapRequestSuccessResponse("");
         result.setObject(requestResult);
         return result;
@@ -100,12 +93,25 @@ public class GetRequestStatusController extends AbstractController {
         return result;
     }
 
+
+
+    private RequestChain getRequestChain(HttpSession httpSession, String responseId) {
+        List<RequestChain> requestList = (List<RequestChain>) httpSession.getAttribute("requestList");
+        for (RequestChain requestChain: requestList) {
+            if (requestChain.getResponseId().equals(responseId)){
+                return requestChain;
+            }
+        }
+
+        throw new RequestChainIsNotExistException("GetRequestStatus RequestChainIsNotExistException");
+    }
+
     private void checkResponseId(HttpSession httpSession, String responseId) {
         boolean requestFound = false;
 
-        List<DataTransferObject> requestList = (List<DataTransferObject>) httpSession.getAttribute("requestList");
-        for (DataTransferObject request: requestList) {
-            if (request.getResponseId().equals(responseId)){
+        List<RequestChain> requestList = (List<RequestChain>) httpSession.getAttribute("requestList");
+        for (RequestChain requestChain: requestList) {
+            if (requestChain.getResponseId().equals(responseId)){
                 requestFound = true;
             }
         }

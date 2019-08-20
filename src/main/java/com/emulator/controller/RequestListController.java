@@ -1,8 +1,8 @@
 package com.emulator.controller;
 
 import com.emulator.domain.entity.AppUser;
-import com.emulator.domain.frontend.response.DataTransferObject;
 import com.emulator.domain.frontend.response.ResponseBodyData;
+import com.emulator.domain.soap.requestchain.RequestChain;
 import com.emulator.exception.SoapServerBadResponseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +24,7 @@ public class RequestListController extends AbstractController{
                 return getUserIsNotAuthorizedResponse();
             }
 
-            List<DataTransferObject> requestList = (List<DataTransferObject>) httpSession.getAttribute("requestList");
+            List<RequestChain> requestList = (List<RequestChain>) httpSession.getAttribute("requestList");
 
             return getSuccessResponse(requestList);
         } catch (Exception e) {
@@ -33,7 +33,7 @@ public class RequestListController extends AbstractController{
         }
     }
 
-    private ResponseBodyData getSuccessResponse(List<DataTransferObject> requestList) {
+    private ResponseBodyData getSuccessResponse(List<RequestChain> requestList) {
         ResponseBodyData response = new ResponseBodyData();
         response.setStatus("OK");
         response.setMessage("Request list");

@@ -1,15 +1,15 @@
 package com.emulator.domain.soap;
 
 import com.emulator.domain.entity.AppUser;
-import com.emulator.domain.soap.authorization.AuthorizationManager;
-import com.emulator.domain.soap.getrequeststatus.GetRequestStatusManager;
-import com.emulator.domain.soap.getrequeststatus.GetRequestStatusResult;
-import com.emulator.domain.soap.incoming.IncomingData;
-import com.emulator.domain.soap.incoming.IncomingManager;
-import com.emulator.domain.soap.incoming.IncomingResult;
-import com.emulator.domain.soap.statementrequest.StatementRequestData;
-import com.emulator.domain.soap.statementrequest.StatementRequestManager;
-import com.emulator.domain.soap.statementrequest.StatementRequestResult;
+import com.emulator.domain.soap.requests.authorization.AuthorizationManager;
+import com.emulator.domain.soap.requests.getrequeststatus.GetRequestStatusManager;
+import com.emulator.domain.soap.requests.getrequeststatus.GetRequestStatusResult;
+import com.emulator.domain.soap.requests.incoming.IncomingData;
+import com.emulator.domain.soap.requests.incoming.IncomingManager;
+import com.emulator.domain.soap.requests.incoming.IncomingResult;
+import com.emulator.domain.soap.requests.statementrequest.StatementRequestData;
+import com.emulator.domain.soap.requests.statementrequest.StatementRequestManager;
+import com.emulator.domain.soap.requests.statementrequest.StatementRequestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;

@@ -1,5 +1,8 @@
 package com.emulator.domain.frontend.response;
 
+import com.emulator.domain.soap.requestchain.RequestChain;
+import com.emulator.domain.soap.requests.DataTransferObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +11,7 @@ public class ResponseBodyData {
     private String status;
     private String message;
     private DataTransferObject object;
-    private List<DataTransferObject> requestList;
+    private List<RequestChain> requestList;
     private List<String> soapMessageList;
 
     public List<String> getSoapMessageList() {
@@ -55,14 +58,14 @@ public class ResponseBodyData {
         this.object = object;
     }
 
-    public List<DataTransferObject> getRequestList() {
+    public List<RequestChain> getRequestList() {
         if (this.requestList == null) {
             setRequestList(new ArrayList<>());
         }
         return requestList;
     }
 
-    public void setRequestList(List<DataTransferObject> requestList) {
+    public void setRequestList(List<RequestChain> requestList) {
         this.requestList = requestList;
     }
 }

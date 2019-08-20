@@ -1,13 +1,14 @@
 package com.emulator.controller;
 
 import com.emulator.domain.entity.AppUser;
-import com.emulator.domain.frontend.response.DataTransferObject;
-import com.emulator.domain.frontend.response.Incoming.IncomingDataDto;
+import com.emulator.domain.soap.requests.incoming.IncomingDto;
 import com.emulator.domain.frontend.response.ResponseBodyData;
 import com.emulator.domain.soap.SoapClient;
 import com.emulator.domain.soap.SoapMessageList;
-import com.emulator.domain.soap.incoming.IncomingData;
-import com.emulator.domain.soap.incoming.IncomingResult;
+import com.emulator.domain.soap.requests.incoming.IncomingData;
+import com.emulator.domain.soap.requests.incoming.IncomingResult;
+import com.emulator.domain.soap.requestchain.RequestChain;
+import com.emulator.exception.RequestChainIsNotExistException;
 import com.emulator.exception.RequestParameterLengthException;
 import com.emulator.exception.SoapServerBadResponseException;
 import com.emulator.exception.SoapServerIncomingException;
@@ -42,12 +43,10 @@ public class IncomingController extends AbstractController {
             data.check();
             IncomingResult result = soapClient.sendIncoming(user, data);
 
-            IncomingDataDto dto =  data.getDto();
-            dto.setRequestId(dto.getAttrRequestId());
-            dto.setResponseId(result.getResponseId());
-            dto.setRequestName(REQUEST_NAME);
-            List<DataTransferObject> requestList = (List<DataTransferObject>) httpSession.getAttribute("requestList");
-            requestList.add(dto);
+            IncomingDto dto = getDto(data, result);
+
+            RequestChain chain = getRequestChain(httpSession, dto.getRequestId());
+            chain.setIncoming(dto);
 
             return getSoapRequestSuccessResponse(result.getResponseId());
         } catch (SoapServerIncomingException e) {
@@ -84,4 +83,16 @@ public class IncomingController extends AbstractController {
         soapMessageList.clearLastRequestMessageList();
         return result;
     }
+
+    private RequestChain getRequestChain(HttpSession httpSession, String responseId) {
+        List<RequestChain> requestList = (List<RequestChain>) httpSession.getAttribute("requestList");
+        for (RequestChain requestChain: requestList) {
+            if (requestChain.getResponseId().equals(responseId)){
+                return requestChain;
+            }
+        }
+
+        throw new RequestChainIsNotExistException("Incoming request RequestChainIsNotExistException");
+    }
+
 }
