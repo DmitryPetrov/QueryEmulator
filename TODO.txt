@@ -1,14 +1,6 @@
 удалить метод interceptor() в com.emulator.config.Config
 
-StatementRequestData дефолтные параметры в объявлении переменных
-
-StatementRequestData файнал поля для максимальных длин строк
-
 StatementRequestData getters/setters for requestAttrRequestId and requestAttrVersion
-
-перенести фанал поля из statementrequest.MessageBuilder в StatementRequestData
-
-StatementRequestData вызывать checkStringLength() с переменными
 
 сделать Incoming.docType как enum
 
@@ -16,3 +8,5 @@ RequestParameters throws декларации
 
 сделать переменную в application.properties, которая будет включать и выключать
         печать soap сообщений в sout
+
+вынести создание ДТО в функции
