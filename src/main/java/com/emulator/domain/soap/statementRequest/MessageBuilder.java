@@ -15,34 +15,6 @@ import java.util.List;
 @Component("StatementRequestMessageBuilder")
 class MessageBuilder {
 
-    private static final String REQUEST_NODE = "upg:Request";
-    private static final String MODELS_NODE = "upg:Models";
-    private static final String MODEL_NODE = "upg:Model";
-    private static final String STATEMENT_REQUEST_NODE = "StatementRequest";
-    private static final String BANK_MESSAGE_NODE = "bankMessage";
-    private static final String DOC_DATE_NODE = "docDate";
-    private static final String DOC_ID_NODE = "docId";
-    private static final String DOC_NUMBER_NODE = "docNumber";
-    private static final String FROM_DATE_NODE = "fromDate";
-    private static final String ORG_ID_NODE = "orgId";
-    private static final String ORG_INN_NODE = "orgInn";
-    private static final String ORG_NAME_NODE = "orgName";
-    private static final String TO_DATE_NODE = "toDate";
-    private static final String ACCOUNTS_NODE = "accounts";
-    private static final String ACC_NODE = "Acc";
-    private static final String ACCOUNT_NODE = "account";
-    private static final String BANK_BIC_NODE = "bankBIC";
-    private static final String BANK_NAME_NODE = "bankName";
-
-    private static final String REQUEST_ID_ATTRIBUTE = "requestId";
-    private static final String VERSION_ATTRIBUTE = "version";
-    private static final String XMLNS_ATTRIBUTE = "xmlns";
-
-    private static final String UPG_NAMESPACE = "xmlns:upg";
-    private static final String UPG_RAIF_NAMESPACE = "xmlns:upgRaif";
-    private static final String XSI_NAMESPACE = "xmlns:xsi";
-
-
     @Autowired
     private DocumentBuilder docBuilder;
 
@@ -53,19 +25,19 @@ class MessageBuilder {
     private String buildStatementRequest(StatementRequestData data) {
         Document doc = docBuilder.newDocument();
 
-        Element requestElement = doc.createElement(REQUEST_NODE);
+        Element requestElement = doc.createElement(data.REQUEST_NODE_NAME);
         doc.appendChild(requestElement);
 
-        createAttribute(requestElement, UPG_NAMESPACE, data.requestNameSpaceUpgValue);
-        createAttribute(requestElement, UPG_RAIF_NAMESPACE, data.requestNameSpaceUpgRaifValue);
-        createAttribute(requestElement, XSI_NAMESPACE, data.requestNameSpaceXsiValue);
-        createAttribute(requestElement, REQUEST_ID_ATTRIBUTE, data.requestAttrRequestId);
-        createAttribute(requestElement, VERSION_ATTRIBUTE, data.requestAttrVersion);
+        createAttribute(requestElement, data.UPG_NAMESPACE_NAME, data.namespaceUpg);
+        createAttribute(requestElement, data.UPG_RAIF_NAMESPACE_NAME, data.namespaceUpgRaif);
+        createAttribute(requestElement, data.XSI_NAMESPACE_NAME, data.namespaceXsi);
+        createAttribute(requestElement, data.REQUEST_ID_ATTR_NAME, data.attrRequestId);
+        createAttribute(requestElement, data.VERSION_ATTR_NAME, data.attrVersion);
 
-        Element modelsElement = doc.createElement(MODELS_NODE);
+        Element modelsElement = doc.createElement(data.MODELS_NODE_NAME);
         requestElement.appendChild(modelsElement);
 
-        Element modelElement = doc.createElement(MODEL_NODE);
+        Element modelElement = doc.createElement(data.MODEL_NODE_NAME);
         modelsElement.appendChild(modelElement);
 
         String statementRequestElement = buildElementStatementRequest(modelElement, data);
@@ -77,21 +49,21 @@ class MessageBuilder {
     private String buildElementStatementRequest(Element parentElement, StatementRequestData data) {
         Document doc = parentElement.getOwnerDocument();
 
-        Element statementRequestElement = doc.createElement(STATEMENT_REQUEST_NODE);
+        Element statementRequestElement = doc.createElement(data.STATEMENT_REQUEST_NODE_NAME);
 
-        createAttribute(statementRequestElement, XMLNS_ATTRIBUTE, data.statementRequestAttrXmlns);
+        createAttribute(statementRequestElement, data.XMLNS_ATTR_NAME, data.attrXmlns);
 
-        Element bankMessageElement = doc.createElement(BANK_MESSAGE_NODE);
+        Element bankMessageElement = doc.createElement(data.BANK_MESSAGE_NODE_NAME);
         statementRequestElement.appendChild(bankMessageElement);
 
-        createTextElement(statementRequestElement, DOC_DATE_NODE, data.getDocDate());
-        createTextElement(statementRequestElement, DOC_ID_NODE, data.getDocId());
-        createTextElement(statementRequestElement, DOC_NUMBER_NODE, data.getDocNumber());
-        createTextElement(statementRequestElement, FROM_DATE_NODE, data.getFromDate());
-        createTextElement(statementRequestElement, ORG_ID_NODE, data.getOrgId());
-        createTextElement(statementRequestElement, ORG_INN_NODE, data.getOrgInn());
-        createTextElement(statementRequestElement, ORG_NAME_NODE, data.getOrgName());
-        createTextElement(statementRequestElement, TO_DATE_NODE, data.getToDate());
+        createTextElement(statementRequestElement, data.DOC_DATE_NODE_NAME, data.getDocDate());
+        createTextElement(statementRequestElement, data.DOC_ID_NODE_NAME, data.getDocId());
+        createTextElement(statementRequestElement, data.DOC_NUMBER_NODE_NAME, data.getDocNumber());
+        createTextElement(statementRequestElement, data.FROM_DATE_NODE_NAME, data.getFromDate());
+        createTextElement(statementRequestElement, data.ORG_ID_NODE_NAME, data.getOrgId());
+        createTextElement(statementRequestElement, data.ORG_INN_NODE_NAME, data.getOrgInn());
+        createTextElement(statementRequestElement, data.ORG_NAME_NODE_NAME, data.getOrgName());
+        createTextElement(statementRequestElement, data.TO_DATE_NODE_NAME, data.getToDate());
 
         buildElementAccounts(statementRequestElement, data);
 
@@ -101,18 +73,18 @@ class MessageBuilder {
     private void buildElementAccounts(Element parentElement, StatementRequestData data) {
         Document doc = parentElement.getOwnerDocument();
 
-        Element accounts = doc.createElement(ACCOUNTS_NODE);
+        Element accounts = doc.createElement(data.ACCOUNTS_NODE_NAME);
         parentElement.appendChild(accounts);
 
         List<DataAccount> accountList = data.getAccounts();
         for (DataAccount accountData : accountList) {
-            Element acc = doc.createElement(ACC_NODE);
+            Element acc = doc.createElement(data.ACC_NODE_NAME);
             accounts.appendChild(acc);
 
-            createTextElement(acc, ACCOUNT_NODE, accountData.getAccount());
-            createTextElement(acc, BANK_BIC_NODE, accountData.getBankBIC());
-            createTextElement(acc, BANK_NAME_NODE, accountData.getBankName());
-            createTextElement(acc, ORG_NAME_NODE, data.getOrgName());
+            createTextElement(acc, accountData.ACCOUNT_NODE_NAME, accountData.getAccount());
+            createTextElement(acc, accountData.BANK_BIC_NODE_NAME, accountData.getBankBIC());
+            createTextElement(acc, accountData.BANK_NAME_NODE_NAME, accountData.getBankName());
+            createTextElement(acc, data.ORG_NAME_NODE_NAME, data.getOrgName());
         }
     }
 

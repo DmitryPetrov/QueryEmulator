@@ -6,19 +6,27 @@ import com.emulator.exception.RequestParameterLengthException;
 
 public class DataAccount extends RequestParameters {
 
+    static final String ACCOUNT_NODE_NAME = "account";
+    static final String BANK_BIC_NODE_NAME = "bankBIC";
+    static final String BANK_NAME_NODE_NAME = "bankName";
+
+    private static final int ACCOUNT_NODE_MAX_LENGTH = 20;
+    private static final int BANK_BIC_NODE_MAX_LENGTH = 64;
+    private static final int BANK_MAX_LENGTH_NODE_NAME = 500;
+
     private final String ACCOUNT_DEFAULT_VALUE = "40702810800000005897";
     private final String BANK_BIC_DEFAULT_VALUE = "044030861";
     private final String BANK_NAME_DEFAULT_VALUE = "АО \"АБ \"РОССИЯ\"";
 
-    private String account = "";
-    private String bankBIC = "";
-    private String bankName = "";
+    private String account = ACCOUNT_DEFAULT_VALUE;
+    private String bankBIC = BANK_BIC_DEFAULT_VALUE;
+    private String bankName = BANK_NAME_DEFAULT_VALUE;
 
     @Override
     public void check() throws RequestParameterLengthException {
-        checkStringLength("account", this.account, 20);
-        checkStringLength("bankBIC", this.bankBIC, 64);
-        checkStringLength("bankName", this.bankName, 500);
+        checkStringLength(ACCOUNT_NODE_NAME, getAccount(), ACCOUNT_NODE_MAX_LENGTH);
+        checkStringLength(BANK_BIC_NODE_NAME, getBankBIC(), BANK_BIC_NODE_MAX_LENGTH);
+        checkStringLength(BANK_NAME_NODE_NAME, getBankName(), BANK_MAX_LENGTH_NODE_NAME);
     }
 
     public String getAccount() {
