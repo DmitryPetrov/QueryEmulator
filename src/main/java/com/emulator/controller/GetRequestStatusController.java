@@ -1,7 +1,6 @@
 package com.emulator.controller;
 
 import com.emulator.domain.entity.AppUser;
-import com.emulator.domain.entity.RequestParameters;
 import com.emulator.domain.frontend.response.DataTransferObject;
 import com.emulator.domain.frontend.response.ResponseBodyData;
 import com.emulator.domain.frontend.response.getrequeststatus.GetRequestStatusResultDto;
@@ -24,23 +23,33 @@ import java.util.List;
 @Controller
 public class GetRequestStatusController extends AbstractController {
 
+    private static final String REQUEST_NAME = "Get Request Status";
+    private static final String NOT_PROCESSED_YET_STATUS = "NOT PROCESSED YET";
+
+
     @Autowired
     private SoapClient soapClient;
 
     @RequestMapping(value = "/sendRequests/getRequestStatus", method = RequestMethod.GET)
     @ResponseBody
     public ResponseBodyData runGetRequestStatus(HttpSession httpSession,
-                                                @RequestParam(name = "requestId") String requestId) {
+                                                @RequestParam(name = "responseId") String responseId) {
         try {
             AppUser user = (AppUser) httpSession.getAttribute("user");
             if (user == null) {
                 return getUserIsNotAuthorizedResponse();
             }
 
-            checkRequestId(httpSession, requestId);
+            checkResponseId(httpSession, responseId);
 
-            GetRequestStatusResult result = soapClient.sendGetRequestStatus(user, requestId);
+            GetRequestStatusResult result = soapClient.sendGetRequestStatus(user, responseId);
             GetRequestStatusResultDto dto = result.getDto();
+            dto.setRequestId(result.getAttrRequestId());
+            dto.setResponseId(result.getAttrResponseId());
+            dto.setRequestName(REQUEST_NAME);
+            if (result.isNotProcessedYet()) {
+                dto.getStateResponse().setState(NOT_PROCESSED_YET_STATUS);
+            }
 
             return getSoapRequestSuccessResponse(dto);
         } catch (SoapServerGetRequestStatusException e) {
@@ -91,12 +100,12 @@ public class GetRequestStatusController extends AbstractController {
         return result;
     }
 
-    private void checkRequestId(HttpSession httpSession, String requestId) {
+    private void checkResponseId(HttpSession httpSession, String responseId) {
         boolean requestFound = false;
 
         List<DataTransferObject> requestList = (List<DataTransferObject>) httpSession.getAttribute("requestList");
         for (DataTransferObject request: requestList) {
-            if (request.getRequestId().equals(requestId)){
+            if (request.getResponseId().equals(responseId)){
                 requestFound = true;
             }
         }
@@ -104,7 +113,7 @@ public class GetRequestStatusController extends AbstractController {
         if (!requestFound) {
             String message = "Parameter not found on server";
             BadRequestParameterException exception = new BadRequestParameterException(message);
-            exception.setParameterName("requestId");
+            exception.setParameterName("responseId");
             throw exception;
         }
     }

@@ -1,7 +1,6 @@
 package com.emulator.controller;
 
 import com.emulator.domain.entity.AppUser;
-import com.emulator.domain.entity.RequestParameters;
 import com.emulator.domain.frontend.response.DataTransferObject;
 import com.emulator.domain.frontend.response.Incoming.IncomingDataDto;
 import com.emulator.domain.frontend.response.ResponseBodyData;
@@ -44,12 +43,13 @@ public class IncomingController extends AbstractController {
             IncomingResult result = soapClient.sendIncoming(user, data);
 
             IncomingDataDto dto =  data.getDto();
-            dto.setRequestId(result.getRequestId());
+            dto.setRequestId(dto.getAttrRequestId());
+            dto.setResponseId(result.getResponseId());
             dto.setRequestName(REQUEST_NAME);
             List<DataTransferObject> requestList = (List<DataTransferObject>) httpSession.getAttribute("requestList");
             requestList.add(dto);
 
-            return getSoapRequestSuccessResponse(result.getRequestId());
+            return getSoapRequestSuccessResponse(result.getResponseId());
         } catch (SoapServerIncomingException e) {
             e.printStackTrace();
             return getSoapRequestFailResponse(e);

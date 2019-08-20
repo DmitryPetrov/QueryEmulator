@@ -59,7 +59,7 @@ public class IncomingManager {
         checkErrors(responseMessage);
 
         IncomingResult result = new IncomingResult();
-        result.setRequestId(responseMessage);
+        result.setResponseId(responseMessage);
         return result;
     }
 

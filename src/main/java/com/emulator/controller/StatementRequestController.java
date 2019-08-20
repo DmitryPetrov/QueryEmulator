@@ -43,12 +43,13 @@ public class StatementRequestController extends AbstractController {
             StatementRequestResult result = soapClient.sendStatementRequest(user, data);
 
             StatementRequestDataDto dto = data.getDto();
-            dto.setRequestId(result.getRequestId());
+            dto.setRequestId(dto.getAttrRequestId());
+            dto.setResponseId(result.getResponseId());
             dto.setRequestName(REQUEST_NAME);
             List<DataTransferObject> requestList = (List<DataTransferObject>) httpSession.getAttribute("requestList");
             requestList.add(dto);
 
-            return getSoapRequestSuccessResponse(result.getRequestId());
+            return getSoapRequestSuccessResponse(result.getResponseId());
         } catch (SoapServerStatementRequestException e) {
             e.printStackTrace();
             return getSoapRequestFailResponse(e);

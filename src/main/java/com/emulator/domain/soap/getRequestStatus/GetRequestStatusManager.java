@@ -19,9 +19,9 @@ public class GetRequestStatusManager {
     @Autowired
     private WebServiceTemplate webServiceTemplate;
 
-    public GetRequestStatusResult runGetRequestStatus(AppUser user, String requestId) throws IOException,
+    public GetRequestStatusResult runGetRequestStatus(AppUser user, String responseId) throws IOException,
             SAXException {
-        JAXBElement<GetRequestStatus> request = buildRequest(user, requestId);
+        JAXBElement<GetRequestStatus> request = buildRequest(user, responseId);
         JAXBElement<GetRequestStatusResponse> response;
 
         response = (JAXBElement<GetRequestStatusResponse>) webServiceTemplate.marshalSendAndReceive(request);
@@ -29,10 +29,10 @@ public class GetRequestStatusManager {
         return getGetRequestStatusResult(response);
     }
 
-    private JAXBElement<GetRequestStatus> buildRequest(AppUser user, String requestId) {
+    private JAXBElement<GetRequestStatus> buildRequest(AppUser user, String responseId) {
         GetRequestStatus request = factory.createGetRequestStatus();
         request.setSessionId(user.getSessionId());
-        request.getRequests().add(requestId);
+        request.getRequests().add(responseId);
 
         return factory.createGetRequestStatus(request);
     }

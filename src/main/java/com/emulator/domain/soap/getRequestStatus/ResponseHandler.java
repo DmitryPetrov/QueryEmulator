@@ -109,7 +109,8 @@ class ResponseHandler {
 
     private void checkErrors(String response) {
         if ((response.contains("NONEXISTENT SESSION"))
-                || (response.contains("Error"))) {
+                || (response.contains("Error"))
+                || (response.contains("UNKNOWN REQUEST"))) {
             handleError(response);
         }
     }

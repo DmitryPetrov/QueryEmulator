@@ -61,7 +61,7 @@ public class StatementRequestManager {
         checkErrors(responseMessage);
 
         StatementRequestResult result = new StatementRequestResult();
-        result.setRequestId(responseMessage);
+        result.setResponseId(responseMessage);
         return result;
     }
 
