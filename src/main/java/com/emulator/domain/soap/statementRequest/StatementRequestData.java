@@ -24,7 +24,7 @@ public class StatementRequestData extends RequestParameters {
     private final String MESSAGE_ONLY_FOR_BANK_DEFAULT_VALUE = "";
     private final String ORG_ID_DEFAULT_VALUE = "0ce353c5-9a53-497d-ad02-df1fb6c37feb";
     private final String ORG_INN_DEFAULT_VALUE = "7842170415";
-    private final String ORG_NAME_DEFAULT_VALUE = "ПАО МРСК Северного Кавказа";
+    private final String ORG_NAME_DEFAULT_VALUE = "АО РЗК";
     private final String TEMPLATE_DEFAULT_VALUE = "";
     private final String TO_DATE_DEFAULT_VALUE = "2018-05-14T00:00:00.715+03:00";
 
