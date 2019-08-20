@@ -40,20 +40,20 @@ public class IncomingData extends RequestParameters {
 
 
     private String attrRequestId = "";
-    private String attrVersion = "";
-    private String attrSender = "";
-    private String attrReceiver = "";
-    private String namespaceUpg = "";
-    private String namespaceXsi = "";
+    private String attrVersion = VERSION_ATTR_DEFAULT_VALUE;
+    private String attrSender = SENDER_ATTR_DEFAULT_VALUE;
+    private String attrReceiver = RECEIVER_ATTR_DEFAULT_VALUE;
+    private String namespaceUpg = UPG_NAMESPACE_DEFAULT_VALUE;
+    private String namespaceXsi = XSI_NAMESPACE_DEFAULT_VALUE;
 
-    private String attrStateRequest = "";
-    private String attrIncomingId = "";
-    private String attrTimestamp = "";
+    private String attrStateRequest = STATE_REQUEST_ATTR_DEFAULT_VALUE;
+    private String attrIncomingId = INCOMING_ID_ATTR_DEFAULT_VALUE;
+    private String attrTimestamp = TIMESTAMP_ATTR_DEFAULT_VALUE;
     private List<String> docTypes;
 
     {
         docTypes = new ArrayList<>();
-        docTypes.add("");
+        docTypes.add(DOC_TYPE_DEFAULT_VALUE);
     }
 
     @Override
