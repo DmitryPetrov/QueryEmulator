@@ -2,6 +2,8 @@ package com.emulator.domain.entity;
 
 import com.emulator.exception.ParameterIsNullException;
 
+import java.util.Objects;
+
 public class AppUser{
 
     private final String userName;
@@ -48,4 +50,21 @@ public class AppUser{
         return sessionId;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        AppUser appUser = (AppUser) o;
+        return Objects.equals(userName, appUser.userName) &&
+                Objects.equals(password, appUser.password) &&
+                Objects.equals(sessionId, appUser.sessionId);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(userName, password, sessionId);
+    }
 }

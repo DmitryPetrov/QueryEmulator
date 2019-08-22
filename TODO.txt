@@ -12,3 +12,7 @@ RequestParameters throws декларации
 вынести создание ДТО в функции
 
 в контроллерах бросать ексепшен если не найден request chain
+
+нужен ли BadRequestParameterException
+
+автоматическое увеличение requestID incomingId

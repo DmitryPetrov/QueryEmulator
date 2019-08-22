@@ -24,7 +24,7 @@ public class IncomingManager {
     @Qualifier("IncomingMessageBuilder")
     private MessageBuilder requestMessageBuilder;
 
-    public IncomingResult runIncoming(AppUser user, IncomingData data) {
+    public IncomingDto runIncoming(AppUser user, IncomingData data) {
         String requestMessage = requestMessageBuilder.build(data);
 
         RequestMessageHandler requestMessageHandler = new RequestMessageHandler("ns2:requests", requestMessage);
@@ -35,7 +35,9 @@ public class IncomingManager {
         response = (JAXBElement<SendRequestsResponse>) webServiceTemplate
                 .marshalSendAndReceive(request, requestMessageHandler);
 
-        return getResult(response);
+        IncomingResult result = getResult(response);
+        IncomingDto dto = data.getDto(result);
+        return dto;
     }
 
 

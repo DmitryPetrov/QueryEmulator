@@ -5,24 +5,14 @@ import com.emulator.domain.soap.requests.incoming.IncomingDto;
 import com.emulator.domain.soap.requests.getrequeststatus.dto.GetRequestStatusDto;
 import com.emulator.domain.soap.requests.statementrequest.dto.StatementRequestDto;
 import com.emulator.exception.ParameterIsNullException;
-import com.emulator.exception.PhaseAlreadyPassedException;
+import com.emulator.exception.RequestChainPhaseNotReadyOrAlreadyPassedException;
 import com.emulator.exception.UserIsNotAuthorizedException;
 
-class RequestChain {
-
-    private static final int START = 0;
-    private static final int STATEMENT_REQUEST = 1;
-    private static final int STATEMENT_REQUEST_STATUS = 2;
-    private static final int INCOMING = 3;
-    private static final int STATEMENT_DOCUMENT = 4;
-
-    private static final String INCOMING_NAME = "incoming";
-
-    private static final String NOT_PROCESSED_YET_STATUS = "NOT PROCESSED YET";
+public class RequestChain {
 
     private final AppUser user;
 
-    private int phase = START;
+    private RequestChainPhase phase = RequestChainPhase.START;
 
     private String requestId = "";
     private String responseId = "";
@@ -35,55 +25,62 @@ class RequestChain {
     private GetRequestStatusDto getRequestStatus;
     private IncomingDto incoming;
 
-    public RequestChain(AppUser user, StatementRequestDto dto) {
+    public RequestChain(AppUser user) {
         checkOnNull(user);
         if (user.getSessionId().equals("")) {
             throw new UserIsNotAuthorizedException("AppUser user must not be authorized");
         }
         this.user = user;
-
-        setStatementRequest(dto);
     }
 
-    private void setStatementRequest(StatementRequestDto dto) {
+    public void setStatementRequest(StatementRequestDto dto) {
         checkOnNull(dto);
 
         this.requestId = dto.getRequestId();
         this.responseId = dto.getResponseId();
         this.statementRequest = dto;
-        this.phase = STATEMENT_REQUEST;
+        this.phase = RequestChainPhase.STATEMENT_REQUEST;
     }
 
     public void setGetRequestStatus(GetRequestStatusDto dto) {
-        checkPhase(STATEMENT_REQUEST_STATUS);
+        checkPhase(RequestChainPhase.STATEMENT_REQUEST_STATUS);
         checkOnNull(dto);
 
         this.getRequestStatus = dto;
-        this.statementRequestStatus = dto.getStateResponse().getState();
-        this.phase = STATEMENT_REQUEST_STATUS;
+        this.statementRequestStatus = dto.getStateResponseList().getState();
+        this.phase = RequestChainPhase.STATEMENT_REQUEST_STATUS;
     }
 
     public void setIncoming(IncomingDto dto) {
-        checkPhase(INCOMING);
+        checkPhase(RequestChainPhase.INCOMING);
         checkOnNull(dto);
 
         this.incomingRequestId = dto.getRequestId();
         this.incomingResponseId = dto.getResponseId();
         this.incoming = dto;
-        this.phase = INCOMING;
+        this.phase = RequestChainPhase.INCOMING;
     }
 
 
-    private void checkOnNull(Object object){
+    private void checkOnNull(Object object) {
         if (object == null) {
             throw new ParameterIsNullException(object.getClass() + " must not be 'null'");
         }
     }
 
-    private void checkPhase(int phase) {
-        if (this.phase > phase) {
-            throw new PhaseAlreadyPassedException(phase +" phase already passed. Current phase: " + this.phase);
+    public void checkPhase(RequestChainPhase newPhase) {
+        if (this.phase.ordinal() < (newPhase.ordinal() - 1)) {
+            throw new RequestChainPhaseNotReadyOrAlreadyPassedException(newPhase + " phase not ready. Current phase: " +
+                    "" + this.phase);
         }
+        if (this.phase.ordinal() > newPhase.ordinal()) {
+            throw new RequestChainPhaseNotReadyOrAlreadyPassedException(newPhase + " phase already passed. Current " +
+                    "phase: " + this.phase);
+        }
+    }
+
+    public AppUser getUser() {
+        return user;
     }
 
     public StatementRequestDto getStatementRequestDataDto() {

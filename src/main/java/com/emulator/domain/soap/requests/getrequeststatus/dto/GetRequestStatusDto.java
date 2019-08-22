@@ -2,6 +2,8 @@ package com.emulator.domain.soap.requests.getrequeststatus.dto;
 
 import com.emulator.domain.soap.requests.DataTransferObject;
 
+import java.util.List;
+
 public class GetRequestStatusDto extends DataTransferObject {
 
     private String attrCreateTime = "";
@@ -12,7 +14,7 @@ public class GetRequestStatusDto extends DataTransferObject {
 
     private boolean notProcessedYet = false;
 
-    private StateResponseDto stateResponse;
+    private List<StateResponseDto> stateResponseList;
 
     public String getAttrCreateTime() {
         return attrCreateTime;
@@ -62,11 +64,11 @@ public class GetRequestStatusDto extends DataTransferObject {
         this.notProcessedYet = notProcessedYet;
     }
 
-    public StateResponseDto getStateResponse() {
-        return stateResponse;
+    public List<StateResponseDto> getStateResponseList() {
+        return stateResponseList;
     }
 
-    public void setStateResponse(StateResponseDto stateResponse) {
-        this.stateResponse = stateResponse;
+    public void setStateResponseList(List<StateResponseDto> stateResponseList) {
+        this.stateResponseList = stateResponseList;
     }
 }

@@ -1,34 +1,29 @@
 package com.emulator.controller;
 
 import com.emulator.domain.entity.AppUser;
-import com.emulator.domain.soap.requestchain.RequestChainPhase;
-import com.emulator.domain.soap.requestchain.RequestChainPool;
-import com.emulator.domain.soap.requests.incoming.IncomingDto;
 import com.emulator.domain.frontend.response.ResponseBodyData;
 import com.emulator.domain.soap.SoapClient;
 import com.emulator.domain.soap.SoapMessageList;
-import com.emulator.domain.soap.requests.incoming.IncomingData;
-import com.emulator.domain.soap.requests.incoming.IncomingResult;
 import com.emulator.domain.soap.requestchain.RequestChain;
-import com.emulator.exception.RequestChainIsNotExistException;
-import com.emulator.exception.RequestParameterLengthException;
+import com.emulator.domain.soap.requestchain.RequestChainPhase;
+import com.emulator.domain.soap.requestchain.RequestChainPool;
+import com.emulator.domain.soap.requests.getrequeststatus.dto.GetRequestStatusDto;
+import com.emulator.exception.BadRequestParameterException;
 import com.emulator.exception.SoapServerBadResponseException;
-import com.emulator.exception.SoapServerIncomingException;
+import com.emulator.exception.SoapServerGetRequestStatusException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 @Controller
-public class IncomingController extends AbstractController {
+public class StatementDocumentController extends AbstractController {
 
-    private static final RequestChainPhase PHASE = RequestChainPhase.INCOMING;
-
+    private static final RequestChainPhase PHASE = RequestChainPhase.STATEMENT_DOCUMENT;
 
     @Autowired
     private SoapClient soapClient;
@@ -36,32 +31,38 @@ public class IncomingController extends AbstractController {
     @Autowired
     private RequestChainPool chainPool;
 
-    @RequestMapping(value = "/sendRequests/incoming", method = RequestMethod.POST)
+    @RequestMapping(value = "/sendRequests/getRequestStatus/getStatement", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseBodyData runIncoming(HttpSession httpSession, @RequestBody IncomingData data) {
+    public ResponseBodyData runGetRequestStatus(HttpSession httpSession,
+                                                @RequestParam(name = "responseId") String responseId) {
         try {
             AppUser user = (AppUser) httpSession.getAttribute("user");
             if (user == null) {
                 return getUserIsNotAuthorizedResponse();
             }
-            data.check();
 
-            RequestChain chain = chainPool.getRequestChain(user, data.getAttrRequestId());
+            RequestChain chain = chainPool.getRequestChain(user, responseId);
             chain.checkPhase(PHASE);
-            IncomingDto dto = soapClient.sendIncoming(user, data);
-            chain.setIncoming(dto);
+            GetRequestStatusDto dto = soapClient.sendGetRequestStatus(user, chain.getIncomingResponseId());
+            chain.setGetRequestStatus(dto);
 
-            return getSoapRequestSuccessResponse(dto.getResponseId());
-        } catch (SoapServerIncomingException e) {
+            return getSoapRequestSuccessResponse(dto);
+        } catch (SoapServerGetRequestStatusException e) {
             e.printStackTrace();
             return getSoapRequestFailResponse(e);
-        } catch (RequestParameterLengthException e) {
+        } catch (BadRequestParameterException e) {
             e.printStackTrace();
-            return getParameterLengthErrorResponse(e);
+            return getBadRequestParameterResponse(e);
         } catch (Exception e) {
             e.printStackTrace();
             return getServerFailResponse(e);
         }
+    }
+
+    protected ResponseBodyData getSoapRequestSuccessResponse(GetRequestStatusDto requestResult) {
+        ResponseBodyData result = getSoapRequestSuccessResponse("");
+        result.setObject(requestResult);
+        return result;
     }
 
     @Autowired
@@ -71,7 +72,7 @@ public class IncomingController extends AbstractController {
     protected ResponseBodyData getSoapRequestSuccessResponse(String message) {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("OK");
-        result.setMessage("Incoming request to Soap server is success. requestID=" + message);
+        result.setMessage("StatementDocument to Soap server is success." + message);
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
         soapMessageList.clearLastRequestMessageList();
         return result;
@@ -81,10 +82,16 @@ public class IncomingController extends AbstractController {
     protected ResponseBodyData getSoapRequestFailResponse(SoapServerBadResponseException exception) {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("ERROR");
-        result.setMessage("Incoming request to Soap server is fail. message=" + exception.getSoapResponse());
+        result.setMessage("StatementDocument to Soap server is fail. message=" + exception.getSoapResponse());
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
         soapMessageList.clearLastRequestMessageList();
         return result;
     }
 
+    private ResponseBodyData getBadRequestParameterResponse(BadRequestParameterException e) {
+        ResponseBodyData result = new ResponseBodyData();
+        result.setStatus("ERROR");
+        result.setMessage("Parameter " + e.getParameterName() + " not found on server");
+        return result;
+    }
 }

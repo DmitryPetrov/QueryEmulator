@@ -2,12 +2,13 @@ package com.emulator.controller;
 
 import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.frontend.response.ResponseBodyData;
-import com.emulator.domain.soap.requests.statementrequest.dto.StatementRequestDto;
 import com.emulator.domain.soap.SoapClient;
 import com.emulator.domain.soap.SoapMessageList;
 import com.emulator.domain.soap.requestchain.RequestChain;
+import com.emulator.domain.soap.requestchain.RequestChainPhase;
+import com.emulator.domain.soap.requestchain.RequestChainPool;
 import com.emulator.domain.soap.requests.statementrequest.StatementRequestData;
-import com.emulator.domain.soap.requests.statementrequest.StatementRequestResult;
+import com.emulator.domain.soap.requests.statementrequest.dto.StatementRequestDto;
 import com.emulator.exception.RequestParameterLengthException;
 import com.emulator.exception.SoapServerBadResponseException;
 import com.emulator.exception.SoapServerStatementRequestException;
@@ -19,15 +20,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 @Controller
 public class StatementRequestController extends AbstractController {
 
-    private static final String REQUEST_NAME = "Statement Request";
+    private static final RequestChainPhase PHASE = RequestChainPhase.STATEMENT_REQUEST;
 
     @Autowired
     private SoapClient soapClient;
+
+    @Autowired
+    private RequestChainPool chainPool;
 
     @RequestMapping(value = "/sendRequests/statementRequest", method = RequestMethod.POST)
     @ResponseBody
@@ -37,19 +40,15 @@ public class StatementRequestController extends AbstractController {
             if (user == null) {
                 return getUserIsNotAuthorizedResponse();
             }
-
-            RequestChain chain = getRequestChain();
-
             data.check();
 
-            StatementRequestResult result = soapClient.sendStatementRequest(user, data);
-            StatementRequestDto dto = getDto(data, result);
+            RequestChain chain = chainPool.createRequestChain(user);
+            chain.checkPhase(PHASE);
+
+            StatementRequestDto dto = soapClient.sendStatementRequest(user, data);
             chain.setStatementRequest(dto);
 
-            List<RequestChain> requestList = (List<RequestChain>) httpSession.getAttribute("requestList");
-            requestList.add(chain);
-
-            return getSoapRequestSuccessResponse(result.getResponseId());
+            return getSoapRequestSuccessResponse(dto.getResponseId());
         } catch (SoapServerStatementRequestException e) {
             e.printStackTrace();
             return getSoapRequestFailResponse(e);
@@ -83,11 +82,6 @@ public class StatementRequestController extends AbstractController {
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
         soapMessageList.clearLastRequestMessageList();
         return result;
-    }
-
-    private RequestChain getRequestChain() {
-        RequestChain chain = new RequestChain();
-        return chain;
     }
 
 }

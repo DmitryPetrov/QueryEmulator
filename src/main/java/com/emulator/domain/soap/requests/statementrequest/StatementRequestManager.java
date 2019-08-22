@@ -6,6 +6,7 @@ import com.emulator.domain.soap.SoapMessageList;
 import com.emulator.domain.soap.com.bssys.sbns.upg.ObjectFactory;
 import com.emulator.domain.soap.com.bssys.sbns.upg.SendRequests;
 import com.emulator.domain.soap.com.bssys.sbns.upg.SendRequestsResponse;
+import com.emulator.domain.soap.requests.statementrequest.dto.StatementRequestDto;
 import com.emulator.exception.SoapServerStatementRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,7 +27,7 @@ public class StatementRequestManager {
     @Qualifier("StatementRequestMessageBuilder")
     private MessageBuilder requestMessageBuilder;
 
-    public StatementRequestResult runStatementRequest(AppUser user, StatementRequestData data) {
+    public StatementRequestDto runStatementRequest(AppUser user, StatementRequestData data) {
         String statementRequestMessage = requestMessageBuilder.build(data);
 
         RequestMessageHandler requestMessageHandler = new RequestMessageHandler(NODE_NAME_WITH_REQUEST_MESSAGE, statementRequestMessage);
@@ -37,7 +38,9 @@ public class StatementRequestManager {
         response = (JAXBElement<SendRequestsResponse>) webServiceTemplate
                 .marshalSendAndReceive(request, requestMessageHandler);
 
-        return getResult(response);
+        StatementRequestResult result = getResult(response);
+
+        return data.getDto(result);
     }
 
 

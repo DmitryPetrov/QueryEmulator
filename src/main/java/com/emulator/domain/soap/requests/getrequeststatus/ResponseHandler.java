@@ -2,6 +2,7 @@ package com.emulator.domain.soap.requests.getrequeststatus;
 
 import com.emulator.domain.soap.SoapMessageList;
 import com.emulator.domain.soap.com.bssys.sbns.upg.GetRequestStatusResponse;
+import com.emulator.domain.soap.requests.getrequeststatus.stateresponse.StateResponse;
 import com.emulator.exception.ParameterIsNullException;
 import com.emulator.exception.SoapServerGetRequestStatusException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,8 +61,19 @@ class ResponseHandler {
         result.setAttrSender(getAttrValue(attributes, result.ATTR_SENDER_NAME));
         result.setAttrVersion(getAttrValue(attributes, result.ATTR_VERSION_NAME));
 
-        Node model = response.getElementsByTagName(MODEL_NODE_NAME).item(MODEL_NODE_INDEX);
-        setStatusResponse(model.getTextContent(), result);
+        NodeList modelList = response.getElementsByTagName(MODEL_NODE_NAME);
+
+        for (int i = 0; i < modelList.getLength(); i++) {
+            Node model = modelList.item(i);
+
+            String textContent = model.getTextContent();
+            if (textContent.contains("Statement")) {
+
+            }
+            if (textContent.contains("StatusResponse")) {
+                setStatusResponse(textContent, result);
+            }
+        }
 
         return result;
     }
@@ -69,16 +81,16 @@ class ResponseHandler {
     private void setStatusResponse(String xml, GetRequestStatusResult result) throws
             IOException, SAXException {
         Document document = toDocument(xml);
-        StateResponse stateResponse = result.getStateResponse();
+        StateResponse stateResponse = result.getStateResponseList();
 
         NamedNodeMap attributes = document.getDocumentElement().getAttributes();
-        stateResponse.setAttrXmlns(getAttrValue(attributes, stateResponse.ATTR_XMLNS_NAME));
+        stateResponse.setAttrXmlns(getAttrValue(attributes, stateResponse.XMLNS_ATTR_NAME));
 
-        stateResponse.setBankMessage(getNodeValue(document, stateResponse.BANK_MESSAGE_NAME));
-        stateResponse.setDocId(getNodeValue(document, stateResponse.DOC_ID_NAME));
-        stateResponse.setDocType(getNodeValue(document, stateResponse.DOC_TYPE_NAME));
-        stateResponse.setExtId(getNodeValue(document, stateResponse.EXT_ID_NAME));
-        stateResponse.setState(getNodeValue(document, stateResponse.STATE_NAME));
+        stateResponse.setBankMessage(getNodeValue(document, stateResponse.BANK_MESSAGE_NODE_NAME));
+        stateResponse.setDocId(getNodeValue(document, stateResponse.DOC_ID_NODE_NAME));
+        stateResponse.setDocType(getNodeValue(document, stateResponse.DOC_TYPE_NODE_NAME));
+        stateResponse.setExtId(getNodeValue(document, stateResponse.EXT_ID_NODE_NAME));
+        stateResponse.setState(getNodeValue(document, stateResponse.STATE_NODE_NAME));
     }
 
     @Autowired
