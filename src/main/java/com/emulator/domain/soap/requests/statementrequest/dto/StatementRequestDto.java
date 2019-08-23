@@ -187,10 +187,6 @@ public class StatementRequestDto extends DataTransferObject {
         return accounts;
     }
 
-    public void setAccounts(List<DataAccountDto> accounts) {
-        this.accounts = accounts;
-    }
-
     public SignCollectionDto getSignCollection() {
         return signCollection;
     }

@@ -2,6 +2,7 @@ package com.emulator.domain.soap.requests.getrequeststatus;
 
 import com.emulator.domain.soap.requests.getrequeststatus.dto.GetRequestStatusDto;
 import com.emulator.domain.soap.requests.getrequeststatus.dto.StateResponseDto;
+import com.emulator.domain.soap.requests.getrequeststatus.statement.Statement;
 import com.emulator.domain.soap.requests.getrequeststatus.stateresponse.StateResponse;
 import com.emulator.exception.ParameterIsNullException;
 
@@ -32,7 +33,8 @@ public class GetRequestStatusResult {
 
     private boolean notProcessedYet = false;
 
-    private List<StateResponse> stateResponseList;
+    private List<StateResponse> stateResponseList  = new ArrayList<>();
+    private List<Statement> statementList  = new ArrayList<>();
 
     public String getNamespaceUpg() {
         return namespaceUpg;
@@ -103,22 +105,23 @@ public class GetRequestStatusResult {
     }
 
     public void setNotProcessedYet(boolean notProcessedYet) {
-        this.notProcessedYet = true;
+        this.notProcessedYet = notProcessedYet;
     }
 
     public List<StateResponse> getStateResponseList() {
-        if (stateResponseList == null) {
-            this.stateResponseList = new ArrayList<>();
-        }
         return stateResponseList;
     }
 
-    public void setStateResponseList(List<StateResponse> stateResponseList) {
-        if (stateResponseList == null) {
-            throw new ParameterIsNullException("com.emulator.domain.soap.requests.getrequeststatus.GetRequestStatusResult" +
-                    ".List<StateResponse> stateResponseList must not be null.");
-        }
-        this.stateResponseList = stateResponseList;
+    public boolean add(StateResponse stateResponse) {
+        return stateResponseList.add(stateResponse);
+    }
+
+    public List<Statement> getStatementList() {
+        return statementList;
+    }
+
+    public boolean add(Statement statemente) {
+        return statementList.add(statemente);
     }
 
     GetRequestStatusDto getDto() {
@@ -130,11 +133,10 @@ public class GetRequestStatusResult {
         dto.setAttrVersion(this.getAttrVersion());
         dto.setNotProcessedYet(this.isNotProcessedYet());
 
-        List<StateResponseDto> stateResponseDtoList = new ArrayList<>(stateResponseList.size());
-        for (StateResponse stateResponse: stateResponseList) {
+        List<StateResponseDto> stateResponseDtoList = dto.getStateResponseList();
+        for (StateResponse stateResponse: getStateResponseList()) {
             stateResponseDtoList.add(stateResponse.getDto());
         }
-        dto.setStateResponseList(stateResponseDtoList);
 
         dto.setRequestId(getAttrRequestId());
         dto.setResponseId(getAttrResponseId());

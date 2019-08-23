@@ -67,4 +67,13 @@ public class AppUser{
 
         return Objects.hash(userName, password, sessionId);
     }
+
+    @Override
+    public String toString() {
+        return "AppUser{" +
+                "userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                ", sessionId='" + sessionId + '\'' +
+                '}';
+    }
 }

@@ -30,7 +30,8 @@ public class StatementRequestManager {
     public StatementRequestDto runStatementRequest(AppUser user, StatementRequestData data) {
         String statementRequestMessage = requestMessageBuilder.build(data);
 
-        RequestMessageHandler requestMessageHandler = new RequestMessageHandler(NODE_NAME_WITH_REQUEST_MESSAGE, statementRequestMessage);
+        RequestMessageHandler requestMessageHandler = new RequestMessageHandler(NODE_NAME_WITH_REQUEST_MESSAGE,
+                statementRequestMessage);
 
         JAXBElement<SendRequests> request = buildRequest(user);
         JAXBElement<SendRequestsResponse> response = null;
@@ -39,7 +40,6 @@ public class StatementRequestManager {
                 .marshalSendAndReceive(request, requestMessageHandler);
 
         StatementRequestResult result = getResult(response);
-
         return data.getDto(result);
     }
 

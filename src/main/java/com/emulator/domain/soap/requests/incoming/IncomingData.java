@@ -159,11 +159,10 @@ public class IncomingData extends RequestParameters {
         dto.setAttrTimestamp(this.getAttrTimestamp());
         dto.setAttrVersion(this.getAttrVersion());
 
-        List<String> docTypesDto = new ArrayList<>(getDocTypes().size());
+        List<String> docTypesDto = dto.getDocTypes();
         for (String docType: getDocTypes()) {
             docTypesDto.add(docType);
         }
-        dto.setDocTypes(docTypesDto);
 
         dto.setRequestId(dto.getAttrRequestId());
         dto.setResponseId(result.getResponseId());

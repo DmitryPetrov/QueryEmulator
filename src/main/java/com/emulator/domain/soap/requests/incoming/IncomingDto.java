@@ -2,6 +2,7 @@ package com.emulator.domain.soap.requests.incoming;
 
 import com.emulator.domain.soap.requests.DataTransferObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class IncomingDto extends DataTransferObject {
@@ -14,7 +15,7 @@ public class IncomingDto extends DataTransferObject {
     private String attrStateRequest = "";
     private String attrIncomingId = "";
     private String attrTimestamp = "";
-    private List<String> docTypes;
+    private List<String> docTypes = new ArrayList<>();
 
     public String getAttrRequestId() {
         return attrRequestId;
@@ -74,9 +75,5 @@ public class IncomingDto extends DataTransferObject {
 
     public List<String> getDocTypes() {
         return docTypes;
-    }
-
-    public void setDocTypes(List<String> docTypes) {
-        this.docTypes = docTypes;
     }
 }

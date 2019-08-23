@@ -16,3 +16,11 @@ RequestParameters throws декларации
 нужен ли BadRequestParameterException
 
 автоматическое увеличение requestID incomingId
+
+RequestChain setGetRequestStatus()
+        this.statementRequestStatus = dto.getStateResponseList().get(0).getState()
+
+com.emulator.domain.soap.requests.getrequeststatus.ResponseHandler getNodeValue()
+        Node node = doc.getElementsByTagName(nodeName).item(0);
+
+сделать список строк из ошибок от сервера и прогонять через него каждый ответ на поиск ошибок

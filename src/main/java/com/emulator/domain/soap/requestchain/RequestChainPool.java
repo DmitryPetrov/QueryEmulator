@@ -21,22 +21,23 @@ public class RequestChainPool {
     }
 
     public RequestChain getRequestChain(AppUser user, String responseId) {
-        for (RequestChain requestChain: chains) {
+        for (RequestChain requestChain : chains) {
             if (!requestChain.getResponseId().equals(responseId)) {
                 continue;
             }
-            if(!requestChain.getUser().equals(user)) {
+            if (!requestChain.getUser().equals(user)) {
                 continue;
             }
             return requestChain;
         }
-        throw new RequestChainIsNotExistException("RequestChain with responseId=" + responseId + " not found");
+        throw new RequestChainIsNotExistException("RequestChain with responseId=" + responseId + " and user=" + user
+                + " not found");
     }
 
     public List<RequestChain> getChainList(AppUser user) {
         List<RequestChain> result = new ArrayList<>();
-        for (RequestChain requestChain: chains) {
-            if(requestChain.getUser().equals(user)) {
+        for (RequestChain requestChain : chains) {
+            if (requestChain.getUser().equals(user)) {
                 result.add(requestChain);
             }
         }

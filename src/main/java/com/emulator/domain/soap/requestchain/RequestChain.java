@@ -47,7 +47,7 @@ public class RequestChain {
         checkOnNull(dto);
 
         this.getRequestStatus = dto;
-        this.statementRequestStatus = dto.getStateResponseList().getState();
+        this.statementRequestStatus = dto.getStateResponseList().get(0).getState();
         this.phase = RequestChainPhase.STATEMENT_REQUEST_STATUS;
     }
 

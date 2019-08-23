@@ -29,7 +29,6 @@ public class IncomingController extends AbstractController {
 
     private static final RequestChainPhase PHASE = RequestChainPhase.INCOMING;
 
-
     @Autowired
     private SoapClient soapClient;
 

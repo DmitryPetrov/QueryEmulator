@@ -2,6 +2,7 @@ package com.emulator.domain.soap.requests.getrequeststatus.dto;
 
 import com.emulator.domain.soap.requests.DataTransferObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GetRequestStatusDto extends DataTransferObject {
@@ -65,10 +66,9 @@ public class GetRequestStatusDto extends DataTransferObject {
     }
 
     public List<StateResponseDto> getStateResponseList() {
+        if (stateResponseList == null) {
+            this.stateResponseList = new ArrayList<>();
+        }
         return stateResponseList;
-    }
-
-    public void setStateResponseList(List<StateResponseDto> stateResponseList) {
-        this.stateResponseList = stateResponseList;
     }
 }

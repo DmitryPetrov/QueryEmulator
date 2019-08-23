@@ -299,11 +299,10 @@ public class StatementRequestData extends RequestParameters {
         dto.setTemplate(this.getTemplate());
         dto.setToDate(this.getToDate());
 
-        List<DataAccountDto> accountsDto = new ArrayList<>(getAccounts().size());
+        List<DataAccountDto> accountsDto = dto.getAccounts();
         for (DataAccount account: getAccounts()) {
             accountsDto.add(account.getDto());
         }
-        dto.setAccounts(accountsDto);
 
         dto.setSignCollection(this.getSignCollection().getDto());
 
