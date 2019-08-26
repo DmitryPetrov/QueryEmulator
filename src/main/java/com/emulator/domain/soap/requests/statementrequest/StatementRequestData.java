@@ -3,6 +3,7 @@ package com.emulator.domain.soap.requests.statementrequest;
 import com.emulator.domain.entity.RequestParameters;
 import com.emulator.domain.soap.requests.statementrequest.dto.DataAccountDto;
 import com.emulator.domain.soap.requests.statementrequest.dto.StatementRequestDto;
+import com.emulator.domain.soap.signcollection.SignCollection;
 import com.emulator.exception.RequestParameterLengthException;
 
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public class StatementRequestData extends RequestParameters {
     private final String BANK_MESSAGE_NODE_DEFAULT_VALUE = "";
     private final String BANK_MESSAGE_AUTHOR_NODE_DEFAULT_VALUE = "";
     private final String DOC_DATE_NODE_DEFAULT_VALUE = "2018-05-15T17:08:00";
-    private final String DOC_ID_NODE_DEFAULT_VALUE = "40702810800000005897";
+    private final String DOC_ID_NODE_DEFAULT_VALUE = "0b64c0df-1690-4c15-0000-000000000020";
     private final String DOC_NUMBER_NODE_DEFAULT_VALUE = "78";
     private final String DOC_TYPE_VERSION_NODE_DEFAULT_VALUE = "";
     private final String EXTERNAL_ID_NODE_DEFAULT_VALUE = "";
@@ -267,7 +268,7 @@ public class StatementRequestData extends RequestParameters {
 
     public SignCollection getSignCollection() {
         if (this.signCollection == null) {
-            this.signCollection = new SignCollection();
+            this.setSignCollection(new SignCollection());
         }
         return signCollection;
     }
@@ -300,7 +301,7 @@ public class StatementRequestData extends RequestParameters {
         dto.setToDate(this.getToDate());
 
         List<DataAccountDto> accountsDto = dto.getAccounts();
-        for (DataAccount account: getAccounts()) {
+        for (DataAccount account: this.getAccounts()) {
             accountsDto.add(account.getDto());
         }
 

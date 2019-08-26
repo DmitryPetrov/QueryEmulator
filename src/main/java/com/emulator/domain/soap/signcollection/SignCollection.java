@@ -1,12 +1,18 @@
-package com.emulator.domain.soap.requests.statementrequest;
+package com.emulator.domain.soap.signcollection;
 
-import com.emulator.domain.soap.requests.statementrequest.dto.SignCollectionDto;
-import com.emulator.domain.soap.requests.statementrequest.dto.SignDto;
+import com.emulator.domain.soap.signcollection.dto.SignCollectionDto;
+import com.emulator.domain.soap.signcollection.dto.SignDto;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SignCollection {
+
+    public final String BANK_MESSAGE_NODE_NAME = "bankMessage";
+    public final String DIGEST_NAME_NODE_NAME = "digestName";
+    public final String SIGNS_NODE_NAME = "signs";
+    public final String SIGN_NODE_NAME = "Sign";
+
 
     private String bankMessage = "";
     private String digestName = "";
@@ -32,17 +38,18 @@ public class SignCollection {
         return signs;
     }
 
-    public void setSigns(List<Sign> signs) {
-        this.signs = signs;
+    public boolean add(Sign sign) {
+        return signs.add(sign);
     }
 
     public SignCollectionDto getDto() {
         SignCollectionDto dto = new SignCollectionDto();
+
         dto.setBankMessage(this.getBankMessage());
         dto.setDigestName(this.getDigestName());
 
-        List<SignDto> signsDto = new ArrayList<>(getSigns().size());
-        for(Sign sign: getSigns()) {
+        List<SignDto> signsDto = dto.getSigns();
+        for (Sign sign: getSigns()) {
             signsDto.add(sign.getDto());
         }
 

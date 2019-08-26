@@ -3,11 +3,11 @@ package com.emulator.domain.soap.requests.getrequeststatus;
 import com.emulator.domain.soap.SoapMessageList;
 import com.emulator.domain.soap.com.bssys.sbns.upg.GetRequestStatusResponse;
 import com.emulator.domain.soap.requests.getrequeststatus.statement.Operation;
-import com.emulator.domain.soap.requests.getrequeststatus.statement.Sign;
-import com.emulator.domain.soap.requests.getrequeststatus.statement.SignCollection;
+import com.emulator.domain.soap.signcollection.Sign;
+import com.emulator.domain.soap.signcollection.SignCollection;
 import com.emulator.domain.soap.requests.getrequeststatus.statement.Statement;
 import com.emulator.domain.soap.requests.getrequeststatus.stateresponse.StateResponse;
-import com.emulator.domain.soap.requests.getrequeststatus.stateresponse.UserWorkspace;
+import com.emulator.domain.soap.signcollection.UserWorkspace;
 import com.emulator.exception.ParameterIsNullException;
 import com.emulator.exception.SoapServerGetRequestStatusException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +74,7 @@ class ResponseHandler {
             if (textContent.contains("Statement")) {
                 setStatement(textContent, result);
             }
-            if (textContent.contains("StatusResponse")) {
+            if (textContent.contains("StateResponse")) {
                 setStatusResponse(textContent, result);
             }
         }

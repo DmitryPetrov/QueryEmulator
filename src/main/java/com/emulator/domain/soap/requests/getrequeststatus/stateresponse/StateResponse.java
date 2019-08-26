@@ -1,6 +1,6 @@
 package com.emulator.domain.soap.requests.getrequeststatus.stateresponse;
 
-import com.emulator.domain.soap.requests.getrequeststatus.dto.StateResponseDto;
+import com.emulator.domain.soap.requests.getrequeststatus.dto.stateresponse.StateResponseDto;
 
 public class StateResponse {
 
@@ -151,11 +151,14 @@ public class StateResponse {
 
     public StateResponseDto getDto() {
         StateResponseDto dto = new StateResponseDto();
-        dto.setAttrXmlns(this.getAttrXmlns());
         dto.setBankMessage(this.getBankMessage());
+        dto.setBankMessageAuthor(this.getBankMessageAuthor());
+        dto.setCreateTime(this.getCreateTime());
         dto.setDocId(this.getDocId());
         dto.setDocType(this.getDocType());
         dto.setExtId(this.getExtId());
+        dto.setMessageOnlyForBank(this.getMessageOnlyForBank());
+        dto.setOperationDate(this.getOperationDate());
         dto.setState(this.getState());
 
         return dto;

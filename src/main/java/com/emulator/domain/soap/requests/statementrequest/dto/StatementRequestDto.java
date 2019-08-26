@@ -1,6 +1,7 @@
 package com.emulator.domain.soap.requests.statementrequest.dto;
 
 import com.emulator.domain.soap.requests.DataTransferObject;
+import com.emulator.domain.soap.signcollection.dto.SignCollectionDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -188,6 +189,9 @@ public class StatementRequestDto extends DataTransferObject {
     }
 
     public SignCollectionDto getSignCollection() {
+        if (this.signCollection == null) {
+            this.setSignCollection(new SignCollectionDto());
+        }
         return signCollection;
     }
 

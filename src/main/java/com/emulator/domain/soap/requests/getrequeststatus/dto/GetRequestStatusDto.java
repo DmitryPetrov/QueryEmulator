@@ -1,6 +1,8 @@
 package com.emulator.domain.soap.requests.getrequeststatus.dto;
 
 import com.emulator.domain.soap.requests.DataTransferObject;
+import com.emulator.domain.soap.requests.getrequeststatus.dto.statement.StatementDto;
+import com.emulator.domain.soap.requests.getrequeststatus.dto.stateresponse.StateResponseDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +17,9 @@ public class GetRequestStatusDto extends DataTransferObject {
 
     private boolean notProcessedYet = false;
 
-    private List<StateResponseDto> stateResponseList;
+    private List<StateResponseDto> stateResponseList = new ArrayList<>();
+    private List<StatementDto> statementList = new ArrayList<>();
+
 
     public String getAttrCreateTime() {
         return attrCreateTime;
@@ -66,9 +70,10 @@ public class GetRequestStatusDto extends DataTransferObject {
     }
 
     public List<StateResponseDto> getStateResponseList() {
-        if (stateResponseList == null) {
-            this.stateResponseList = new ArrayList<>();
-        }
         return stateResponseList;
+    }
+
+    public List<StatementDto> getStatementList() {
+        return statementList;
     }
 }

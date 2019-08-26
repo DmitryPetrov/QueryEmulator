@@ -1,4 +1,6 @@
-package com.emulator.domain.soap.requests.getrequeststatus.stateresponse;
+package com.emulator.domain.soap.signcollection;
+
+import com.emulator.domain.soap.signcollection.dto.UserWorkspaceDto;
 
 public class UserWorkspace {
 
@@ -93,5 +95,21 @@ public class UserWorkspace {
 
     public void setUserMAC(String userMAC) {
         this.userMAC = userMAC;
+    }
+
+    public UserWorkspaceDto getDto() {
+        UserWorkspaceDto dto = new UserWorkspaceDto();
+
+        dto.setAVPActive(this.getAVPActive());
+        dto.setOSUpdatable(this.getOSUpdatable());
+        dto.setAddInfo(this.getAddInfo());
+        dto.setFaultPassAttemptCount(this.getFaultPassAttemptCount());
+        dto.setHashCode(this.getHashCode());
+        dto.setNotRemoteAccess(this.getNotRemoteAccess());
+        dto.setOuterKeyStorage(this.getOuterKeyStorage());
+        dto.setPassChanged(this.getPassChanged());
+        dto.setUserMAC(this.getUserMAC());
+
+        return dto;
     }
 }

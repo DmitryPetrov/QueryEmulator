@@ -1,9 +1,7 @@
-package com.emulator.domain.soap.requests.getrequeststatus.statement;
+package com.emulator.domain.soap.signcollection;
 
-import com.emulator.domain.soap.requests.getrequeststatus.stateresponse.UserWorkspace;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.emulator.domain.soap.signcollection.dto.SignDto;
+import com.emulator.domain.soap.signcollection.dto.UserWorkspaceDto;
 
 public class Sign {
 
@@ -59,8 +57,8 @@ public class Sign {
     private String userMAC = "";
     private String userName = "";
     private String valid = "";
-    private Sign confirmSign = new Sign();
-    private UserWorkspace userWorkspace = new UserWorkspace();
+    private Sign confirmSign;
+    private UserWorkspace userWorkspace;
 
 
     public String getCertificateGuid() {
@@ -248,10 +246,60 @@ public class Sign {
     }
 
     public Sign getConfirmSign() {
+        if (this.confirmSign == null) {
+            this.setConfirmSign(new Sign());
+        }
         return confirmSign;
     }
 
+    public void setConfirmSign(Sign confirmSign) {
+        this.confirmSign = confirmSign;
+    }
+
     public UserWorkspace getUserWorkspace() {
+        if (this.userWorkspace == null) {
+            this.setUserWorkspace(new UserWorkspace());
+        }
         return userWorkspace;
+    }
+
+    public void setUserWorkspace(UserWorkspace userWorkspace) {
+        this.userWorkspace = userWorkspace;
+    }
+
+    public SignDto getDto() {
+        SignDto dto = new SignDto();
+
+        dto.setCertificateGuid(this.getCertificateGuid());
+        dto.setContent(this.getContent());
+        dto.setContentLarge(this.getContentLarge());
+        dto.setDigestScheme(this.getDigestScheme());
+        dto.setDigestSchemeFormat(this.getDigestSchemeFormat());
+        dto.setDigestSchemeVersion(this.getDigestSchemeVersion());
+        dto.setDtCheck(this.getDtCheck());
+        dto.setDtCreate(this.getDtCreate());
+        dto.setOrgId(this.getOrgId());
+        dto.setOrgName(this.getOrgName());
+        dto.setPosition(this.getPosition());
+        dto.setSafeTouchAutoSign(this.getSafeTouchAutoSign());
+        dto.setSafeTouchDigestScheme(this.getSafeTouchDigestScheme());
+        dto.setSafeTouchDigestSchemeVersion(this.getSafeTouchDigestSchemeVersion());
+        dto.setSignAuthorityId(this.getSignAuthorityId());
+        dto.setSignHash(this.getSignHash());
+        dto.setSignKey(this.getSignKey());
+        dto.setSignType(this.getSignType());
+        dto.setSignerFullName(this.getSignerFullName());
+        dto.setUserIP(this.getUserIP());
+        dto.setUserMAC(this.getUserMAC());
+        dto.setUserName(this.getUserName());
+        dto.setValid(this.getValid());
+
+        SignDto confirmSignDto = this.getConfirmSign().getDto();
+        dto.setConfirmSign(confirmSignDto);
+
+        UserWorkspaceDto userWorkspaceDto = this.getUserWorkspace().getDto();
+        dto.setUserWorkspace(userWorkspaceDto);
+
+        return dto;
     }
 }

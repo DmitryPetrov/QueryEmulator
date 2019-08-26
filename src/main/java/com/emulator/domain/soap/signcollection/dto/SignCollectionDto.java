@@ -1,4 +1,4 @@
-package com.emulator.domain.soap.requests.statementrequest.dto;
+package com.emulator.domain.soap.signcollection.dto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,4 @@ public class SignCollectionDto {
         return signs;
     }
 
-    public void setSigns(List<SignDto> signs) {
-        this.signs = signs;
-    }
 }

@@ -1,10 +1,10 @@
 package com.emulator.domain.soap.requests.getrequeststatus;
 
 import com.emulator.domain.soap.requests.getrequeststatus.dto.GetRequestStatusDto;
-import com.emulator.domain.soap.requests.getrequeststatus.dto.StateResponseDto;
+import com.emulator.domain.soap.requests.getrequeststatus.dto.statement.StatementDto;
+import com.emulator.domain.soap.requests.getrequeststatus.dto.stateresponse.StateResponseDto;
 import com.emulator.domain.soap.requests.getrequeststatus.statement.Statement;
 import com.emulator.domain.soap.requests.getrequeststatus.stateresponse.StateResponse;
-import com.emulator.exception.ParameterIsNullException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -134,8 +134,13 @@ public class GetRequestStatusResult {
         dto.setNotProcessedYet(this.isNotProcessedYet());
 
         List<StateResponseDto> stateResponseDtoList = dto.getStateResponseList();
-        for (StateResponse stateResponse: getStateResponseList()) {
+        for (StateResponse stateResponse: this.getStateResponseList()) {
             stateResponseDtoList.add(stateResponse.getDto());
+        }
+
+        List<StatementDto> statementDtoList = dto.getStatementList();
+        for (Statement statement: this.getStatementList()) {
+            statementDtoList.add(statement.getDto());
         }
 
         dto.setRequestId(getAttrRequestId());

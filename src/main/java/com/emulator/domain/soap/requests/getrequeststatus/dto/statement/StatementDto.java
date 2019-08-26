@@ -1,67 +1,11 @@
-package com.emulator.domain.soap.requests.getrequeststatus.statement;
+package com.emulator.domain.soap.requests.getrequeststatus.dto.statement;
 
-import com.emulator.domain.soap.requests.getrequeststatus.dto.statement.OperationDto;
-import com.emulator.domain.soap.requests.getrequeststatus.dto.statement.StatementDto;
-import com.emulator.domain.soap.signcollection.SignCollection;
 import com.emulator.domain.soap.signcollection.dto.SignCollectionDto;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Statement {
-
-    public final String XMLNS_ATTR_NAME = "xmlns";
-
-    public final String ACCEPT_DATE_NODE_NAME = "acceptDate";
-    public final String ACCOUNT_NODE_NAME = "account";
-    public final String ACCOUNT_ID_NODE_NAME = "accountId";
-    public final String ACTUAL_NODE_NAME = "actual";
-    public final String AUTHOR_NODE_NAME = "author";
-    public final String BANK_BIC_NODE_NAME = "bankBIC";
-    public final String BANK_NAME_NODE_NAME = "bankName";
-    public final String BANK_NAME_BIC_NODE_NAME = "bankNameBIC";
-    public final String CARD_1_SUM_NODE_NAME = "card1Sum";
-    public final String CARD_2_SUM_NODE_NAME = "card2Sum";
-    public final String CREDIT_RETURN_NODE_NAME = "creditReturn";
-    public final String CREDIT_RETURN_NAT_NODE_NAME = "creditReturnNat";
-    public final String CURR_CODE_NODE_NAME = "currCode";
-    public final String CURR_ISO_CODE_NODE_NAME = "currIsoCode";
-    public final String DEBET_RETURN_NODE_NAME = "debetReturn";
-    public final String DEBET_RETURN_NAT_NODE_NAME = "debetReturnNat";
-    public final String DOC_COMMENT_NODE_NAME = "docComment";
-    public final String DOC_DATE_NODE_NAME = "docDate";
-    public final String DOC_NUMBER_NODE_NAME = "docNumber";
-    public final String DOC_TYPE_VERSION_NODE_NAME = "docTypeVersion";
-    public final String EXTERNAL_ID_NODE_NAME = "externalId";
-    public final String FROM_DATE_NODE_NAME = "fromDate";
-    public final String HASHCODE_NODE_NAME = "hashcode";
-    public final String INBOUND_BALANCE_NODE_NAME = "inboundBalance";
-    public final String INBOUND_BALANCE_NAT_NODE_NAME = "inboundBalanceNat";
-    public final String INDEXED_NODE_NAME = "indexed";
-    public final String IS_FINAL_NODE_NAME = "isFinal";
-    public final String LAST_OPERATION_DATE_NODE_NAME = "lastOperationDate";
-    public final String OLD_DOC_ID_NODE_NAME = "oldDocId";
-    public final String ORG_INN_NODE_NAME = "orgInn";
-    public final String ORG_NAME_NODE_NAME = "orgName";
-    public final String OUTBOUND_BALANCE_NODE_NAME = "outboundBalance";
-    public final String OUTBOUND_BALANCE_NAT_NODE_NAME = "outboundBalanceNat";
-    public final String PLAN_OUTBOUND_BALANCE_NODE_NAME = "planOutboundBalance";
-    public final String PREV_OPERATION_DATE_NODE_NAME = "prevOperationDate";
-    public final String RATE_IN_NODE_NAME = "rateIn";
-    public final String RATE_IN_FULL_NODE_NAME = "rateInFull";
-    public final String RATE_OUT_NODE_NAME = "rateOut";
-    public final String RATE_OUT_FULL_NODE_NAME = "rateOutFull";
-    public final String REQUEST_ID_NODE_NAME = "requestId";
-    public final String SEIZURE_AMOUNT_NODE_NAME = "seizureAmount";
-    public final String SEIZURE_WHOLE_AMOUNT_NODE_NAME = "seizureWholeAmount";
-    public final String TO_DATE_NODE_NAME = "toDate";
-    public final String OPERATIONS_NODE_NAME = "operations";
-    public final String OPERATION_NODE_NAME = "Operation";
-    public final String SIGN_COLLECTION_NODE_NAME = "signCollection";
-    public final String SIGN_COLLECTION_INNER_NODE_NAME = "SignCollection";
-
-
-    private String attrXmlns = "";
+public class StatementDto {
 
     private String acceptDate= "";
     private String account = "";
@@ -106,16 +50,8 @@ public class Statement {
     private String seizureAmount = "";
     private String seizureWholeAmount = "";
     private String toDate = "";
-    private List<Operation> operations = new ArrayList<>();
-    private SignCollection signCollection;
-
-    public String getAttrXmlns() {
-        return attrXmlns;
-    }
-
-    public void setAttrXmlns(String attrXmlns) {
-        this.attrXmlns = attrXmlns;
-    }
+    private List<OperationDto> operations = new ArrayList<>();
+    private SignCollectionDto signCollection;
 
     public String getAcceptDate() {
         return acceptDate;
@@ -461,79 +397,18 @@ public class Statement {
         this.toDate = toDate;
     }
 
-    public List<Operation> getOperations() {
+    public List<OperationDto> getOperations() {
         return operations;
     }
 
-    public boolean add(Operation operation) {
-        return operations.add(operation);
-    }
-
-    public SignCollection getSignCollection() {
+    public SignCollectionDto getSignCollection() {
         if (this.signCollection == null) {
-            this.setSignCollection(new SignCollection());
+            this.setSignCollection(new SignCollectionDto());
         }
         return signCollection;
     }
 
-    public void setSignCollection(SignCollection signCollection) {
+    public void setSignCollection(SignCollectionDto signCollection) {
         this.signCollection = signCollection;
-    }
-
-    public StatementDto getDto() {
-        StatementDto dto = new StatementDto();
-
-        dto.setAcceptDate(this.getAcceptDate());
-        dto.setAccount(this.getAccount());
-        dto.setAccountId(this.getAccountId());
-        dto.setActual(this.getActual());
-        dto.setAuthor(this.getAuthor());
-        dto.setBankBIC(this.getBankBIC());
-        dto.setBankName(this.getBankName());
-        dto.setBankNameBIC(this.getBankNameBIC());
-        dto.setCard1Sum(this.getCard1Sum());
-        dto.setCard2Sum(this.getCard2Sum());
-        dto.setCreditReturn(this.getCreditReturn());
-        dto.setCreditReturnNat(this.getCreditReturnNat());
-        dto.setCurrCode(this.getCurrCode());
-        dto.setCurrIsoCode(this.getCurrIsoCode());
-        dto.setDebetReturn(this.getDebetReturn());
-        dto.setDebetReturnNat(this.getDebetReturnNat());
-        dto.setDocComment(this.getDocComment());
-        dto.setDocDate(this.getDocDate());
-        dto.setDocNumber(this.getDocNumber());
-        dto.setDocTypeVersion(this.getDocTypeVersion());
-        dto.setExternalId(this.getExternalId());
-        dto.setFromDate(this.getFromDate());
-        dto.setHashcode(this.getHashcode());
-        dto.setInboundBalance(this.getInboundBalance());
-        dto.setInboundBalanceNat(this.getInboundBalanceNat());
-        dto.setIndexed(this.getIndexed());
-        dto.setIsFinal(this.getIsFinal());
-        dto.setLastOperationDate(this.getLastOperationDate());
-        dto.setOldDocId(this.getOldDocId());
-        dto.setOrgInn(this.getOrgInn());
-        dto.setOrgName(this.getOrgName());
-        dto.setOutboundBalance(this.getOutboundBalance());
-        dto.setOutboundBalanceNat(this.getOutboundBalanceNat());
-        dto.setPlanOutboundBalance(this.getPlanOutboundBalance());
-        dto.setPrevOperationDate(this.getPrevOperationDate());
-        dto.setRateIn(this.getRateIn());
-        dto.setRateInFull(this.getRateInFull());
-        dto.setRateOut(this.getRateOut());
-        dto.setRateOutFull(this.getRateOutFull());
-        dto.setRequestId(this.getRequestId());
-        dto.setSeizureAmount(this.getSeizureAmount());
-        dto.setSeizureWholeAmount(this.getSeizureWholeAmount());
-        dto.setToDate(this.getToDate());
-
-        List<OperationDto> operationsDto = dto.getOperations();
-        for (Operation operation: this.getOperations()) {
-            operationsDto.add(operation.getDto());
-        }
-
-        dto.setSignCollection(this.getSignCollection().getDto());
-
-        return dto;
     }
 }
