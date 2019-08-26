@@ -1,41 +1,29 @@
 package com.emulator.controller;
 
 import com.emulator.domain.entity.AppUser;
-import com.emulator.domain.soap.requestchain.RequestChainPhase;
-import com.emulator.domain.soap.requestchain.RequestChainPool;
-import com.emulator.domain.soap.requests.incoming.IncomingDto;
 import com.emulator.domain.frontend.response.ResponseBodyData;
-import com.emulator.domain.soap.SoapClient;
 import com.emulator.domain.soap.SoapMessageList;
-import com.emulator.domain.soap.requests.incoming.IncomingData;
-import com.emulator.domain.soap.requests.incoming.IncomingResult;
 import com.emulator.domain.soap.requestchain.RequestChain;
-import com.emulator.exception.RequestChainIsNotExistException;
+import com.emulator.domain.soap.requestchain.RequestChainPool;
+import com.emulator.domain.soap.requests.incoming.IncomingData;
 import com.emulator.exception.RequestParameterLengthException;
 import com.emulator.exception.SoapServerBadResponseException;
 import com.emulator.exception.SoapServerIncomingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 @Controller
 public class IncomingController extends AbstractController {
 
-    private static final RequestChainPhase PHASE = RequestChainPhase.INCOMING;
-
-    @Autowired
-    private SoapClient soapClient;
-
     @Autowired
     private RequestChainPool chainPool;
 
-    @RequestMapping(value = "/sendRequests/incoming", method = RequestMethod.POST)
+    @PostMapping("/request/nextStep")
     @ResponseBody
     public ResponseBodyData runIncoming(HttpSession httpSession, @RequestBody IncomingData data) {
         try {
@@ -46,11 +34,9 @@ public class IncomingController extends AbstractController {
             data.check();
 
             RequestChain chain = chainPool.getRequestChain(user, data.getAttrRequestId());
-            chain.checkPhase(PHASE);
-            IncomingDto dto = soapClient.sendIncoming(user, data);
-            chain.setIncoming(dto);
+            chain.nextStep(data);
 
-            return getSoapRequestSuccessResponse(dto.getResponseId());
+            return getSoapRequestSuccessResponse(chain);
         } catch (SoapServerIncomingException e) {
             e.printStackTrace();
             return getSoapRequestFailResponse(e);
@@ -67,10 +53,11 @@ public class IncomingController extends AbstractController {
     SoapMessageList soapMessageList;
 
     @Override
-    protected ResponseBodyData getSoapRequestSuccessResponse(String message) {
+    protected ResponseBodyData getSoapRequestSuccessResponse(RequestChain chain) {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("OK");
-        result.setMessage("Incoming request to Soap server is success. requestID=" + message);
+        result.setMessage("Incoming request to Soap server is success. requestID=" + chain.getIncomingResponseId());
+        result.setRequestChain(chain);
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
         soapMessageList.clearLastRequestMessageList();
         return result;

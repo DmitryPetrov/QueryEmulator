@@ -20,7 +20,7 @@ public class RequestListController extends AbstractController{
     @Autowired
     private RequestChainPool chainPool;
 
-    @RequestMapping(value = "/requestList", method = RequestMethod.GET)
+    @RequestMapping(value = "/request/list", method = RequestMethod.GET)
     @ResponseBody
     public ResponseBodyData runGetRequestStatus(HttpSession httpSession) {
         try {
@@ -29,25 +29,25 @@ public class RequestListController extends AbstractController{
                 return getUserIsNotAuthorizedResponse();
             }
 
-            List<RequestChain> requestList = chainPool.getChainList(user);
+            List<RequestChain> chainList = chainPool.getChainList(user);
 
-            return getSuccessResponse(requestList);
+            return getSuccessResponse(chainList);
         } catch (Exception e) {
             e.printStackTrace();
             return getServerFailResponse(e);
         }
     }
 
-    private ResponseBodyData getSuccessResponse(List<RequestChain> requestList) {
+    private ResponseBodyData getSuccessResponse(List<RequestChain> chainList) {
         ResponseBodyData response = new ResponseBodyData();
         response.setStatus("OK");
         response.setMessage("Request list");
-        response.setRequestList(requestList);
+        response.setRequestChainList(chainList);
         return response;
     }
 
     @Override
-    protected ResponseBodyData getSoapRequestSuccessResponse(String sessionId) {
+    protected ResponseBodyData getSoapRequestSuccessResponse(RequestChain chain) {
         return null;
     }
 

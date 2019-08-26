@@ -35,7 +35,6 @@ public class AuthorizationController extends AbstractController{
             AppUser authorizedUser = soapClient.authorization(user);
 
             httpSession.setAttribute("user", authorizedUser);
-            httpSession.setAttribute("requestList", new ArrayList<RequestChain>());
 
             return getSoapRequestSuccessResponse(authorizedUser.getSessionId());
         } catch (SoapServerLoginException e) {
@@ -53,8 +52,7 @@ public class AuthorizationController extends AbstractController{
     @Autowired
     SoapMessageList soapMessageList;
 
-    @Override
-    protected ResponseBodyData getSoapRequestSuccessResponse(String sessionId) {
+    private ResponseBodyData getSoapRequestSuccessResponse(String sessionId) {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("OK");
         result.setMessage("LogIn to Soap server is success. sessionID=" + sessionId);
@@ -71,6 +69,11 @@ public class AuthorizationController extends AbstractController{
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
         soapMessageList.clearLastRequestMessageList();
         return result;
+    }
+
+    @Override
+    protected ResponseBodyData getSoapRequestSuccessResponse(RequestChain chain) {
+        return null;
     }
 
 }

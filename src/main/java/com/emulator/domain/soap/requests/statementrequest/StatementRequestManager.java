@@ -1,7 +1,7 @@
 package com.emulator.domain.soap.requests.statementrequest;
 
 import com.emulator.domain.entity.AppUser;
-import com.emulator.domain.soap.RequestMessageHandler;
+import com.emulator.domain.soap.requests.RequestMessageHandler;
 import com.emulator.domain.soap.SoapMessageList;
 import com.emulator.domain.soap.com.bssys.sbns.upg.ObjectFactory;
 import com.emulator.domain.soap.com.bssys.sbns.upg.SendRequests;

@@ -2,36 +2,25 @@ package com.emulator.controller;
 
 import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.frontend.response.ResponseBodyData;
-import com.emulator.domain.soap.SoapClient;
 import com.emulator.domain.soap.SoapMessageList;
 import com.emulator.domain.soap.requestchain.RequestChain;
-import com.emulator.domain.soap.requestchain.RequestChainPhase;
 import com.emulator.domain.soap.requestchain.RequestChainPool;
-import com.emulator.domain.soap.requests.getrequeststatus.dto.GetRequestStatusDto;
 import com.emulator.exception.BadRequestParameterException;
 import com.emulator.exception.SoapServerBadResponseException;
 import com.emulator.exception.SoapServerGetRequestStatusException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
 @Controller
 public class GetRequestStatusController extends AbstractController {
 
-    private static final RequestChainPhase PHASE = RequestChainPhase.STATEMENT_REQUEST_STATUS;
-
-    @Autowired
-    private SoapClient soapClient;
-
     @Autowired
     private RequestChainPool chainPool;
 
-    @RequestMapping(value = "/sendRequests/getRequestStatus", method = RequestMethod.GET)
+    @GetMapping("/request/nextStep")
     @ResponseBody
     public ResponseBodyData runGetRequestStatus(HttpSession httpSession,
                                                 @RequestParam(name = "responseId") String responseId) {
@@ -42,11 +31,9 @@ public class GetRequestStatusController extends AbstractController {
             }
 
             RequestChain chain = chainPool.getRequestChain(user, responseId);
-            chain.checkPhase(PHASE);
-            GetRequestStatusDto dto = soapClient.sendGetRequestStatus(user, responseId);
-            chain.setGetRequestStatus(dto);
+            chain.nextStep();
 
-            return getSoapRequestSuccessResponse(dto);
+            return getSoapRequestSuccessResponse(chain);
         } catch (SoapServerGetRequestStatusException e) {
             e.printStackTrace();
             return getSoapRequestFailResponse(e);
@@ -59,20 +46,15 @@ public class GetRequestStatusController extends AbstractController {
         }
     }
 
-    protected ResponseBodyData getSoapRequestSuccessResponse(GetRequestStatusDto requestResult) {
-        ResponseBodyData result = getSoapRequestSuccessResponse("");
-        result.setObject(requestResult);
-        return result;
-    }
-
     @Autowired
     SoapMessageList soapMessageList;
 
     @Override
-    protected ResponseBodyData getSoapRequestSuccessResponse(String message) {
+    protected ResponseBodyData getSoapRequestSuccessResponse(RequestChain chain) {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("OK");
-        result.setMessage("GetRequestStatus to Soap server is success." + message);
+        result.setMessage("GetRequestStatus to Soap server is success.");
+        result.setRequestChain(chain);
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
         soapMessageList.clearLastRequestMessageList();
         return result;

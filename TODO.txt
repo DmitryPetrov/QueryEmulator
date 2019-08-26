@@ -24,3 +24,8 @@ com.emulator.domain.soap.requests.getrequeststatus.ResponseHandler getNodeValue(
         Node node = doc.getElementsByTagName(nodeName).item(0);
 
 сделать список строк из ошибок от сервера и прогонять через него каждый ответ на поиск ошибок
+
+удалить StatementRequestResult и IncomingResult
+
+добавить пакеты data в пакеты запросов
+

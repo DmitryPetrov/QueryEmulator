@@ -1,6 +1,6 @@
 package com.emulator.domain.soap.requestchain;
 
-public enum RequestChainPhase {
+enum Phase {
 
     START(0),
     STATEMENT_REQUEST(1),
@@ -9,7 +9,7 @@ public enum RequestChainPhase {
     STATEMENT_DOCUMENT(4),
     FINNISH(5);
 
-    RequestChainPhase(int i) {
+    Phase(int i) {
 
     }
 }

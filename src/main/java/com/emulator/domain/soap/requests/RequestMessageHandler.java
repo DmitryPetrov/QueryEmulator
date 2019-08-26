@@ -1,4 +1,4 @@
-package com.emulator.domain.soap;
+package com.emulator.domain.soap.requests;
 
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.WebServiceMessageCallback;

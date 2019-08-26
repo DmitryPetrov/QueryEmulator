@@ -8,27 +8,14 @@ import java.util.List;
 
 public class ResponseBodyData {
 
-    private String status;
-    private String message;
-    private DataTransferObject object;
-    private List<RequestChain> requestList;
+    private String status = "";
+    private String message = "";
+    private RequestChain requestChain;
+    private List<RequestChain> requestChainList;
     private List<String> soapMessageList;
 
-    public List<String> getSoapMessageList() {
-        if (soapMessageList == null) {
-            setSoapMessageList(new ArrayList<>());
-        }
-        return soapMessageList;
-    }
-
-    public void setSoapMessageList(List<String> soapMessageList) {
-        this.soapMessageList = soapMessageList;
-    }
 
     public String getStatus() {
-        if (status == null) {
-            setStatus("");
-        }
         return status;
     }
 
@@ -37,9 +24,6 @@ public class ResponseBodyData {
     }
 
     public String getMessage() {
-        if (message == null) {
-            setMessage("");
-        }
         return message;
     }
 
@@ -47,25 +31,27 @@ public class ResponseBodyData {
         this.message = message;
     }
 
-    public DataTransferObject getObject() {
-        if (object == null) {
-            setObject(new DataTransferObject());
-        }
-        return object;
+    public RequestChain getRequestChain() {
+        return requestChain;
     }
 
-    public void setObject(DataTransferObject object) {
-        this.object = object;
+    public void setRequestChain(RequestChain requestChain) {
+        this.requestChain = requestChain;
     }
 
-    public List<RequestChain> getRequestList() {
-        if (this.requestList == null) {
-            setRequestList(new ArrayList<>());
-        }
-        return requestList;
+    public List<RequestChain> getRequestChainList() {
+        return requestChainList;
     }
 
-    public void setRequestList(List<RequestChain> requestList) {
-        this.requestList = requestList;
+    public void setRequestChainList(List<RequestChain> requestChainList) {
+        this.requestChainList = requestChainList;
+    }
+
+    public List<String> getSoapMessageList() {
+        return soapMessageList;
+    }
+
+    public void setSoapMessageList(List<String> soapMessageList) {
+        this.soapMessageList = soapMessageList;
     }
 }

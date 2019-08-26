@@ -1,18 +1,28 @@
 package com.emulator.domain.soap.requestchain;
 
 import com.emulator.domain.entity.AppUser;
+import com.emulator.domain.soap.SoapClient;
+import com.emulator.domain.soap.requests.DataTransferObject;
+import com.emulator.domain.soap.requests.incoming.IncomingData;
 import com.emulator.domain.soap.requests.incoming.IncomingDto;
 import com.emulator.domain.soap.requests.getrequeststatus.dto.GetRequestStatusDto;
+import com.emulator.domain.soap.requests.statementrequest.StatementRequestData;
 import com.emulator.domain.soap.requests.statementrequest.dto.StatementRequestDto;
 import com.emulator.exception.ParameterIsNullException;
 import com.emulator.exception.RequestChainPhaseNotReadyOrAlreadyPassedException;
 import com.emulator.exception.UserIsNotAuthorizedException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.xml.sax.SAXException;
+
+import java.io.IOException;
 
 public class RequestChain {
 
     private final AppUser user;
+    private final SoapClient soapClient;
 
-    private RequestChainPhase phase = RequestChainPhase.START;
+    private Phase phase = Phase.START;
 
     private String requestId = "";
     private String responseId = "";
@@ -24,51 +34,73 @@ public class RequestChain {
     private StatementRequestDto statementRequest;
     private GetRequestStatusDto getRequestStatus;
     private IncomingDto incoming;
+    private GetRequestStatusDto statementDocument;
 
-    public RequestChain(AppUser user) {
-        checkOnNull(user);
+    public RequestChain(AppUser user, SoapClient soapClient) {
+        if (user == null) {
+            throw new ParameterIsNullException("AppUser must not be 'null'");
+        }
         if (user.getSessionId().equals("")) {
             throw new UserIsNotAuthorizedException("AppUser user must not be authorized");
         }
         this.user = user;
+        this.soapClient = soapClient;
     }
 
-    public void setStatementRequest(StatementRequestDto dto) {
-        checkOnNull(dto);
+
+
+    public void nextStep(StatementRequestData data) {
+        checkPhase(Phase.STATEMENT_REQUEST);
+
+        StatementRequestDto dto = soapClient.sendStatementRequest(user, data);
 
         this.requestId = dto.getRequestId();
         this.responseId = dto.getResponseId();
         this.statementRequest = dto;
-        this.phase = RequestChainPhase.STATEMENT_REQUEST;
+        this.phase = Phase.STATEMENT_REQUEST;
     }
 
-    public void setGetRequestStatus(GetRequestStatusDto dto) {
-        checkPhase(RequestChainPhase.STATEMENT_REQUEST_STATUS);
-        checkOnNull(dto);
+    public void nextStep() throws IOException, SAXException {
+        if (phase == Phase.STATEMENT_REQUEST) {
+            runGetRequestStatus();
+        }
+        if (phase == Phase.INCOMING) {
+            runGetStatementDocument();
+        }
+    }
+
+    public void runGetRequestStatus() throws IOException, SAXException {
+        checkPhase(Phase.STATEMENT_REQUEST_STATUS);
+
+        GetRequestStatusDto dto = soapClient.sendGetRequestStatus(user, responseId);
 
         this.getRequestStatus = dto;
         this.statementRequestStatus = dto.getStateResponseList().get(0).getState();
-        this.phase = RequestChainPhase.STATEMENT_REQUEST_STATUS;
+        this.phase = Phase.STATEMENT_REQUEST_STATUS;
     }
 
-    public void setIncoming(IncomingDto dto) {
-        checkPhase(RequestChainPhase.INCOMING);
-        checkOnNull(dto);
+    public void nextStep(IncomingData data) {
+        checkPhase(Phase.INCOMING);
+
+        IncomingDto dto = soapClient.sendIncoming(user, data);
 
         this.incomingRequestId = dto.getRequestId();
         this.incomingResponseId = dto.getResponseId();
         this.incoming = dto;
-        this.phase = RequestChainPhase.INCOMING;
+        this.phase = Phase.INCOMING;
     }
 
+    public void runGetStatementDocument() throws IOException, SAXException {
+        checkPhase(Phase.STATEMENT_DOCUMENT);
 
-    private void checkOnNull(Object object) {
-        if (object == null) {
-            throw new ParameterIsNullException(object.getClass() + " must not be 'null'");
-        }
+        GetRequestStatusDto dto = soapClient.sendGetRequestStatus(user, incomingResponseId);
+
+        this.statementDocument = dto;
+        this.statementDocumentStatus = "ACCEPTED";
+        this.phase = Phase.STATEMENT_DOCUMENT;
     }
 
-    public void checkPhase(RequestChainPhase newPhase) {
+    public void checkPhase(Phase newPhase) {
         if (this.phase.ordinal() < (newPhase.ordinal() - 1)) {
             throw new RequestChainPhaseNotReadyOrAlreadyPassedException(newPhase + " phase not ready. Current phase: " +
                     "" + this.phase);
@@ -83,16 +115,8 @@ public class RequestChain {
         return user;
     }
 
-    public StatementRequestDto getStatementRequestDataDto() {
-        return statementRequest;
-    }
-
-    public GetRequestStatusDto getGetRequestStatusResultDto() {
-        return getRequestStatus;
-    }
-
-    public IncomingDto getIncomingDataDto() {
-        return incoming;
+    public Phase getPhase() {
+        return phase;
     }
 
     public String getRequestId() {
@@ -107,7 +131,6 @@ public class RequestChain {
         return statementRequestStatus;
     }
 
-
     public String getIncomingRequestId() {
         return incomingRequestId;
     }
@@ -116,4 +139,23 @@ public class RequestChain {
         return incomingResponseId;
     }
 
+    public String getStatementDocumentStatus() {
+        return statementDocumentStatus;
+    }
+
+    public StatementRequestDto getStatementRequest() {
+        return statementRequest;
+    }
+
+    public GetRequestStatusDto getGetRequestStatus() {
+        return getRequestStatus;
+    }
+
+    public IncomingDto getIncoming() {
+        return incoming;
+    }
+
+    public GetRequestStatusDto getStatementDocument() {
+        return statementDocument;
+    }
 }

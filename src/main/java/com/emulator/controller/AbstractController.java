@@ -1,12 +1,13 @@
 package com.emulator.controller;
 
 import com.emulator.domain.frontend.response.ResponseBodyData;
+import com.emulator.domain.soap.requestchain.RequestChain;
 import com.emulator.exception.RequestParameterLengthException;
 import com.emulator.exception.SoapServerBadResponseException;
 
 public abstract class AbstractController {
 
-    protected abstract ResponseBodyData getSoapRequestSuccessResponse(String message);
+    protected abstract ResponseBodyData getSoapRequestSuccessResponse(RequestChain chain);
 
     protected abstract ResponseBodyData getSoapRequestFailResponse(SoapServerBadResponseException exception);
 
