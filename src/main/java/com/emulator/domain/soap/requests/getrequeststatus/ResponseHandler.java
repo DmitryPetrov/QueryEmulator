@@ -3,6 +3,7 @@ package com.emulator.domain.soap.requests.getrequeststatus;
 import com.emulator.domain.soap.SoapMessageList;
 import com.emulator.domain.soap.com.bssys.sbns.upg.GetRequestStatusResponse;
 import com.emulator.domain.soap.requests.getrequeststatus.statement.Operation;
+import com.emulator.domain.soap.signcollection.ConfirmSign;
 import com.emulator.domain.soap.signcollection.Sign;
 import com.emulator.domain.soap.signcollection.SignCollection;
 import com.emulator.domain.soap.requests.getrequeststatus.statement.Statement;
@@ -71,10 +72,10 @@ class ResponseHandler {
             Node model = modelList.item(i);
 
             String textContent = model.getTextContent();
-            if (textContent.contains("Statement")) {
+            if (textContent.contains("</Statement>")) {
                 setStatement(textContent, result);
             }
-            if (textContent.contains("StateResponse")) {
+            if (textContent.contains("</StateResponse>")) {
                 setStatusResponse(textContent, result);
             }
         }
@@ -135,163 +136,215 @@ class ResponseHandler {
         statement.setSeizureWholeAmount(getNodeValue(document, statement.SEIZURE_WHOLE_AMOUNT_NODE_NAME));
         statement.setToDate(getNodeValue(document, statement.TO_DATE_NODE_NAME));
 
-        NodeList operationsNodeList = document.getElementsByTagName(statement.OPERATIONS_NODE_NAME);
+        NodeList operationsNodeList = document.getElementsByTagName(statement.OPERATION_NODE_NAME);
         for (int i = 0; i < operationsNodeList.getLength(); i++) {
-            String textContent = operationsNodeList.item(i).getTextContent();
+            Node operationNode = operationsNodeList.item(i);
             Operation operation = new Operation();
-            setOperation(textContent, operation);
+            setOperation(operationNode, operation);
             statement.add(operation);
         }
 
-        NodeList signCollectionNode = document.getElementsByTagName(statement.SIGN_COLLECTION_INNER_NODE_NAME);
-        if (signCollectionNode.getLength() == 1) {
+        NodeList signCollectionNodeList = document.getElementsByTagName(statement.SIGN_COLLECTION_INNER_NODE_NAME);
+        if (signCollectionNodeList.getLength() == 1) {
+            Node signCollectionNode = signCollectionNodeList.item(0);
             SignCollection signCollection = statement.getSignCollection();
-            signCollection.setBankMessage(getNodeValue(document, signCollection.BANK_MESSAGE_NODE_NAME));
-            signCollection.setDigestName(getNodeValue(document, signCollection.DIGEST_NAME_NODE_NAME));
+            signCollection.setBankMessage(getNodeValue(signCollectionNode.getChildNodes(), signCollection
+                    .BANK_MESSAGE_NODE_NAME));
+            signCollection.setDigestName(getNodeValue(signCollectionNode.getChildNodes(), signCollection
+                    .DIGEST_NAME_NODE_NAME));
 
-            NodeList signsNodeList = document.getElementsByTagName(signCollection.SIGN_NODE_NAME);
+            NodeList signsNodeList = signCollectionNodeList.item(0).getChildNodes();
             for (int i = 0; i < signsNodeList.getLength(); i++) {
-                String textContent = operationsNodeList.item(i).getTextContent();
-                Sign sign = new Sign();
-                setSign(textContent, sign);
-                signCollection.add(sign);
+                Node signNode = signsNodeList.item(i);
+                if (signNode.getNodeName().equals(signCollection.SIGN_NODE_NAME)) {
+                    Sign sign = new Sign();
+                    setSign(signNode, sign);
+                    signCollection.add(sign);
+                }
             }
         }
     }
 
-    private void setOperation(String xml, Operation operation) throws IOException, SAXException {
-        Document document = toDocument(xml);
-
-        operation.setAcceptDate(getNodeValue(document, operation.ACCEPT_DATE_NODE_NAME));
-        operation.setCashSymbol(getNodeValue(document, operation.CASH_SYMBOL_NODE_NAME));
-        operation.setCbc(getNodeValue(document, operation.CBC_NODE_NAME));
-        operation.setChargeType(getNodeValue(document, operation.CHARGE_TYPE_NODE_NAME));
-        operation.setCorrAccCurr(getNodeValue(document, operation.CORR_ACC_CURR_NODE_NAME));
-        operation.setCorrAccCurrSum(getNodeValue(document, operation.CORR_ACC_CURR_SUM_NODE_NAME));
-        operation.setCreateDocId(getNodeValue(document, operation.CREATE_DOC_ID_NODE_NAME));
-        operation.setCredit(getNodeValue(document, operation.CREDIT_NODE_NAME));
-        operation.setCreditNat(getNodeValue(document, operation.CREDIT_NAT_NODE_NAME));
-        operation.setDboDocId(getNodeValue(document, operation.DBO_DOC_ID_NODE_NAME));
-        operation.setDebet(getNodeValue(document, operation.DEBET_NODE_NAME));
-        operation.setDebetNat(getNodeValue(document, operation.DEBET_NAT_NODE_NAME));
-        operation.setDepartmentalInfoDocDate(getNodeValue(document, operation.DEPARTMENTAL_INFO_DOC_DATE_NODE_NAME));
-        operation.setDepartmentalInfoDocNo(getNodeValue(document, operation.DEPARTMENTAL_INFO_DOC_NO_NODE_NAME));
-        operation.setDocDate(getNodeValue(document, operation.DOC_DATE_NODE_NAME));
-        operation.setDocDate2(getNodeValue(document, operation.DOC_DATE_2_NODE_NAME));
-        operation.setDocExtId(getNodeValue(document, operation.DOC_EXT_ID_NODE_NAME));
-        operation.setDocMatchTime(getNodeValue(document, operation.DOC_MATCH_TIME_NODE_NAME));
-        operation.setDocNumber(getNodeValue(document, operation.DOC_NUMBER_NODE_NAME));
-        operation.setDocNumber2(getNodeValue(document, operation.DOC_NUMBER_2_NODE_NAME));
-        operation.setDocShifr(getNodeValue(document, operation.DOC_SHIFR_NODE_NAME));
-        operation.setDocumentDate(getNodeValue(document, operation.DOCUMENT_DATE_NODE_NAME));
-        operation.setDocumentId(getNodeValue(document, operation.DOCUMENT_ID_NODE_NAME));
-        operation.setDocumentNumber(getNodeValue(document, operation.DOCUMENT_NUMBER_NODE_NAME));
-        operation.setDocumentSum(getNodeValue(document, operation.DOCUMENT_SUM_NODE_NAME));
-        operation.setDocumentType(getNodeValue(document, operation.DOCUMENT_TYPE_NODE_NAME));
-        operation.setFilial(getNodeValue(document, operation.FILIAL_NODE_NAME));
-        operation.setFioForStamp(getNodeValue(document, operation.FIO_FOR_STAMP_NODE_NAME));
-        operation.setInfo(getNodeValue(document, operation.INFO_NODE_NAME));
-        operation.setLetterOfCreditAddCond(getNodeValue(document, operation.LETTER_OF_CREDIT_ADD_COND_NODE_NAME));
-        operation.setLetterOfCreditDemandDocs(getNodeValue(document, operation.LETTER_OF_CREDIT_DEMAND_DOCS_NODE_NAME));
-        operation.setLetterOfCreditPayAcc(getNodeValue(document, operation.LETTER_OF_CREDIT_PAY_ACC_NODE_NAME));
-        operation.setLetterOfCreditPaymCond(getNodeValue(document, operation.LETTER_OF_CREDIT_PAYM_COND_NODE_NAME));
-        operation.setLetterOfCreditPeriodVal(getNodeValue(document, operation.LETTER_OF_CREDIT_PERIOD_VAL_NODE_NAME));
-        operation.setLetterOfCreditType(getNodeValue(document, operation.LETTER_OF_CREDIT_TYPE_NODE_NAME));
-        operation.setNumPayment(getNodeValue(document, operation.NUM_PAYMENT_NODE_NAME));
-        operation.setNumberPP(getNodeValue(document, operation.NUMBER_PP_NODE_NAME));
-        operation.setoS(getNodeValue(document, operation.OS_NODE_NAME));
-        operation.setOcato(getNodeValue(document, operation.OCATO_NODE_NAME));
-        operation.setOperationDate(getNodeValue(document, operation.OPERATION_DATE_NODE_NAME));
-        operation.setOperationType(getNodeValue(document, operation.OPERATION_TYPE_NODE_NAME));
-        operation.setPayerAccount(getNodeValue(document, operation.PAYER_ACCOUNT_NODE_NAME));
-        operation.setPayerBankBic(getNodeValue(document, operation.PAYER_BANK_BIC_NODE_NAME));
-        operation.setPayerBankCorrAccount(getNodeValue(document, operation.PAYER_BANK_CORR_ACCOUNT_NODE_NAME));
-        operation.setPayerBankName(getNodeValue(document, operation.PAYER_BANK_NAME_NODE_NAME));
-        operation.setPayerCurrCode(getNodeValue(document, operation.PAYER_CURR_CODE_NODE_NAME));
-        operation.setPayerINN(getNodeValue(document, operation.PAYER_INN_NODE_NAME));
-        operation.setPayerKPP(getNodeValue(document, operation.PAYER_KPP_NODE_NAME));
-        operation.setPayerName(getNodeValue(document, operation.PAYER_NAME_NODE_NAME));
-        operation.setPayingCondition(getNodeValue(document, operation.PAYING_CONDITION_NODE_NAME));
-        operation.setPaymentGoalId(getNodeValue(document, operation.PAYMENT_GOAL_ID_NODE_NAME));
-        operation.setPaymentOrder(getNodeValue(document, operation.PAYMENT_ORDER_NODE_NAME));
-        operation.setPaymentPurpose(getNodeValue(document, operation.PAYMENT_PURPOSE_NODE_NAME));
-        operation.setPaytCode(getNodeValue(document, operation.PAYT_CODE_NODE_NAME));
-        operation.setPaytKind(getNodeValue(document, operation.PAYT_KIND_NODE_NAME));
-        operation.setPeriodVal(getNodeValue(document, operation.PERIOD_VAL_NODE_NAME));
-        operation.setReceiverAccount(getNodeValue(document, operation.RECEIVER_ACCOUNT_NODE_NAME));
-        operation.setReceiverBankBic(getNodeValue(document, operation.RECEIVER_BANK_BIC_NODE_NAME));
-        operation.setReceiverBankCorrAccount(getNodeValue(document, operation.RECEIVER_BANK_CORR_ACCOUNT_NODE_NAME));
-        operation.setReceiverBankName(getNodeValue(document, operation.RECEIVER_BANK_NAME_NODE_NAME));
-        operation.setReceiverCurrCode(getNodeValue(document, operation.RECEIVER_CURR_CODE_NODE_NAME));
-        operation.setReceiverINN(getNodeValue(document, operation.RECEIVER_INN_NODE_NAME));
-        operation.setReceiverKPP(getNodeValue(document, operation.RECEIVER_KPP_NODE_NAME));
-        operation.setReceiverName(getNodeValue(document, operation.RECEIVER_NAME_NODE_NAME));
-        operation.setRecieptDate(getNodeValue(document, operation.RECIEPT_DATE_NODE_NAME));
-        operation.setReserv23(getNodeValue(document, operation.RESERV_23_NODE_NAME));
-        operation.setsNumDoc(getNodeValue(document, operation.S_NUM_DOC_NODE_NAME));
-        operation.setS_TI(getNodeValue(document, operation.S_TI_NODE_NAME));
-        operation.setStatus(getNodeValue(document, operation.STATUS_NODE_NAME));
-        operation.setSumRest(getNodeValue(document, operation.SUM_REST_NODE_NAME));
-        operation.setTaxPeriod(getNodeValue(document, operation.TAX_PERIOD_NODE_NAME));
-        operation.setUip(getNodeValue(document, operation.UIP_NODE_NAME));
-        operation.setValueDate(getNodeValue(document, operation.VALUE_DATE_NODE_NAME));
-        operation.setWriteOffDate(getNodeValue(document, operation.WRITE_OFF_DATE_NODE_NAME));
+    private String getNodeValue(NodeList list, String nodeName) {
+        for (int i = 0; i < list.getLength(); i++) {
+            Node childNode = list.item(i);
+            if (childNode.getNodeName().equals(nodeName)) {
+                return childNode.getTextContent();
+            }
+        }
+        return "";
     }
 
-    private void setSign(String xml, Sign sign) throws IOException, SAXException {
-        Document document = toDocument(xml);
+    private void setOperation(Node node, Operation operation) {
+        NodeList childNodes = node.getChildNodes();
 
-        sign.setCertificateGuid(getNodeValue(document, sign.CERTIFICATE_GUID_NODE_NAME));
-        sign.setContent(getNodeValue(document, sign.CONTENT_NODE_NAME));
-        sign.setContentLarge(getNodeValue(document, sign.CONTENT_LARGE_NODE_NAME));
-        sign.setDigestScheme(getNodeValue(document, sign.DIGEST_SCHEME_NODE_NAME));
-        sign.setDigestSchemeFormat(getNodeValue(document, sign.DIGEST_SCHEME_FORMAT_NODE_NAME));
-        sign.setDigestSchemeVersion(getNodeValue(document, sign.DIGEST_SCHEME_VERSION_NODE_NAME));
-        sign.setDtCheck(getNodeValue(document, sign.DT_CHECK_NODE_NAME));
-        sign.setDtCreate(getNodeValue(document, sign.DT_CREATE_NODE_NAME));
-        sign.setOrgId(getNodeValue(document, sign.ORG_ID_NODE_NAME));
-        sign.setOrgName(getNodeValue(document, sign.ORG_NAME_NODE_NAME));
-        sign.setPosition(getNodeValue(document, sign.POSITION_NODE_NAME));
-        sign.setSafeTouchAutoSign(getNodeValue(document, sign.SAFE_TOUCH_AUTO_SIGN_NODE_NAME));
-        sign.setSafeTouchDigestScheme(getNodeValue(document, sign.SAFE_TOUCH_DIGEST_SCHEME_NODE_NAME));
-        sign.setSafeTouchDigestSchemeVersion(getNodeValue(document, sign.SAFE_TOUCH_DIGEST_SCHEME_VERSION_NODE_NAME));
-        sign.setSignAuthorityId(getNodeValue(document, sign.SIGN_AUTHORITY_ID_NODE_NAME));
-        sign.setSignHash(getNodeValue(document, sign.SIGN_HASH_NODE_NAME));
-        sign.setSignKey(getNodeValue(document, sign.SIGN_KEY_NODE_NAME));
-        sign.setSignType(getNodeValue(document, sign.SIGN_TYPE_NODE_NAME));
-        sign.setSignerFullName(getNodeValue(document, sign.SIGNER_FULL_NAME_NODE_NAME));
-        sign.setUserIP(getNodeValue(document, sign.USER_IP_NODE_NAME));
-        sign.setUserMAC(getNodeValue(document, sign.USER_MAC_NODE_NAME));
-        sign.setUserName(getNodeValue(document, sign.USER_NAME_NODE_NAME));
-        sign.setValid(getNodeValue(document, sign.VALID_NODE_NAME));
+        operation.setAcceptDate(getNodeValue(childNodes, operation.ACCEPT_DATE_NODE_NAME));
+        operation.setCashSymbol(getNodeValue(childNodes, operation.CASH_SYMBOL_NODE_NAME));
+        operation.setCbc(getNodeValue(childNodes, operation.CBC_NODE_NAME));
+        operation.setChargeType(getNodeValue(childNodes, operation.CHARGE_TYPE_NODE_NAME));
+        operation.setCorrAccCurr(getNodeValue(childNodes, operation.CORR_ACC_CURR_NODE_NAME));
+        operation.setCorrAccCurrSum(getNodeValue(childNodes, operation.CORR_ACC_CURR_SUM_NODE_NAME));
+        operation.setCreateDocId(getNodeValue(childNodes, operation.CREATE_DOC_ID_NODE_NAME));
+        operation.setCredit(getNodeValue(childNodes, operation.CREDIT_NODE_NAME));
+        operation.setCreditNat(getNodeValue(childNodes, operation.CREDIT_NAT_NODE_NAME));
+        operation.setDboDocId(getNodeValue(childNodes, operation.DBO_DOC_ID_NODE_NAME));
+        operation.setDebet(getNodeValue(childNodes, operation.DEBET_NODE_NAME));
+        operation.setDebetNat(getNodeValue(childNodes, operation.DEBET_NAT_NODE_NAME));
+        operation.setDepartmentalInfoDocDate(getNodeValue(childNodes, operation.DEPARTMENTAL_INFO_DOC_DATE_NODE_NAME));
+        operation.setDepartmentalInfoDocNo(getNodeValue(childNodes, operation.DEPARTMENTAL_INFO_DOC_NO_NODE_NAME));
+        operation.setDocDate(getNodeValue(childNodes, operation.DOC_DATE_NODE_NAME));
+        operation.setDocDate2(getNodeValue(childNodes, operation.DOC_DATE_2_NODE_NAME));
+        operation.setDocExtId(getNodeValue(childNodes, operation.DOC_EXT_ID_NODE_NAME));
+        operation.setDocMatchTime(getNodeValue(childNodes, operation.DOC_MATCH_TIME_NODE_NAME));
+        operation.setDocNumber(getNodeValue(childNodes, operation.DOC_NUMBER_NODE_NAME));
+        operation.setDocNumber2(getNodeValue(childNodes, operation.DOC_NUMBER_2_NODE_NAME));
+        operation.setDocShifr(getNodeValue(childNodes, operation.DOC_SHIFR_NODE_NAME));
+        operation.setDocumentDate(getNodeValue(childNodes, operation.DOCUMENT_DATE_NODE_NAME));
+        operation.setDocumentId(getNodeValue(childNodes, operation.DOCUMENT_ID_NODE_NAME));
+        operation.setDocumentNumber(getNodeValue(childNodes, operation.DOCUMENT_NUMBER_NODE_NAME));
+        operation.setDocumentSum(getNodeValue(childNodes, operation.DOCUMENT_SUM_NODE_NAME));
+        operation.setDocumentType(getNodeValue(childNodes, operation.DOCUMENT_TYPE_NODE_NAME));
+        operation.setFilial(getNodeValue(childNodes, operation.FILIAL_NODE_NAME));
+        operation.setFioForStamp(getNodeValue(childNodes, operation.FIO_FOR_STAMP_NODE_NAME));
+        operation.setInfo(getNodeValue(childNodes, operation.INFO_NODE_NAME));
+        operation.setLetterOfCreditAddCond(getNodeValue(childNodes, operation.LETTER_OF_CREDIT_ADD_COND_NODE_NAME));
+        operation.setLetterOfCreditDemandDocs(getNodeValue(childNodes, operation
+                .LETTER_OF_CREDIT_DEMAND_DOCS_NODE_NAME));
+        operation.setLetterOfCreditPayAcc(getNodeValue(childNodes, operation.LETTER_OF_CREDIT_PAY_ACC_NODE_NAME));
+        operation.setLetterOfCreditPaymCond(getNodeValue(childNodes, operation.LETTER_OF_CREDIT_PAYM_COND_NODE_NAME));
+        operation.setLetterOfCreditPeriodVal(getNodeValue(childNodes, operation.LETTER_OF_CREDIT_PERIOD_VAL_NODE_NAME));
+        operation.setLetterOfCreditType(getNodeValue(childNodes, operation.LETTER_OF_CREDIT_TYPE_NODE_NAME));
+        operation.setNumPayment(getNodeValue(childNodes, operation.NUM_PAYMENT_NODE_NAME));
+        operation.setNumberPP(getNodeValue(childNodes, operation.NUMBER_PP_NODE_NAME));
+        operation.setoS(getNodeValue(childNodes, operation.OS_NODE_NAME));
+        operation.setOcato(getNodeValue(childNodes, operation.OCATO_NODE_NAME));
+        operation.setOperationDate(getNodeValue(childNodes, operation.OPERATION_DATE_NODE_NAME));
+        operation.setOperationType(getNodeValue(childNodes, operation.OPERATION_TYPE_NODE_NAME));
+        operation.setPayerAccount(getNodeValue(childNodes, operation.PAYER_ACCOUNT_NODE_NAME));
+        operation.setPayerBankBic(getNodeValue(childNodes, operation.PAYER_BANK_BIC_NODE_NAME));
+        operation.setPayerBankCorrAccount(getNodeValue(childNodes, operation.PAYER_BANK_CORR_ACCOUNT_NODE_NAME));
+        operation.setPayerBankName(getNodeValue(childNodes, operation.PAYER_BANK_NAME_NODE_NAME));
+        operation.setPayerCurrCode(getNodeValue(childNodes, operation.PAYER_CURR_CODE_NODE_NAME));
+        operation.setPayerINN(getNodeValue(childNodes, operation.PAYER_INN_NODE_NAME));
+        operation.setPayerKPP(getNodeValue(childNodes, operation.PAYER_KPP_NODE_NAME));
+        operation.setPayerName(getNodeValue(childNodes, operation.PAYER_NAME_NODE_NAME));
+        operation.setPayingCondition(getNodeValue(childNodes, operation.PAYING_CONDITION_NODE_NAME));
+        operation.setPaymentGoalId(getNodeValue(childNodes, operation.PAYMENT_GOAL_ID_NODE_NAME));
+        operation.setPaymentOrder(getNodeValue(childNodes, operation.PAYMENT_ORDER_NODE_NAME));
+        operation.setPaymentPurpose(getNodeValue(childNodes, operation.PAYMENT_PURPOSE_NODE_NAME));
+        operation.setPaytCode(getNodeValue(childNodes, operation.PAYT_CODE_NODE_NAME));
+        operation.setPaytKind(getNodeValue(childNodes, operation.PAYT_KIND_NODE_NAME));
+        operation.setPeriodVal(getNodeValue(childNodes, operation.PERIOD_VAL_NODE_NAME));
+        operation.setReceiverAccount(getNodeValue(childNodes, operation.RECEIVER_ACCOUNT_NODE_NAME));
+        operation.setReceiverBankBic(getNodeValue(childNodes, operation.RECEIVER_BANK_BIC_NODE_NAME));
+        operation.setReceiverBankCorrAccount(getNodeValue(childNodes, operation.RECEIVER_BANK_CORR_ACCOUNT_NODE_NAME));
+        operation.setReceiverBankName(getNodeValue(childNodes, operation.RECEIVER_BANK_NAME_NODE_NAME));
+        operation.setReceiverCurrCode(getNodeValue(childNodes, operation.RECEIVER_CURR_CODE_NODE_NAME));
+        operation.setReceiverINN(getNodeValue(childNodes, operation.RECEIVER_INN_NODE_NAME));
+        operation.setReceiverKPP(getNodeValue(childNodes, operation.RECEIVER_KPP_NODE_NAME));
+        operation.setReceiverName(getNodeValue(childNodes, operation.RECEIVER_NAME_NODE_NAME));
+        operation.setRecieptDate(getNodeValue(childNodes, operation.RECIEPT_DATE_NODE_NAME));
+        operation.setReserv23(getNodeValue(childNodes, operation.RESERV_23_NODE_NAME));
+        operation.setsNumDoc(getNodeValue(childNodes, operation.S_NUM_DOC_NODE_NAME));
+        operation.setS_TI(getNodeValue(childNodes, operation.S_TI_NODE_NAME));
+        operation.setStatus(getNodeValue(childNodes, operation.STATUS_NODE_NAME));
+        operation.setSumRest(getNodeValue(childNodes, operation.SUM_REST_NODE_NAME));
+        operation.setTaxPeriod(getNodeValue(childNodes, operation.TAX_PERIOD_NODE_NAME));
+        operation.setUip(getNodeValue(childNodes, operation.UIP_NODE_NAME));
+        operation.setValueDate(getNodeValue(childNodes, operation.VALUE_DATE_NODE_NAME));
+        operation.setWriteOffDate(getNodeValue(childNodes, operation.WRITE_OFF_DATE_NODE_NAME));
+    }
 
-        NodeList confirmSignNodeList = document.getElementsByTagName(sign.CONFIRM_SIGN_NODE_NAME);
-        if (confirmSignNodeList.getLength() == 1) {
-            String textContent = confirmSignNodeList.item(0).getTextContent();
-            Sign confirmSign = sign.getConfirmSign();
-            setSign(textContent, confirmSign);
-        }
+    private void setSign(Node node, Sign sign) throws IOException, SAXException {
+        NodeList childNodes = node.getChildNodes();
 
-        NodeList userWorkspaceNodeList = document.getElementsByTagName(sign.USER_WORKSPACE_INNER_NODE_NAME);
-        if (userWorkspaceNodeList.getLength() != 1) {
-            String textContent = userWorkspaceNodeList.item(0).getTextContent();
-            UserWorkspace userWorkspace = sign.getUserWorkspace();
-            setUserWorkspace(textContent, userWorkspace);
+        sign.setCertificateGuid(getNodeValue(childNodes, sign.CERTIFICATE_GUID_NODE_NAME));
+        sign.setContent(getNodeValue(childNodes, sign.CONTENT_NODE_NAME));
+        sign.setContentLarge(getNodeValue(childNodes, sign.CONTENT_LARGE_NODE_NAME));
+        sign.setDigestScheme(getNodeValue(childNodes, sign.DIGEST_SCHEME_NODE_NAME));
+        sign.setDigestSchemeFormat(getNodeValue(childNodes, sign.DIGEST_SCHEME_FORMAT_NODE_NAME));
+        sign.setDigestSchemeVersion(getNodeValue(childNodes, sign.DIGEST_SCHEME_VERSION_NODE_NAME));
+        sign.setDtCheck(getNodeValue(childNodes, sign.DT_CHECK_NODE_NAME));
+        sign.setDtCreate(getNodeValue(childNodes, sign.DT_CREATE_NODE_NAME));
+        sign.setOrgId(getNodeValue(childNodes, sign.ORG_ID_NODE_NAME));
+        sign.setOrgName(getNodeValue(childNodes, sign.ORG_NAME_NODE_NAME));
+        sign.setPosition(getNodeValue(childNodes, sign.POSITION_NODE_NAME));
+        sign.setSafeTouchAutoSign(getNodeValue(childNodes, sign.SAFE_TOUCH_AUTO_SIGN_NODE_NAME));
+        sign.setSafeTouchDigestScheme(getNodeValue(childNodes, sign.SAFE_TOUCH_DIGEST_SCHEME_NODE_NAME));
+        sign.setSafeTouchDigestSchemeVersion(getNodeValue(childNodes, sign.SAFE_TOUCH_DIGEST_SCHEME_VERSION_NODE_NAME));
+        sign.setSignAuthorityId(getNodeValue(childNodes, sign.SIGN_AUTHORITY_ID_NODE_NAME));
+        sign.setSignHash(getNodeValue(childNodes, sign.SIGN_HASH_NODE_NAME));
+        sign.setSignKey(getNodeValue(childNodes, sign.SIGN_KEY_NODE_NAME));
+        sign.setSignType(getNodeValue(childNodes, sign.SIGN_TYPE_NODE_NAME));
+        sign.setSignerFullName(getNodeValue(childNodes, sign.SIGNER_FULL_NAME_NODE_NAME));
+        sign.setUserIP(getNodeValue(childNodes, sign.USER_IP_NODE_NAME));
+        sign.setUserMAC(getNodeValue(childNodes, sign.USER_MAC_NODE_NAME));
+        sign.setUserName(getNodeValue(childNodes, sign.USER_NAME_NODE_NAME));
+        sign.setValid(getNodeValue(childNodes, sign.VALID_NODE_NAME));
+
+        for (int i = 0; i < childNodes.getLength(); i++) {
+            Node childNode = childNodes.item(i);
+            if (childNode.getNodeName().equals(sign.CONFIRM_SIGN_NODE_NAME)) {
+                ConfirmSign confirmSign = sign.getConfirmSign();
+                setConfirmSign(childNode, confirmSign);
+            }
+            if (childNode.getNodeName().equals(sign.USER_WORKSPACE_INNER_NODE_NAME)) {
+                UserWorkspace userWorkspace = sign.getUserWorkspace();
+                setUserWorkspace(childNode, userWorkspace);
+            }
         }
     }
 
-    private void setUserWorkspace(String xml, UserWorkspace userWorkspace) throws IOException, SAXException {
-        Document document = toDocument(xml);
+    private void setConfirmSign(Node node, ConfirmSign confirmSign) throws IOException, SAXException {
+        NodeList childNodes = node.getChildNodes();
 
-        userWorkspace.setAVPActive(getNodeValue(document, userWorkspace.AVP_ACTIVE_NODE_NAME));
-        userWorkspace.setOSUpdatable(getNodeValue(document, userWorkspace.OS_UPDATABLE_NODE_NAME));
-        userWorkspace.setAddInfo(getNodeValue(document, userWorkspace.ADD_INFO_NODE_NAME));
-        userWorkspace.setFaultPassAttemptCount(getNodeValue(document, userWorkspace.FAULT_PASS_ATTEMPT_COUNT_NODE_NAME));
-        userWorkspace.setHashCode(getNodeValue(document, userWorkspace.HASH_CODE_NODE_NAME));
-        userWorkspace.setNotRemoteAccess(getNodeValue(document, userWorkspace.NOT_REMOTE_ACCESS_NODE_NAME));
-        userWorkspace.setOuterKeyStorage(getNodeValue(document, userWorkspace.OUTER_KEY_STORAGE_NODE_NAME));
-        userWorkspace.setPassChanged(getNodeValue(document, userWorkspace.PASS_CHANGED_NODE_NAME));
-        userWorkspace.setUserMAC(getNodeValue(document, userWorkspace.USER_MAC_NODE_NAME));
+        confirmSign.setCertificateGuid(getNodeValue(childNodes, confirmSign.CERTIFICATE_GUID_NODE_NAME));
+        confirmSign.setContent(getNodeValue(childNodes, confirmSign.CONTENT_NODE_NAME));
+        confirmSign.setContentLarge(getNodeValue(childNodes, confirmSign.CONTENT_LARGE_NODE_NAME));
+        confirmSign.setDigestScheme(getNodeValue(childNodes, confirmSign.DIGEST_SCHEME_NODE_NAME));
+        confirmSign.setDigestSchemeFormat(getNodeValue(childNodes, confirmSign.DIGEST_SCHEME_FORMAT_NODE_NAME));
+        confirmSign.setDigestSchemeVersion(getNodeValue(childNodes, confirmSign.DIGEST_SCHEME_VERSION_NODE_NAME));
+        confirmSign.setDtCheck(getNodeValue(childNodes, confirmSign.DT_CHECK_NODE_NAME));
+        confirmSign.setDtCreate(getNodeValue(childNodes, confirmSign.DT_CREATE_NODE_NAME));
+        confirmSign.setOrgId(getNodeValue(childNodes, confirmSign.ORG_ID_NODE_NAME));
+        confirmSign.setOrgName(getNodeValue(childNodes, confirmSign.ORG_NAME_NODE_NAME));
+        confirmSign.setPosition(getNodeValue(childNodes, confirmSign.POSITION_NODE_NAME));
+        confirmSign.setSafeTouchAutoSign(getNodeValue(childNodes, confirmSign.SAFE_TOUCH_AUTO_SIGN_NODE_NAME));
+        confirmSign.setSafeTouchDigestScheme(getNodeValue(childNodes, confirmSign.SAFE_TOUCH_DIGEST_SCHEME_NODE_NAME));
+        confirmSign.setSafeTouchDigestSchemeVersion(getNodeValue(childNodes, confirmSign
+                .SAFE_TOUCH_DIGEST_SCHEME_VERSION_NODE_NAME));
+        confirmSign.setSignAuthorityId(getNodeValue(childNodes, confirmSign.SIGN_AUTHORITY_ID_NODE_NAME));
+        confirmSign.setSignHash(getNodeValue(childNodes, confirmSign.SIGN_HASH_NODE_NAME));
+        confirmSign.setSignKey(getNodeValue(childNodes, confirmSign.SIGN_KEY_NODE_NAME));
+        confirmSign.setSignType(getNodeValue(childNodes, confirmSign.SIGN_TYPE_NODE_NAME));
+        confirmSign.setSignerFullName(getNodeValue(childNodes, confirmSign.SIGNER_FULL_NAME_NODE_NAME));
+        confirmSign.setUserIP(getNodeValue(childNodes, confirmSign.USER_IP_NODE_NAME));
+        confirmSign.setUserMAC(getNodeValue(childNodes, confirmSign.USER_MAC_NODE_NAME));
+        confirmSign.setUserName(getNodeValue(childNodes, confirmSign.USER_NAME_NODE_NAME));
+        confirmSign.setValid(getNodeValue(childNodes, confirmSign.VALID_NODE_NAME));
+
+        for (int i = 0; i < childNodes.getLength(); i++) {
+            Node childNode = childNodes.item(i);
+            if (childNode.getNodeName().equals(confirmSign.USER_WORKSPACE_INNER_NODE_NAME)) {
+                UserWorkspace userWorkspace = confirmSign.getUserWorkspace();
+                setUserWorkspace(childNode, userWorkspace);
+            }
+        }
+    }
+
+    private void setUserWorkspace(Node node, UserWorkspace userWorkspace) throws IOException, SAXException {
+        NodeList childNodes = node.getChildNodes();
+
+        userWorkspace.setAVPActive(getNodeValue(childNodes, userWorkspace.AVP_ACTIVE_NODE_NAME));
+        userWorkspace.setOSUpdatable(getNodeValue(childNodes, userWorkspace.OS_UPDATABLE_NODE_NAME));
+        userWorkspace.setAddInfo(getNodeValue(childNodes, userWorkspace.ADD_INFO_NODE_NAME));
+        userWorkspace.setFaultPassAttemptCount(getNodeValue(childNodes, userWorkspace
+                .FAULT_PASS_ATTEMPT_COUNT_NODE_NAME));
+        userWorkspace.setHashCode(getNodeValue(childNodes, userWorkspace.HASH_CODE_NODE_NAME));
+        userWorkspace.setNotRemoteAccess(getNodeValue(childNodes, userWorkspace.NOT_REMOTE_ACCESS_NODE_NAME));
+        userWorkspace.setOuterKeyStorage(getNodeValue(childNodes, userWorkspace.OUTER_KEY_STORAGE_NODE_NAME));
+        userWorkspace.setPassChanged(getNodeValue(childNodes, userWorkspace.PASS_CHANGED_NODE_NAME));
+        userWorkspace.setUserMAC(getNodeValue(childNodes, userWorkspace.USER_MAC_NODE_NAME));
     }
 
     private void setStatusResponse(String xml, GetRequestStatusResult result) throws IOException, SAXException {
