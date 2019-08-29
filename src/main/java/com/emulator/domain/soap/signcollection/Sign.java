@@ -1,5 +1,6 @@
 package com.emulator.domain.soap.signcollection;
 
+import com.emulator.domain.soap.signcollection.dto.ConfirmSignDto;
 import com.emulator.domain.soap.signcollection.dto.SignDto;
 import com.emulator.domain.soap.signcollection.dto.UserWorkspaceDto;
 
@@ -57,7 +58,7 @@ public class Sign {
     private String userMAC = "";
     private String userName = "";
     private String valid = "";
-    private Sign confirmSign;
+    private ConfirmSign confirmSign;
     private UserWorkspace userWorkspace;
 
 
@@ -245,14 +246,14 @@ public class Sign {
         this.valid = valid;
     }
 
-    public Sign getConfirmSign() {
+    public ConfirmSign getConfirmSign() {
         if (this.confirmSign == null) {
-            this.setConfirmSign(new Sign());
+            this.setConfirmSign(new ConfirmSign());
         }
         return confirmSign;
     }
 
-    public void setConfirmSign(Sign confirmSign) {
+    public void setConfirmSign(ConfirmSign confirmSign) {
         this.confirmSign = confirmSign;
     }
 
@@ -294,7 +295,7 @@ public class Sign {
         dto.setUserName(this.getUserName());
         dto.setValid(this.getValid());
 
-        SignDto confirmSignDto = this.getConfirmSign().getDto();
+        ConfirmSignDto confirmSignDto = this.getConfirmSign().getDto();
         dto.setConfirmSign(confirmSignDto);
 
         UserWorkspaceDto userWorkspaceDto = this.getUserWorkspace().getDto();

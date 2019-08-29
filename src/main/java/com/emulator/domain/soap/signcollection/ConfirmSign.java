@@ -1,8 +1,38 @@
-package com.emulator.domain.soap.signcollection.dto;
+package com.emulator.domain.soap.signcollection;
 
-import com.emulator.domain.soap.signcollection.ConfirmSign;
+import com.emulator.domain.soap.signcollection.dto.ConfirmSignDto;
+import com.emulator.domain.soap.signcollection.dto.SignDto;
+import com.emulator.domain.soap.signcollection.dto.UserWorkspaceDto;
 
-public class SignDto {
+public class ConfirmSign {
+    public final String CERTIFICATE_GUID_NODE_NAME = "certificateGuid";
+    public final String CONTENT_NODE_NAME = "content";
+    public final String CONTENT_LARGE_NODE_NAME = "contentLarge";
+    public final String DIGEST_SCHEME_NODE_NAME = "digestScheme";
+    public final String DIGEST_SCHEME_FORMAT_NODE_NAME = "digestSchemeFormat";
+    public final String DIGEST_SCHEME_VERSION_NODE_NAME = "digestSchemeVersion";
+    public final String DT_CHECK_NODE_NAME = "dtCheck";
+    public final String DT_CREATE_NODE_NAME = "dtCreate";
+    public final String ORG_ID_NODE_NAME = "orgId";
+    public final String ORG_NAME_NODE_NAME = "orgName";
+    public final String POSITION_NODE_NAME = "position";
+    public final String SAFE_TOUCH_AUTO_SIGN_NODE_NAME = "safeTouchAutoSign";
+    public final String SAFE_TOUCH_DIGEST_SCHEME_NODE_NAME = "safeTouchDigestScheme";
+    public final String SAFE_TOUCH_DIGEST_SCHEME_VERSION_NODE_NAME = "safeTouchDigestSchemeVersion";
+    public final String SIGN_AUTHORITY_ID_NODE_NAME = "signAuthorityId";
+    public final String SIGN_HASH_NODE_NAME = "signHash";
+    public final String SIGN_KEY_NODE_NAME = "signKey";
+    public final String SIGN_TYPE_NODE_NAME = "signType";
+    public final String SIGNER_FULL_NAME_NODE_NAME = "signerFullName";
+    public final String USER_IP_NODE_NAME = "userIP";
+    public final String USER_MAC_NODE_NAME = "userMAC";
+    public final String USER_NAME_NODE_NAME = "userName";
+    public final String VALID_NODE_NAME = "valid";
+    public final String CONFIRM_SIGN_NODE_NAME = "confirmSign";
+    public final String SIGN_NODE_NAME = "Sign";
+    public final String USER_WORKSPACE_NODE_NAME = "userWorkspace";
+    public final String USER_WORKSPACE_INNER_NODE_NAME = "UserWorkspace";
+
 
     private String certificateGuid = "";
     private String content = "";
@@ -27,8 +57,8 @@ public class SignDto {
     private String userMAC = "";
     private String userName = "";
     private String valid = "";
-    private ConfirmSignDto confirmSign;
-    private UserWorkspaceDto userWorkspace;
+    private UserWorkspace userWorkspace;
+
 
     public String getCertificateGuid() {
         return certificateGuid;
@@ -214,25 +244,47 @@ public class SignDto {
         this.valid = valid;
     }
 
-    public ConfirmSignDto getConfirmSign() {
-        if (this.confirmSign == null) {
-            this.setConfirmSign(new ConfirmSignDto());
-        }
-        return confirmSign;
-    }
-
-    public void setConfirmSign(ConfirmSignDto confirmSign) {
-        this.confirmSign = confirmSign;
-    }
-
-    public UserWorkspaceDto getUserWorkspace() {
+    public UserWorkspace getUserWorkspace() {
         if (this.userWorkspace == null) {
-            this.setUserWorkspace(new UserWorkspaceDto());
+            this.setUserWorkspace(new UserWorkspace());
         }
         return userWorkspace;
     }
 
-    public void setUserWorkspace(UserWorkspaceDto userWorkspace) {
+    public void setUserWorkspace(UserWorkspace userWorkspace) {
         this.userWorkspace = userWorkspace;
+    }
+
+    public ConfirmSignDto getDto() {
+        ConfirmSignDto dto = new ConfirmSignDto();
+
+        dto.setCertificateGuid(this.getCertificateGuid());
+        dto.setContent(this.getContent());
+        dto.setContentLarge(this.getContentLarge());
+        dto.setDigestScheme(this.getDigestScheme());
+        dto.setDigestSchemeFormat(this.getDigestSchemeFormat());
+        dto.setDigestSchemeVersion(this.getDigestSchemeVersion());
+        dto.setDtCheck(this.getDtCheck());
+        dto.setDtCreate(this.getDtCreate());
+        dto.setOrgId(this.getOrgId());
+        dto.setOrgName(this.getOrgName());
+        dto.setPosition(this.getPosition());
+        dto.setSafeTouchAutoSign(this.getSafeTouchAutoSign());
+        dto.setSafeTouchDigestScheme(this.getSafeTouchDigestScheme());
+        dto.setSafeTouchDigestSchemeVersion(this.getSafeTouchDigestSchemeVersion());
+        dto.setSignAuthorityId(this.getSignAuthorityId());
+        dto.setSignHash(this.getSignHash());
+        dto.setSignKey(this.getSignKey());
+        dto.setSignType(this.getSignType());
+        dto.setSignerFullName(this.getSignerFullName());
+        dto.setUserIP(this.getUserIP());
+        dto.setUserMAC(this.getUserMAC());
+        dto.setUserName(this.getUserName());
+        dto.setValid(this.getValid());
+
+        UserWorkspaceDto userWorkspaceDto = this.getUserWorkspace().getDto();
+        dto.setUserWorkspace(userWorkspaceDto);
+
+        return dto;
     }
 }
