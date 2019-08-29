@@ -19,6 +19,8 @@ import java.io.IOException;
 
 public class RequestChain {
 
+    private static final String STATEMENT_REQUEST_STATUS_DELIVERED = "DELIVERED";
+
     private final AppUser user;
     private final SoapClient soapClient;
 
@@ -76,7 +78,9 @@ public class RequestChain {
 
         this.getRequestStatus = dto;
         this.statementRequestStatus = dto.getStateResponseList().get(0).getState();
-        this.phase = Phase.STATEMENT_REQUEST_STATUS;
+        if (this.statementRequestStatus.equals(STATEMENT_REQUEST_STATUS_DELIVERED)) {
+            this.phase = Phase.STATEMENT_REQUEST_STATUS;
+        }
     }
 
     public void nextStep(IncomingData data) {
@@ -96,8 +100,19 @@ public class RequestChain {
         GetRequestStatusDto dto = soapClient.sendGetRequestStatus(user, incomingResponseId);
 
         this.statementDocument = dto;
-        this.statementDocumentStatus = "ACCEPTED";
-        this.phase = Phase.STATEMENT_DOCUMENT;
+        if (dto.isNotProcessedYet()) {
+            this.statementDocumentStatus = "NOT PROCESSED YET";
+        } else {
+            String extId = statementRequest.getExternalId();
+            this.statementDocumentStatus = dto.getStateResponseList().stream()
+                    .filter(stateResponseDto -> stateResponseDto.getExtId().equals(extId))
+                    .map(stateResponseDto -> stateResponseDto.getState())
+                    .findFirst()
+                    .orElse("Statement Request not found");
+
+            this.statementDocumentStatus = "ACCEPTED";
+            this.phase = Phase.STATEMENT_DOCUMENT;
+        }
     }
 
     public void checkPhase(Phase newPhase) {
