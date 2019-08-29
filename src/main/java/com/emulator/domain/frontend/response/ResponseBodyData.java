@@ -40,6 +40,9 @@ public class ResponseBodyData {
     }
 
     public List<RequestChain> getRequestChainList() {
+        if (this.requestChainList == null) {
+            setRequestChainList(new ArrayList<>());
+        }
         return requestChainList;
     }
 
@@ -48,6 +51,9 @@ public class ResponseBodyData {
     }
 
     public List<String> getSoapMessageList() {
+        if (this.soapMessageList == null) {
+            setSoapMessageList(new ArrayList<>());
+        }
         return soapMessageList;
     }
 
