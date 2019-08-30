@@ -8,7 +8,6 @@ import com.emulator.domain.soap.requestchain.RequestChainPool;
 import com.emulator.domain.soap.requests.incoming.IncomingData;
 import com.emulator.exception.RequestParameterLengthException;
 import com.emulator.exception.SoapServerBadResponseException;
-import com.emulator.exception.SoapServerIncomingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,7 +36,7 @@ public class IncomingController extends AbstractController {
             chain.nextStep(data);
 
             return getSoapRequestSuccessResponse(chain);
-        } catch (SoapServerIncomingException e) {
+        } catch (SoapServerBadResponseException e) {
             e.printStackTrace();
             return getSoapRequestFailResponse(e);
         } catch (RequestParameterLengthException e) {
@@ -49,9 +48,6 @@ public class IncomingController extends AbstractController {
         }
     }
 
-    @Autowired
-    SoapMessageList soapMessageList;
-
     @Override
     protected ResponseBodyData getSoapRequestSuccessResponse(RequestChain chain) {
         ResponseBodyData result = new ResponseBodyData();
@@ -59,7 +55,6 @@ public class IncomingController extends AbstractController {
         result.setMessage("Incoming request to Soap server is success. requestID=" + chain.getIncomingResponseId());
         result.setRequestChain(chain);
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
-        soapMessageList.clearLastRequestMessageList();
         return result;
     }
 
@@ -69,7 +64,6 @@ public class IncomingController extends AbstractController {
         result.setStatus("ERROR");
         result.setMessage("Incoming request to Soap server is fail. message=" + exception.getSoapResponse());
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
-        soapMessageList.clearLastRequestMessageList();
         return result;
     }
 

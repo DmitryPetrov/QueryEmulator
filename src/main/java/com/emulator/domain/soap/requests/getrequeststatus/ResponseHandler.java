@@ -1,16 +1,15 @@
 package com.emulator.domain.soap.requests.getrequeststatus;
 
-import com.emulator.domain.soap.SoapMessageList;
 import com.emulator.domain.soap.com.bssys.sbns.upg.GetRequestStatusResponse;
+import com.emulator.domain.soap.requests.ErrorResponseHandler;
 import com.emulator.domain.soap.requests.getrequeststatus.statement.Operation;
+import com.emulator.domain.soap.requests.getrequeststatus.statement.Statement;
+import com.emulator.domain.soap.requests.getrequeststatus.stateresponse.StateResponse;
 import com.emulator.domain.soap.signcollection.ConfirmSign;
 import com.emulator.domain.soap.signcollection.Sign;
 import com.emulator.domain.soap.signcollection.SignCollection;
-import com.emulator.domain.soap.requests.getrequeststatus.statement.Statement;
-import com.emulator.domain.soap.requests.getrequeststatus.stateresponse.StateResponse;
 import com.emulator.domain.soap.signcollection.UserWorkspace;
 import com.emulator.exception.ParameterIsNullException;
-import com.emulator.exception.SoapServerGetRequestStatusException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.*;
@@ -37,8 +36,11 @@ class ResponseHandler {
         return parse(responseMessage);
     }
 
+    @Autowired
+    private ErrorResponseHandler errorHandler;
+
     private GetRequestStatusResult parse(String responseMessage) throws IOException, SAXException {
-        checkErrors(responseMessage);
+        errorHandler.check(responseMessage);
 
         if (responseMessage.contains(NOT_PROCESSED_YET)) {
             GetRequestStatusResult result = new GetRequestStatusResult();
@@ -394,27 +396,5 @@ class ResponseHandler {
             return "";
         }
         return nodeList.item(0).getTextContent();
-    }
-
-    private void checkErrors(String response) {
-        if ((response.contains("NONEXISTENT SESSION"))
-                || (response.contains("Error"))
-                || (response.contains("UNKNOWN REQUEST"))) {
-            handleError(response);
-        }
-    }
-
-    @Autowired
-    private SoapMessageList soapMessageList;
-
-    private void handleError(String response) {
-        String exceptionMessage = response;
-        exceptionMessage += "\n>>>>SAOP Messages:";
-        exceptionMessage += soapMessageList.getLastRequestAsString();
-
-        SoapServerGetRequestStatusException exception = new SoapServerGetRequestStatusException(exceptionMessage);
-        exception.setSoapMessages(soapMessageList.getLastRequestAsString());
-        exception.setSoapResponse(response);
-        throw exception;
     }
 }

@@ -12,8 +12,6 @@ public class SoapMessageList {
     private List<String> lastSoapRequest = new ArrayList<>();
 
     public void add(String message) {
-        System.out.println(">>>>SoapMessageList");
-        System.out.println(message);
         lastSoapRequest.add(message);
         messageList.add(new String(message));
     }
@@ -33,6 +31,15 @@ public class SoapMessageList {
 
     public List<String> getMessageList() {
         return messageList;
+    }
+
+    public String getMessageListAsString() {
+        String result = "";
+        for (String message : messageList) {
+            result += message;
+            result += System.lineSeparator();
+        }
+        return result;
     }
 
     public void clearLastRequestMessageList() {

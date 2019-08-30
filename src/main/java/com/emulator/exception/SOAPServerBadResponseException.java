@@ -1,9 +1,12 @@
 package com.emulator.exception;
 
-public abstract class SoapServerBadResponseException extends RuntimeException {
+import java.util.ArrayList;
+import java.util.List;
+
+public class SoapServerBadResponseException extends RuntimeException {
 
     private String message;
-    private String soapMessages;
+    private List<String> soapMessageList;
     private String soapResponse;
 
     public SoapServerBadResponseException(String message) {
@@ -20,12 +23,15 @@ public abstract class SoapServerBadResponseException extends RuntimeException {
         this.message = message;
     }
 
-    public String getSoapMessages() {
-        return soapMessages;
+    public List<String> getSoapMessageList() {
+        if (this.soapMessageList == null) {
+            setSoapMessageList(new ArrayList<>());
+        }
+        return soapMessageList;
     }
 
-    public void setSoapMessages(String soapMessages) {
-        this.soapMessages = soapMessages;
+    public void setSoapMessageList(List<String> soapMessageList) {
+        this.soapMessageList = soapMessageList;
     }
 
     public String getSoapResponse() {

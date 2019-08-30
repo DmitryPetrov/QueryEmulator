@@ -8,10 +8,11 @@ import com.emulator.domain.soap.requestchain.RequestChainPool;
 import com.emulator.domain.soap.requests.statementrequest.StatementRequestData;
 import com.emulator.exception.RequestParameterLengthException;
 import com.emulator.exception.SoapServerBadResponseException;
-import com.emulator.exception.SoapServerStatementRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 
@@ -35,7 +36,7 @@ public class StatementRequestController extends AbstractController {
             chain.nextStep(data);
 
             return getSoapRequestSuccessResponse(chain);
-        } catch (SoapServerStatementRequestException e) {
+        } catch (SoapServerBadResponseException e) {
             e.printStackTrace();
             return getSoapRequestFailResponse(e);
         } catch (RequestParameterLengthException e) {
@@ -47,16 +48,12 @@ public class StatementRequestController extends AbstractController {
         }
     }
 
-    @Autowired
-    SoapMessageList soapMessageList;
-
     @Override
     protected ResponseBodyData getSoapRequestSuccessResponse(RequestChain chain) {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("OK");
         result.setMessage("StatementRequest to Soap server is success. requestID=" + chain.getResponseId());
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
-        soapMessageList.clearLastRequestMessageList();
         return result;
     }
 
@@ -66,7 +63,6 @@ public class StatementRequestController extends AbstractController {
         result.setStatus("ERROR");
         result.setMessage("StatementRequest to Soap server is fail. message=" + exception.getSoapResponse());
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
-        soapMessageList.clearLastRequestMessageList();
         return result;
     }
 

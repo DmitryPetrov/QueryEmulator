@@ -1,13 +1,12 @@
 package com.emulator.domain.soap.requests.authorization;
 
 import com.emulator.domain.entity.AppUser;
-import com.emulator.domain.soap.SoapMessageList;
+import com.emulator.domain.soap.com.bssys.sbns.upg.*;
+import com.emulator.domain.soap.requests.ErrorResponseHandler;
 import com.emulator.domain.soap.requests.authorization.login.ClientAuthData;
 import com.emulator.domain.soap.requests.authorization.login.ClientAuthDataBuilder;
 import com.emulator.domain.soap.requests.authorization.login.LoginResult;
 import com.emulator.domain.soap.requests.authorization.prelogin.PreLoginResult;
-import com.emulator.domain.soap.com.bssys.sbns.upg.*;
-import com.emulator.exception.SoapServerLoginException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.client.core.WebServiceTemplate;
@@ -89,37 +88,16 @@ public class AuthorizationManager {
         return factory.createLogin(request);
     }
 
+    @Autowired
+    private ErrorResponseHandler errorHandler;
+
     private LoginResult getLoginResult(JAXBElement<LoginResponse> response) {
         String responseMessage = response.getValue().getReturn();
 
-        checkErrors(responseMessage);
+        errorHandler.check(responseMessage);
 
         LoginResult loginResult = new LoginResult();
         loginResult.setSessionId(responseMessage);
         return loginResult;
     }
-
-    private void checkErrors(String response) {
-        System.out.println("Authorization response: " + response);
-
-        if ((response.contains("BAD_CREDENTIALS"))
-                || (response.contains("Error"))) {
-            handleError(response);
-        }
-    }
-
-    @Autowired
-    private SoapMessageList soapMessageList;
-
-    private void handleError(String responseMessage) {
-        String exceptionMessage = responseMessage;
-        exceptionMessage += "\n>>>>SAOP Messages:";
-        exceptionMessage += soapMessageList.getLastRequestAsString();
-
-        SoapServerLoginException exception = new SoapServerLoginException(exceptionMessage);
-        exception.setSoapMessages(soapMessageList.getLastRequestAsString());
-        exception.setSoapResponse(responseMessage);
-        throw exception;
-    }
-
 }

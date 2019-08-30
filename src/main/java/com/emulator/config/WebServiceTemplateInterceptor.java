@@ -51,6 +51,7 @@ public class WebServiceTemplateInterceptor implements ClientInterceptor {
         try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
             messageContext.getRequest().writeTo(stream);
             String responseStr = new String(stream.toByteArray());
+            soapMessageList.clearLastRequestMessageList();
             soapMessageList.add(responseStr);
         } catch (IOException e) {
             e.printStackTrace();

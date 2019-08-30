@@ -1,12 +1,11 @@
 package com.emulator.domain.soap.requests.incoming;
 
 import com.emulator.domain.entity.AppUser;
-import com.emulator.domain.soap.SoapMessageList;
 import com.emulator.domain.soap.com.bssys.sbns.upg.ObjectFactory;
 import com.emulator.domain.soap.com.bssys.sbns.upg.SendRequests;
 import com.emulator.domain.soap.com.bssys.sbns.upg.SendRequestsResponse;
+import com.emulator.domain.soap.requests.ErrorResponseHandler;
 import com.emulator.domain.soap.requests.RequestMessageHandler;
-import com.emulator.exception.SoapServerIncomingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -52,40 +51,19 @@ public class IncomingManager {
         return factory.createSendRequests(request);
     }
 
+    @Autowired
+    private ErrorResponseHandler errorHandler;
+
     private IncomingResult getResult(JAXBElement<SendRequestsResponse> response) {
         String responseMessage = "";
         for (String responseLine : response.getValue().getReturn()) {
             responseMessage += responseLine;
         }
 
-        checkErrors(responseMessage);
+        errorHandler.check(responseMessage);
 
         IncomingResult result = new IncomingResult(responseMessage);
         return result;
-    }
-
-    private void checkErrors(String response) {
-        System.out.println("Incoming response: " + response);
-
-        if ((response.contains("NONEXISTENT SESSION"))
-                || (response.contains("Error"))) {
-            handleError(response);
-        }
-    }
-
-
-    @Autowired
-    private SoapMessageList soapMessageList;
-
-    private void handleError(String response) {
-        String exceptionMessage = response;
-        exceptionMessage += "\n>>>>SAOP Messages:";
-        exceptionMessage += soapMessageList.getLastRequestAsString();
-
-        SoapServerIncomingException exception = new SoapServerIncomingException(exceptionMessage);
-        exception.setSoapMessages(soapMessageList.getLastRequestAsString());
-        exception.setSoapResponse(response);
-        throw exception;
     }
 
 }
