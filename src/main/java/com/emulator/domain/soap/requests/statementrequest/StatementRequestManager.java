@@ -1,6 +1,6 @@
 package com.emulator.domain.soap.requests.statementrequest;
 
-import com.emulator.domain.entity.AppUser;
+import com.emulator.domain.soap.requests.authorization.AppUser;
 import com.emulator.domain.soap.com.bssys.sbns.upg.ObjectFactory;
 import com.emulator.domain.soap.com.bssys.sbns.upg.SendRequests;
 import com.emulator.domain.soap.com.bssys.sbns.upg.SendRequestsResponse;

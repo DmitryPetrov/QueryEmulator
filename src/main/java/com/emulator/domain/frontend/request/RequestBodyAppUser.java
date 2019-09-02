@@ -1,7 +1,7 @@
 package com.emulator.domain.frontend.request;
 
-import com.emulator.domain.entity.AppUser;
-import com.emulator.domain.entity.RequestParameters;
+import com.emulator.domain.soap.requests.authorization.AppUser;
+import com.emulator.domain.soap.requests.RequestParameters;
 import com.emulator.exception.RequestParameterLengthException;
 
 public class RequestBodyAppUser extends RequestParameters {

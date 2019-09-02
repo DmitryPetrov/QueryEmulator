@@ -1,8 +1,7 @@
-package com.emulator.domain.soap.requestchain;
+package com.emulator.domain.requestchain;
 
-import com.emulator.domain.entity.AppUser;
+import com.emulator.domain.soap.requests.authorization.AppUser;
 import com.emulator.domain.soap.SoapClient;
-import com.emulator.domain.soap.requests.statementrequest.dto.StatementRequestDto;
 import com.emulator.exception.RequestChainIsNotExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

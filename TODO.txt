@@ -4,16 +4,8 @@ StatementRequestData getters/setters for requestAttrRequestId and requestAttrVer
 
 сделать Incoming.docType как enum
 
-RequestParameters throws декларации
-
 сделать переменную в application.properties, которая будет включать и выключать
         печать soap сообщений в sout
-
-вынести создание ДТО в функции
-
-в контроллерах бросать ексепшен если не найден request chain
-
-нужен ли BadRequestParameterException
 
 автоматическое увеличение requestID incomingId
 
@@ -25,7 +17,7 @@ com.emulator.domain.soap.requests.getrequeststatus.ResponseHandler getNodeValue(
 
 сделать список строк из ошибок от сервера и прогонять через него каждый ответ на поиск ошибок
 
-удалить StatementRequestResult и IncomingResult
-
 добавить пакеты data в пакеты запросов
+
+решить что делать с entity
 

@@ -1,6 +1,6 @@
 package com.emulator.domain.soap;
 
-import com.emulator.domain.entity.AppUser;
+import com.emulator.domain.soap.requests.authorization.AppUser;
 import com.emulator.domain.soap.requests.authorization.AuthorizationManager;
 import com.emulator.domain.soap.requests.getrequeststatus.GetRequestStatusManager;
 import com.emulator.domain.soap.requests.getrequeststatus.dto.GetRequestStatusDto;

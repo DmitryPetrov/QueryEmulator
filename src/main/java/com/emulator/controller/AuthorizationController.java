@@ -1,10 +1,10 @@
 package com.emulator.controller;
 
-import com.emulator.domain.entity.AppUser;
+import com.emulator.domain.soap.requests.authorization.AppUser;
 import com.emulator.domain.frontend.request.RequestBodyAppUser;
 import com.emulator.domain.frontend.response.ResponseBodyData;
 import com.emulator.domain.soap.SoapClient;
-import com.emulator.domain.soap.requestchain.RequestChain;
+import com.emulator.domain.requestchain.RequestChain;
 import com.emulator.exception.RequestParameterLengthException;
 import com.emulator.exception.SoapServerBadResponseException;
 import org.springframework.beans.factory.annotation.Autowired;

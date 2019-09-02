@@ -1,6 +1,5 @@
 package com.emulator.domain.soap.requests.authorization;
 
-import com.emulator.domain.entity.AppUser;
 import com.emulator.domain.soap.com.bssys.sbns.upg.*;
 import com.emulator.domain.soap.requests.ErrorResponseHandler;
 import com.emulator.domain.soap.requests.authorization.login.ClientAuthData;

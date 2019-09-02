@@ -1,7 +1,6 @@
 package com.emulator.domain.frontend.response;
 
-import com.emulator.domain.soap.requestchain.RequestChain;
-import com.emulator.domain.soap.requests.DataTransferObject;
+import com.emulator.domain.requestchain.RequestChain;
 
 import java.util.ArrayList;
 import java.util.List;

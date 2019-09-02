@@ -1,8 +1,7 @@
-package com.emulator.domain.soap.requestchain;
+package com.emulator.domain.requestchain;
 
-import com.emulator.domain.entity.AppUser;
+import com.emulator.domain.soap.requests.authorization.AppUser;
 import com.emulator.domain.soap.SoapClient;
-import com.emulator.domain.soap.requests.DataTransferObject;
 import com.emulator.domain.soap.requests.incoming.IncomingData;
 import com.emulator.domain.soap.requests.incoming.IncomingDto;
 import com.emulator.domain.soap.requests.getrequeststatus.dto.GetRequestStatusDto;
@@ -11,8 +10,6 @@ import com.emulator.domain.soap.requests.statementrequest.dto.StatementRequestDt
 import com.emulator.exception.ParameterIsNullException;
 import com.emulator.exception.RequestChainPhaseNotReadyOrAlreadyPassedException;
 import com.emulator.exception.UserIsNotAuthorizedException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;

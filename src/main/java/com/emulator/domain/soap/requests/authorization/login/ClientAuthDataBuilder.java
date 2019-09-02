@@ -1,6 +1,6 @@
 package com.emulator.domain.soap.requests.authorization.login;
 
-import com.emulator.domain.entity.AppUser;
+import com.emulator.domain.soap.requests.authorization.AppUser;
 import com.emulator.domain.soap.requests.authorization.prelogin.PreLoginResult;
 import org.springframework.stereotype.Component;
 

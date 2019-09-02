@@ -1,6 +1,6 @@
 package com.emulator.domain.soap.requests.statementrequest;
 
-import com.emulator.domain.entity.RequestParameters;
+import com.emulator.domain.soap.requests.RequestParameters;
 import com.emulator.domain.soap.requests.statementrequest.dto.DataAccountDto;
 import com.emulator.exception.RequestParameterLengthException;
 

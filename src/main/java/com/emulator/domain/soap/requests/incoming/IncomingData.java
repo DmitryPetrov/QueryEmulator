@@ -1,6 +1,6 @@
 package com.emulator.domain.soap.requests.incoming;
 
-import com.emulator.domain.entity.RequestParameters;
+import com.emulator.domain.soap.requests.RequestParameters;
 import com.emulator.exception.RequestParameterLengthException;
 
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package com.emulator.domain.soap.requests.getrequeststatus;
 
-import com.emulator.domain.entity.AppUser;
+import com.emulator.domain.soap.requests.authorization.AppUser;
 import com.emulator.domain.soap.com.bssys.sbns.upg.*;
 import com.emulator.domain.soap.requests.getrequeststatus.dto.GetRequestStatusDto;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.emulator.domain.soap.requestchain;
+package com.emulator.domain.requestchain;
 
 enum Phase {
 
