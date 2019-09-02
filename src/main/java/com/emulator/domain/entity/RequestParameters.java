@@ -23,7 +23,7 @@ public abstract class RequestParameters {
         this.requestName = requestName;
     }
 
-    abstract public void check() throws RequestParameterLengthException;
+    abstract public void check();
 
     protected String checkNull(String value, String defaultValue) {
         if ((value == null) || (value.equals("(initialState)"))) {
@@ -32,7 +32,7 @@ public abstract class RequestParameters {
         return value;
     }
 
-    protected void checkStringLength(String paramName, String string, int maxLength) throws RequestParameterLengthException {
+    protected void checkStringLength(String paramName, String string, int maxLength) {
         if (string.length() > maxLength) {
             RequestParameterLengthException exception = new RequestParameterLengthException("String is too long");
             exception.setMaxLength(maxLength);
