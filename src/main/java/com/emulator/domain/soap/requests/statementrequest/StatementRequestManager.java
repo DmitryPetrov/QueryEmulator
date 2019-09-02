@@ -38,8 +38,8 @@ public class StatementRequestManager {
         response = (JAXBElement<SendRequestsResponse>) webServiceTemplate
                 .marshalSendAndReceive(request, requestMessageHandler);
 
-        StatementRequestResult result = getResult(response);
-        return data.getDto(result);
+        String responseId = getResult(response);
+        return data.getDto(responseId);
     }
 
 
@@ -57,7 +57,7 @@ public class StatementRequestManager {
     @Autowired
     private ErrorResponseHandler errorHandler;
 
-    private StatementRequestResult getResult(JAXBElement<SendRequestsResponse> response) {
+    private String getResult(JAXBElement<SendRequestsResponse> response) {
         String responseMessage = "";
         for (String responseLine : response.getValue().getReturn()) {
             responseMessage += responseLine;
@@ -65,7 +65,6 @@ public class StatementRequestManager {
 
         errorHandler.check(responseMessage);
 
-        StatementRequestResult result = new StatementRequestResult(responseMessage);
-        return result;
+        return responseMessage;
     }
 }

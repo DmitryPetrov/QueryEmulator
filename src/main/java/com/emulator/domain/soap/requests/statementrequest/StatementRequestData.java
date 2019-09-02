@@ -277,7 +277,7 @@ public class StatementRequestData extends RequestParameters {
         this.signCollection = signCollection;
     }
 
-    StatementRequestDto getDto(StatementRequestResult result) {
+    StatementRequestDto getDto(String responseId) {
         StatementRequestDto dto = new StatementRequestDto();
 
         dto.setAttrRequestId(this.attrRequestId);
@@ -308,7 +308,7 @@ public class StatementRequestData extends RequestParameters {
         dto.setSignCollection(this.getSignCollection().getDto());
 
         dto.setRequestId(dto.getAttrRequestId());
-        dto.setResponseId(result.getResponseId());
+        dto.setResponseId(responseId);
         dto.setRequestName("Statement request");
 
         return dto;
