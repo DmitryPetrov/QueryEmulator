@@ -34,9 +34,8 @@ public class IncomingManager {
         response = (JAXBElement<SendRequestsResponse>) webServiceTemplate
                 .marshalSendAndReceive(request, requestMessageHandler);
 
-        IncomingResult result = getResult(response);
-        IncomingDto dto = data.getDto(result);
-        return dto;
+        String incomingResponseId = getResult(response);
+        return data.getDto(incomingResponseId);
     }
 
 
@@ -54,16 +53,14 @@ public class IncomingManager {
     @Autowired
     private ErrorResponseHandler errorHandler;
 
-    private IncomingResult getResult(JAXBElement<SendRequestsResponse> response) {
+    private String getResult(JAXBElement<SendRequestsResponse> response) {
         String responseMessage = "";
         for (String responseLine : response.getValue().getReturn()) {
             responseMessage += responseLine;
         }
-
         errorHandler.check(responseMessage);
 
-        IncomingResult result = new IncomingResult(responseMessage);
-        return result;
+        return responseMessage;
     }
 
 }

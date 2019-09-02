@@ -149,7 +149,7 @@ public class IncomingData extends RequestParameters {
         this.docTypes = checkedDocTypes;
     }
 
-    IncomingDto getDto(IncomingResult result) {
+    IncomingDto getDto(String incomingResponseId) {
         IncomingDto dto = new IncomingDto();
         dto.setAttrIncomingId(this.getAttrIncomingId());
         dto.setAttrReceiver(this.getAttrReceiver());
@@ -165,7 +165,7 @@ public class IncomingData extends RequestParameters {
         }
 
         dto.setRequestId(dto.getAttrRequestId());
-        dto.setResponseId(result.getResponseId());
+        dto.setResponseId(incomingResponseId);
         dto.setRequestName("Incoming");
 
         return dto;
