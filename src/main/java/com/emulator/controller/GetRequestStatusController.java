@@ -6,6 +6,7 @@ import com.emulator.domain.requestchain.RequestChain;
 import com.emulator.domain.requestchain.RequestChainPool;
 import com.emulator.exception.BadRequestParameterException;
 import com.emulator.exception.SoapServerBadResponseException;
+import com.emulator.exception.UserIsNotAuthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,16 +25,17 @@ public class GetRequestStatusController extends AbstractController {
     @ResponseBody
     public ResponseBodyData runGetRequestStatus(HttpSession httpSession,
                                                 @RequestParam(name = "responseId") String responseId) {
+        RequestChain chain = null;
         try {
-            AppUser user = (AppUser) httpSession.getAttribute("user");
-            if (user == null) {
-                return getUserIsNotAuthorizedResponse();
-            }
+            AppUser user = getUser(httpSession);
 
-            RequestChain chain = chainPool.getRequestChain(user, responseId);
+            chain = chainPool.getRequestChain(user, responseId);
             chain.nextStep();
 
             return getSoapRequestSuccessResponse(chain);
+        } catch (UserIsNotAuthorizedException e) {
+            e.printStackTrace();
+            return getUserIsNotAuthorizedResponse();
         } catch (SoapServerBadResponseException e) {
             e.printStackTrace();
             return getSoapRequestFailResponse(e);
@@ -42,7 +44,7 @@ public class GetRequestStatusController extends AbstractController {
             return getBadRequestParameterResponse(e);
         } catch (Exception e) {
             e.printStackTrace();
-            return getServerFailResponse(e);
+            return getServerFailResponse(e, chain);
         }
     }
 

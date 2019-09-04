@@ -5,6 +5,7 @@ import com.emulator.domain.frontend.response.ResponseBodyData;
 import com.emulator.domain.requestchain.RequestChain;
 import com.emulator.domain.requestchain.RequestChainPool;
 import com.emulator.exception.SoapServerBadResponseException;
+import com.emulator.exception.UserIsNotAuthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,14 +24,14 @@ public class RequestListController extends AbstractController{
     @ResponseBody
     public ResponseBodyData runGetRequestStatus(HttpSession httpSession) {
         try {
-            AppUser user = (AppUser) httpSession.getAttribute("user");
-            if (user == null) {
-                return getUserIsNotAuthorizedResponse();
-            }
+            AppUser user = getUser(httpSession);
 
             List<RequestChain> chainList = chainPool.getChainList(user);
 
             return getSuccessResponse(chainList);
+        } catch (UserIsNotAuthorizedException e) {
+            e.printStackTrace();
+            return getUserIsNotAuthorizedResponse();
         } catch (Exception e) {
             e.printStackTrace();
             return getServerFailResponse(e);

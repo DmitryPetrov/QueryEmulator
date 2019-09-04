@@ -7,11 +7,13 @@ import com.emulator.domain.requestchain.RequestChainPool;
 import com.emulator.domain.soap.requests.statementrequest.StatementRequestData;
 import com.emulator.exception.RequestParameterLengthException;
 import com.emulator.exception.SoapServerBadResponseException;
+import com.emulator.exception.UserIsNotAuthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.w3c.dom.DOMException;
 
 import javax.servlet.http.HttpSession;
 
@@ -24,17 +26,18 @@ public class StatementRequestController extends AbstractController {
     @PostMapping("/request/new/statementRequest")
     @ResponseBody
     public ResponseBodyData runStatementRequest(HttpSession httpSession, @RequestBody StatementRequestData data) {
+        RequestChain chain = null;
         try {
-            AppUser user = (AppUser) httpSession.getAttribute("user");
-            if (user == null) {
-                return getUserIsNotAuthorizedResponse();
-            }
+            AppUser user = getUser(httpSession);
             data.check();
 
-            RequestChain chain = chainPool.createRequestChain(user);
+            chain = chainPool.createRequestChain(user);
             chain.nextStep(data);
 
             return getSoapRequestSuccessResponse(chain);
+        } catch (UserIsNotAuthorizedException e) {
+            e.printStackTrace();
+            return getUserIsNotAuthorizedResponse();
         } catch (SoapServerBadResponseException e) {
             e.printStackTrace();
             return getSoapRequestFailResponse(e);
@@ -43,7 +46,7 @@ public class StatementRequestController extends AbstractController {
             return getParameterLengthErrorResponse(e);
         } catch (Exception e) {
             e.printStackTrace();
-            return getServerFailResponse(e);
+            return getServerFailResponse(e, chain);
         }
     }
 

@@ -4,6 +4,7 @@ import com.emulator.domain.frontend.response.ResponseBodyData;
 import com.emulator.domain.requestchain.RequestChain;
 import com.emulator.domain.soap.requests.authorization.AppUser;
 import com.emulator.exception.SoapServerBadResponseException;
+import com.emulator.exception.UserIsNotAuthorizedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,11 +18,11 @@ public class SoapMessageListController  extends AbstractController{
     @ResponseBody
     public ResponseBodyData getAllMessage(HttpSession httpSession) {
         try {
-            AppUser user = (AppUser) httpSession.getAttribute("user");
-            if (user == null) {
-                return getUserIsNotAuthorizedResponse();
-            }
+            AppUser user = getUser(httpSession);
             return getSuccessResponseList();
+        } catch (UserIsNotAuthorizedException e) {
+            e.printStackTrace();
+            return getUserIsNotAuthorizedResponse();
         } catch (Exception e) {
             e.printStackTrace();
             return getServerFailResponse(e);
@@ -32,11 +33,11 @@ public class SoapMessageListController  extends AbstractController{
     @ResponseBody
     public ResponseBodyData getLastRequestMessage(HttpSession httpSession) {
         try {
-            AppUser user = (AppUser) httpSession.getAttribute("user");
-            if (user == null) {
-                return getUserIsNotAuthorizedResponse();
-            }
+            AppUser user = getUser(httpSession);
             return getSuccessResponseLastRequest();
+        } catch (UserIsNotAuthorizedException e) {
+            e.printStackTrace();
+            return getUserIsNotAuthorizedResponse();
         } catch (Exception e) {
             e.printStackTrace();
             return getServerFailResponse(e);
@@ -47,12 +48,12 @@ public class SoapMessageListController  extends AbstractController{
     @ResponseBody
     public ResponseBodyData removeAllMessage(HttpSession httpSession) {
         try {
-            AppUser user = (AppUser) httpSession.getAttribute("user");
-            if (user == null) {
-                return getUserIsNotAuthorizedResponse();
-            }
+            AppUser user = getUser(httpSession);
             clearSoapMessageList();
             return getSuccessResponseList();
+        } catch (UserIsNotAuthorizedException e) {
+            e.printStackTrace();
+            return getUserIsNotAuthorizedResponse();
         } catch (Exception e) {
             e.printStackTrace();
             return getServerFailResponse(e);
