@@ -170,4 +170,8 @@ public class RequestChain {
     public GetRequestStatusDto getStatementDocument() {
         return statementDocument;
     }
+
+    public int getPhaseNum() {
+        return this.phase.ordinal();
+    }
 }
