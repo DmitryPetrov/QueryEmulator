@@ -1,12 +1,11 @@
 package com.emulator.controller;
 
-import com.emulator.domain.soap.requests.authorization.AppUser;
 import com.emulator.domain.frontend.response.ResponseBodyData;
 import com.emulator.domain.requestchain.RequestChain;
+import com.emulator.domain.soap.requests.authorization.AppUser;
 import com.emulator.exception.SoapServerBadResponseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
@@ -14,19 +13,46 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class SoapMessageListController  extends AbstractController{
 
-    @GetMapping("/soapMessage/list")
+    @GetMapping("/soapMessage/list/all")
     @ResponseBody
-    public ResponseBodyData runGetRequestStatus(HttpSession httpSession,
-                                                @RequestParam(name = "clear", required = false) String clear) {
+    public ResponseBodyData getAllMessage(HttpSession httpSession) {
         try {
             AppUser user = (AppUser) httpSession.getAttribute("user");
             if (user == null) {
                 return getUserIsNotAuthorizedResponse();
             }
-            if ((clear != null) && (clear.equals("true"))) {
-                clearSoapMessageList();
+            return getSuccessResponseList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getServerFailResponse(e);
+        }
+    }
+
+    @GetMapping("/soapMessage/list/lastRequest")
+    @ResponseBody
+    public ResponseBodyData getLastRequestMessage(HttpSession httpSession) {
+        try {
+            AppUser user = (AppUser) httpSession.getAttribute("user");
+            if (user == null) {
+                return getUserIsNotAuthorizedResponse();
             }
-            return getSuccessResponse();
+            return getSuccessResponseLastRequest();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getServerFailResponse(e);
+        }
+    }
+
+    @GetMapping("/soapMessage/remove/all")
+    @ResponseBody
+    public ResponseBodyData removeAllMessage(HttpSession httpSession) {
+        try {
+            AppUser user = (AppUser) httpSession.getAttribute("user");
+            if (user == null) {
+                return getUserIsNotAuthorizedResponse();
+            }
+            clearSoapMessageList();
+            return getSuccessResponseList();
         } catch (Exception e) {
             e.printStackTrace();
             return getServerFailResponse(e);
@@ -37,7 +63,15 @@ public class SoapMessageListController  extends AbstractController{
         soapMessageList.clear();
     }
 
-    private ResponseBodyData getSuccessResponse() {
+    private ResponseBodyData getSuccessResponseLastRequest() {
+        ResponseBodyData response = new ResponseBodyData();
+        response.setStatus("OK");
+        response.setMessage("Last Request soap message list");
+        response.setSoapMessageList(soapMessageList.getLastRequestMessageList());
+        return response;
+    }
+
+    private ResponseBodyData getSuccessResponseList() {
         ResponseBodyData response = new ResponseBodyData();
         response.setStatus("OK");
         response.setMessage("Soap message list");
