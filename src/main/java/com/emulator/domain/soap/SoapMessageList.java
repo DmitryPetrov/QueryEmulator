@@ -16,6 +16,11 @@ public class SoapMessageList {
         message = message.replaceAll("\r", "");
         message = message.replaceAll("\n", "");
         message = message.replaceAll("\t", "");
+        message = message.replaceAll("&amp;", "&");
+        message = message.replaceAll("&#13;", "");
+        message = message.replaceAll("&lt;", "<");
+        message = message.replaceAll("&gt;", ">");
+        message = message.replaceAll("> ", ">");
 
         lastSoapRequest.add(message);
         messageList.add(new String(message));
