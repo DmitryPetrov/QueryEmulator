@@ -46,8 +46,6 @@ public class RequestChain {
         this.soapClient = soapClient;
     }
 
-
-
     public void nextStep(StatementRequestData data) {
         checkPhase(Phase.STATEMENT_REQUEST);
 

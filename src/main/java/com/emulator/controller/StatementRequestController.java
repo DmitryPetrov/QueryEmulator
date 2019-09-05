@@ -33,6 +33,7 @@ public class StatementRequestController extends AbstractController {
 
             chain = chainPool.createRequestChain(user);
             chain.nextStep(data);
+            chainPool.addToPool(chain);
 
             return getSoapRequestSuccessResponse(chain);
         } catch (UserIsNotAuthorizedException e) {

@@ -2,6 +2,7 @@ package com.emulator.domain.requestchain;
 
 import com.emulator.domain.soap.requests.authorization.AppUser;
 import com.emulator.domain.soap.SoapClient;
+import com.emulator.exception.ParameterIsNullException;
 import com.emulator.exception.RequestChainIsNotExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,18 +22,23 @@ public class RequestChainPool {
     SoapClient soapClient;
 
     public RequestChain createRequestChain(AppUser user) {
-        List<RequestChain> chainList = null;
+        return new RequestChain(user, soapClient);
+    }
 
+    public void addToPool(RequestChain chain) {
+        if (chain == null) {
+            throw new ParameterIsNullException("RequestChain must not be null");
+        }
+        AppUser user = chain.getUser();
+
+        List<RequestChain> chainList = null;
         if (pool.containsKey(user)) {
             chainList = pool.get(user);
         } else {
             chainList = new ArrayList<>();
             pool.put(user, chainList);
         }
-
-        RequestChain requestChain = new RequestChain(user, soapClient);
-        chainList.add(requestChain);
-        return requestChain;
+        chainList.add(chain);
     }
 
     public RequestChain getRequestChain(AppUser user, String responseId) {
