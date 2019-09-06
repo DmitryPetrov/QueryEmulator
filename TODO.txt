@@ -21,3 +21,5 @@ com.emulator.domain.soap.requests.getrequeststatus.ResponseHandler getNodeValue(
 
 решить что делать с entity
 
+//working app
+
