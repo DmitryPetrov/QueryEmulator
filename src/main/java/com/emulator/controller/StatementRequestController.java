@@ -41,7 +41,7 @@ public class StatementRequestController extends AbstractController {
             return getUserIsNotAuthorizedResponse();
         } catch (SoapServerBadResponseException e) {
             e.printStackTrace();
-            return getSoapRequestFailResponse(e);
+            return getSoapRequestFailResponse(e, chain);
         } catch (RequestParameterLengthException e) {
             e.printStackTrace();
             return getParameterLengthErrorResponse(e);
@@ -61,11 +61,13 @@ public class StatementRequestController extends AbstractController {
     }
 
     @Override
-    protected ResponseBodyData getSoapRequestFailResponse(SoapServerBadResponseException exception) {
+    protected ResponseBodyData getSoapRequestFailResponse(SoapServerBadResponseException exception, RequestChain
+            chain) {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("ERROR");
         result.setMessage("StatementRequest to Soap server is fail. message=" + exception.getSoapResponse());
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
+        result.setRequestChain(chain);
         return result;
     }
 

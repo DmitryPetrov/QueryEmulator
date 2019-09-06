@@ -1,9 +1,9 @@
 package com.emulator.controller;
 
-import com.emulator.domain.soap.requests.authorization.AppUser;
 import com.emulator.domain.frontend.response.ResponseBodyData;
 import com.emulator.domain.requestchain.RequestChain;
 import com.emulator.domain.requestchain.RequestChainPool;
+import com.emulator.domain.soap.requests.authorization.AppUser;
 import com.emulator.domain.soap.requests.incoming.IncomingData;
 import com.emulator.exception.RequestParameterLengthException;
 import com.emulator.exception.SoapServerBadResponseException;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.w3c.dom.DOMException;
 
 import javax.servlet.http.HttpSession;
 
@@ -40,7 +39,7 @@ public class IncomingController extends AbstractController {
             return getUserIsNotAuthorizedResponse();
         } catch (SoapServerBadResponseException e) {
             e.printStackTrace();
-            return getSoapRequestFailResponse(e);
+            return getSoapRequestFailResponse(e, chain);
         } catch (RequestParameterLengthException e) {
             e.printStackTrace();
             return getParameterLengthErrorResponse(e);
@@ -61,11 +60,13 @@ public class IncomingController extends AbstractController {
     }
 
     @Override
-    protected ResponseBodyData getSoapRequestFailResponse(SoapServerBadResponseException exception) {
+    protected ResponseBodyData getSoapRequestFailResponse(SoapServerBadResponseException exception, RequestChain
+            chain) {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("ERROR");
         result.setMessage("Incoming request to Soap server is fail. message=" + exception.getSoapResponse());
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
+        result.setRequestChain(chain);
         return result;
     }
 

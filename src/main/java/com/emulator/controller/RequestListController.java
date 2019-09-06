@@ -52,7 +52,8 @@ public class RequestListController extends AbstractController{
     }
 
     @Override
-    protected ResponseBodyData getSoapRequestFailResponse(SoapServerBadResponseException exception) {
+    protected ResponseBodyData getSoapRequestFailResponse(SoapServerBadResponseException exception, RequestChain
+            chain) {
         return null;
     }
 

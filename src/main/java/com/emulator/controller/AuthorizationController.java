@@ -36,7 +36,7 @@ public class AuthorizationController extends AbstractController{
             return getSoapRequestSuccessResponse(authorizedUser.getSessionId());
         } catch (SoapServerBadResponseException e) {
             e.printStackTrace();
-            return getSoapRequestFailResponse(e);
+            return getSoapRequestFailResponse(e, null);
         } catch (RequestParameterLengthException e) {
             e.printStackTrace();
             return getParameterLengthErrorResponse(e);
@@ -55,7 +55,8 @@ public class AuthorizationController extends AbstractController{
     }
 
     @Override
-    protected ResponseBodyData getSoapRequestFailResponse(SoapServerBadResponseException exception) {
+    protected ResponseBodyData getSoapRequestFailResponse(SoapServerBadResponseException exception, RequestChain
+            chain) {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("ERROR");
         result.setMessage("LogIn to Soap server is fail. Message=" + exception.getSoapResponse());

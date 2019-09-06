@@ -15,7 +15,8 @@ public abstract class AbstractController {
 
     protected abstract ResponseBodyData getSoapRequestSuccessResponse(RequestChain chain);
 
-    protected abstract ResponseBodyData getSoapRequestFailResponse(SoapServerBadResponseException exception);
+    protected abstract ResponseBodyData getSoapRequestFailResponse(SoapServerBadResponseException exception,
+                                                                   RequestChain chain);
 
     protected AppUser getUser(HttpSession httpSession) {
         AppUser user = (AppUser) httpSession.getAttribute("user");
