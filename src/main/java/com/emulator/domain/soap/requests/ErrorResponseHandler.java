@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
 public class ErrorResponseHandler {
 
     public void check(String response) {
-        if ((response.contains("BAD_CREDENTIALS"))
-                || (response.contains("UNKNOWN REQUEST"))
-                || (response.contains("NONEXISTENT SESSION"))
-                || (response.contains("Error"))) {
+        if ((response.contains("!--BAD_CREDENTIALS--"))
+                || (response.contains("!--UNKNOWN REQUEST--"))
+                || (response.contains("!--NONEXISTENT SESSION--"))
+                || (response.contains("</upg:Error>"))) {
             handleError(response);
         }
     }
