@@ -1,7 +1,10 @@
 package com.emulator.domain.soap.requests.authorization.login;
 
 import com.emulator.domain.soap.requests.authorization.AppUser;
+import com.emulator.domain.soap.requests.authorization.AuthorizationManager;
 import com.emulator.domain.soap.requests.authorization.prelogin.PreLoginResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
@@ -14,17 +17,21 @@ import java.util.List;
 @Component
 public class ClientAuthDataBuilder {
 
+    private static Logger log = LoggerFactory.getLogger(ClientAuthDataBuilder.class);
+
     private final String USE_2048_BIT_SRP = "true";
 
     public ClientAuthData build(AppUser user, PreLoginResult preLoginResult) throws IOException {
         List<String> command = buildCommand(user, preLoginResult);
 
+        log.debug("Build client auth data with parameters=" + command);
         ProcessBuilder pb = new ProcessBuilder(command);
         Process process = pb.start();
 
-        ClientAuthData result = getResult(process);
+        ClientAuthData authData = getResult(process);
 
-        return result;
+        log.info("Client auth data was built " + authData);
+        return authData;
     }
 
     private ClientAuthData getResult(Process process) throws IOException {
@@ -35,7 +42,7 @@ public class ClientAuthDataBuilder {
         BufferedReader stderrReader = new BufferedReader (new InputStreamReader (stderr));
         String line;
         while ((line = stderrReader.readLine ()) != null) {
-            System.out.println ("[Stderr] " + line);
+            log.error("Error in building client auth data " + line);
         }
         stderrReader.close();
 

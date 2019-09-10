@@ -8,24 +8,30 @@ import com.emulator.domain.soap.requests.statementrequest.StatementRequestData;
 import com.emulator.exception.RequestParameterLengthException;
 import com.emulator.exception.SoapServerBadResponseException;
 import com.emulator.exception.UserIsNotAuthorizedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.w3c.dom.DOMException;
 
 import javax.servlet.http.HttpSession;
 
 @Controller
 public class StatementRequestController extends AbstractController {
 
+    private static Logger log = LoggerFactory.getLogger(StatementRequestController.class);
+
+    private static final String URI = "/request/new/statementRequest";
+
     @Autowired
     private RequestChainPool chainPool;
 
-    @PostMapping("/request/new/statementRequest")
+    @PostMapping(URI)
     @ResponseBody
     public ResponseBodyData runStatementRequest(HttpSession httpSession, @RequestBody StatementRequestData data) {
+        log.info("Request uri='" + URI + "' data='" + data.toString() + "'");
         RequestChain chain = null;
         try {
             AppUser user = getUser(httpSession);
@@ -37,16 +43,12 @@ public class StatementRequestController extends AbstractController {
 
             return getSoapRequestSuccessResponse(chain);
         } catch (UserIsNotAuthorizedException e) {
-            e.printStackTrace();
             return getUserIsNotAuthorizedResponse();
         } catch (SoapServerBadResponseException e) {
-            e.printStackTrace();
             return getSoapRequestFailResponse(e, chain);
         } catch (RequestParameterLengthException e) {
-            e.printStackTrace();
             return getParameterLengthErrorResponse(e);
         } catch (Exception e) {
-            e.printStackTrace();
             return getServerFailResponse(e, chain);
         }
     }
@@ -57,6 +59,8 @@ public class StatementRequestController extends AbstractController {
         result.setStatus("OK");
         result.setMessage("StatementRequest to Soap server is success. requestID=" + chain.getResponseId());
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
+
+        log.info("Success request." + result.getLogInfo());
         return result;
     }
 
@@ -68,6 +72,8 @@ public class StatementRequestController extends AbstractController {
         result.setMessage("StatementRequest to Soap server is fail. message=" + exception.getSoapResponse());
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
         result.setRequestChain(chain);
+
+        log.info("Failed request." + result.getLogInfo());
         return result;
     }
 

@@ -38,4 +38,11 @@ public class RequestBodyAppUser extends RequestParameters {
         return new AppUser(this.userName, this.password, "");
     }
 
+    @Override
+    public String toString() {
+        return "RequestBodyAppUser{" +
+                "userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }

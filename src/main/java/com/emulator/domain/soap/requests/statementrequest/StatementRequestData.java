@@ -314,4 +314,28 @@ public class StatementRequestData extends RequestParameters {
         return dto;
     }
 
+    @Override
+    public String toString() {
+        return "StatementRequestData{" +
+                "acceptDate='" + acceptDate + '\'' +
+                ", bankMessage='" + bankMessage + '\'' +
+                ", bankMessageAuthor='" + bankMessageAuthor + '\'' +
+                ", docDate='" + docDate + '\'' +
+                ", docId='" + docId + '\'' +
+                ", docNumber='" + docNumber + '\'' +
+                ", docTypeVersion='" + docTypeVersion + '\'' +
+                ", externalId='" + externalId + '\'' +
+                ", externalUPGId='" + externalUPGId + '\'' +
+                ", fromDate='" + fromDate + '\'' +
+                ", lastModifyDate='" + lastModifyDate + '\'' +
+                ", messageOnlyForBank='" + messageOnlyForBank + '\'' +
+                ", orgId='" + orgId + '\'' +
+                ", orgInn='" + orgInn + '\'' +
+                ", orgName='" + orgName + '\'' +
+                ", template='" + template + '\'' +
+                ", toDate='" + toDate + '\'' +
+                ", accounts=" + accounts +
+                ", signCollection=" + signCollection +
+                '}';
+    }
 }

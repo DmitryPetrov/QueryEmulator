@@ -7,41 +7,45 @@ import com.emulator.domain.soap.SoapClient;
 import com.emulator.domain.requestchain.RequestChain;
 import com.emulator.exception.RequestParameterLengthException;
 import com.emulator.exception.SoapServerBadResponseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
 @Controller
 public class AuthorizationController extends AbstractController{
 
+    private static Logger log = LoggerFactory.getLogger(AuthorizationController.class);
+
+    private static final String URI = "/login";
+
     @Autowired
     private SoapClient soapClient;
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @PostMapping(URI)
     @ResponseBody
     public ResponseBodyData login(HttpSession httpSession, @RequestBody RequestBodyAppUser requestData) {
+        log.info("Request uri='" + URI + "' data='" + requestData.toString() + "'");
+
         try {
             requestData.check();
 
             AppUser user = requestData.getAppUser();
             AppUser authorizedUser = soapClient.authorization(user);
 
+            log.debug("User was authorized. " + authorizedUser);
+
             httpSession.setAttribute("user", authorizedUser);
 
             return getSoapRequestSuccessResponse(authorizedUser.getSessionId());
         } catch (SoapServerBadResponseException e) {
-            e.printStackTrace();
             return getSoapRequestFailResponse(e, null);
         } catch (RequestParameterLengthException e) {
-            e.printStackTrace();
             return getParameterLengthErrorResponse(e);
         } catch (Exception e) {
-            e.printStackTrace();
             return getServerFailResponse(e);
         }
     }
@@ -51,6 +55,8 @@ public class AuthorizationController extends AbstractController{
         result.setStatus("OK");
         result.setMessage("LogIn to Soap server is success. sessionID=" + sessionId);
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
+
+        log.info("Success request." + result.getLogInfo());
         return result;
     }
 
@@ -61,6 +67,8 @@ public class AuthorizationController extends AbstractController{
         result.setStatus("ERROR");
         result.setMessage("LogIn to Soap server is fail. Message=" + exception.getSoapResponse());
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
+
+        log.info("Failed request." + result.getLogInfo());
         return result;
     }
 

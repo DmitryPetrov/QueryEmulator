@@ -6,6 +6,9 @@ import com.emulator.domain.soap.com.bssys.sbns.upg.SendRequests;
 import com.emulator.domain.soap.com.bssys.sbns.upg.SendRequestsResponse;
 import com.emulator.domain.soap.requests.ErrorResponseHandler;
 import com.emulator.domain.soap.requests.RequestMessageHandler;
+import com.emulator.domain.soap.requests.statementrequest.StatementRequestManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -16,6 +19,10 @@ import javax.xml.bind.JAXBElement;
 @Component
 public class IncomingManager {
 
+    private static Logger log = LoggerFactory.getLogger(IncomingManager.class);
+
+    private static final String NODE_NAME_WITH_REQUEST_MESSAGE = "ns2:requests";
+
     @Autowired
     private WebServiceTemplate webServiceTemplate;
 
@@ -24,17 +31,21 @@ public class IncomingManager {
     private MessageBuilder requestMessageBuilder;
 
     public IncomingDto runIncoming(AppUser user, IncomingData data) {
+        log.debug("Build message for Incoming");
         String requestMessage = requestMessageBuilder.build(data);
+        log.debug("Message was build. Message='" + requestMessage + "'");
 
-        RequestMessageHandler requestMessageHandler = new RequestMessageHandler("ns2:requests", requestMessage);
+        RequestMessageHandler handler = new RequestMessageHandler(NODE_NAME_WITH_REQUEST_MESSAGE, requestMessage);
 
         JAXBElement<SendRequests> request = buildRequest(user, requestMessage);
         JAXBElement<SendRequestsResponse> response = null;
 
+        log.debug("Send StatementRequest request");
         response = (JAXBElement<SendRequestsResponse>) webServiceTemplate
-                .marshalSendAndReceive(request, requestMessageHandler);
+                .marshalSendAndReceive(request, handler);
 
         String incomingResponseId = getResult(response);
+        log.info("Handle Incoming response. Incoming responseId=" + incomingResponseId);
         return data.getDto(incomingResponseId);
     }
 

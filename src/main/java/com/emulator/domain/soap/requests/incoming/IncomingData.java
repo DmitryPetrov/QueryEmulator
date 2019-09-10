@@ -170,4 +170,20 @@ public class IncomingData extends RequestParameters {
 
         return dto;
     }
+
+    @Override
+    public String toString() {
+        return "IncomingData{" +
+                "attrRequestId='" + attrRequestId + '\'' +
+                ", attrVersion='" + attrVersion + '\'' +
+                ", attrSender='" + attrSender + '\'' +
+                ", attrReceiver='" + attrReceiver + '\'' +
+                ", namespaceUpg='" + namespaceUpg + '\'' +
+                ", namespaceXsi='" + namespaceXsi + '\'' +
+                ", attrStateRequest='" + attrStateRequest + '\'' +
+                ", attrIncomingId='" + attrIncomingId + '\'' +
+                ", attrTimestamp='" + attrTimestamp + '\'' +
+                ", docTypes=" + docTypes +
+                '}';
+    }
 }

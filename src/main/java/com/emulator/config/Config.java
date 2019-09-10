@@ -1,6 +1,9 @@
 package com.emulator.config;
 
+import com.emulator.controller.AuthorizationController;
 import com.emulator.domain.soap.com.bssys.sbns.upg.ObjectFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,11 +27,14 @@ import java.security.NoSuchAlgorithmException;
 @Import(WebConfig.class)
 public class Config {
 
+    private static Logger log = LoggerFactory.getLogger(AuthorizationController.class);
+
     @Bean
     Jaxb2Marshaller jaxb2Marshaller() {
         Jaxb2Marshaller jaxb2Marshaller = new Jaxb2Marshaller();
         jaxb2Marshaller.setContextPath("com.emulator.domain.soap.com.bssys.sbns.upg");
 
+        log.debug("Jaxb2Marshaller was built");
         return jaxb2Marshaller;
     }
 
@@ -45,16 +51,19 @@ public class Config {
 
         disableSslVerification();
 
+        log.debug("WebServiceTemplate was built. Server address: " + serverAddress);
         return webServiceTemplate;
     }
 
     @Bean
     public WebServiceTemplateInterceptor interceptor() {
+        log.debug("WebServiceTemplateInterceptor was built");
         return new WebServiceTemplateInterceptor();
     }
 
     @Bean
     public ObjectFactory objectFactory() {
+        log.debug("ObjectFactory for soap requests/responses was built");
         return new ObjectFactory();
     }
 
@@ -69,6 +78,8 @@ public class Config {
         }
         transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+
+        log.debug("Transformer was built");
         return transformer;
     }
 
@@ -81,7 +92,20 @@ public class Config {
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         }
+        log.debug("DocumentBuilder was built");
         return docBuilder;
+    }
+
+    @Bean
+    public LoggingFilter requestLoggingFilter() {
+        int maxPayloadLength = 10000;
+
+        LoggingFilter loggingFilter = new LoggingFilter();
+        loggingFilter.setIncludeQueryString(true);
+        loggingFilter.setIncludePayload(true);
+        loggingFilter.setMaxPayloadLength(maxPayloadLength);
+        log.debug("LoggingFilter was built. Max payload length: " + maxPayloadLength);
+        return loggingFilter;
     }
 
     private void disableSslVerification() {

@@ -6,6 +6,8 @@ import com.emulator.domain.requestchain.RequestChain;
 import com.emulator.domain.requestchain.RequestChainPool;
 import com.emulator.exception.SoapServerBadResponseException;
 import com.emulator.exception.UserIsNotAuthorizedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,33 +19,36 @@ import java.util.List;
 @Controller
 public class RequestListController extends AbstractController{
 
+    private static Logger log = LoggerFactory.getLogger(RequestListController.class);
+
+    private static final String URI = "/request/list";
+
     @Autowired
     private RequestChainPool chainPool;
 
-    @GetMapping("/request/list")
+    @GetMapping(URI)
     @ResponseBody
-    public ResponseBodyData runGetRequestStatus(HttpSession httpSession) {
+    public ResponseBodyData getRequestChainList(HttpSession httpSession) {
+        log.info("Request uri='" + URI + "'");
         try {
             AppUser user = getUser(httpSession);
-
             List<RequestChain> chainList = chainPool.getChainList(user);
-
             return getSuccessResponse(chainList);
         } catch (UserIsNotAuthorizedException e) {
-            e.printStackTrace();
             return getUserIsNotAuthorizedResponse();
         } catch (Exception e) {
-            e.printStackTrace();
             return getServerFailResponse(e);
         }
     }
 
     private ResponseBodyData getSuccessResponse(List<RequestChain> chainList) {
-        ResponseBodyData response = new ResponseBodyData();
-        response.setStatus("OK");
-        response.setMessage("Request list");
-        response.setRequestChainList(chainList);
-        return response;
+        ResponseBodyData result = new ResponseBodyData();
+        result.setStatus("OK");
+        result.setMessage("Request list");
+        result.setRequestChainList(chainList);
+
+        log.info("Success request." + result.getLogInfo());
+        return result;
     }
 
     @Override

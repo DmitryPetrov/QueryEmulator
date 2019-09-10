@@ -59,4 +59,11 @@ public class ResponseBodyData {
     public void setSoapMessageList(List<String> soapMessageList) {
         this.soapMessageList = soapMessageList;
     }
+
+    public String getLogInfo() {
+        return "ResponseBodyData{" +
+                "status='" + status + '\'' +
+                ", message='" + message + '\'' +
+                '}';
+    }
 }

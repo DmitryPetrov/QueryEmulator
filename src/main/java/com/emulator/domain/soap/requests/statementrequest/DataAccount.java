@@ -60,4 +60,13 @@ public class DataAccount extends RequestParameters {
         dto.setBankName(this.getBankName());
         return dto;
     }
+
+    @Override
+    public String toString() {
+        return "DataAccount{" +
+                "account='" + account + '\'' +
+                ", bankBIC='" + bankBIC + '\'' +
+                ", bankName='" + bankName + '\'' +
+                '}';
+    }
 }

@@ -6,7 +6,10 @@ import com.emulator.domain.soap.com.bssys.sbns.upg.SendRequests;
 import com.emulator.domain.soap.com.bssys.sbns.upg.SendRequestsResponse;
 import com.emulator.domain.soap.requests.ErrorResponseHandler;
 import com.emulator.domain.soap.requests.RequestMessageHandler;
+import com.emulator.domain.soap.requests.authorization.AuthorizationManager;
 import com.emulator.domain.soap.requests.statementrequest.dto.StatementRequestDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -16,6 +19,8 @@ import javax.xml.bind.JAXBElement;
 
 @Component
 public class StatementRequestManager {
+
+    private static Logger log = LoggerFactory.getLogger(StatementRequestManager.class);
 
     private static final String NODE_NAME_WITH_REQUEST_MESSAGE = "ns2:requests";
 
@@ -27,18 +32,21 @@ public class StatementRequestManager {
     private MessageBuilder requestMessageBuilder;
 
     public StatementRequestDto runStatementRequest(AppUser user, StatementRequestData data) {
-        String statementRequestMessage = requestMessageBuilder.build(data);
+        log.debug("Build message for StatementRequest");
+        String requestMessage = requestMessageBuilder.build(data);
+        log.debug("Message was build. Message='" + requestMessage + "'");
 
-        RequestMessageHandler requestMessageHandler = new RequestMessageHandler(NODE_NAME_WITH_REQUEST_MESSAGE,
-                statementRequestMessage);
+        RequestMessageHandler handler = new RequestMessageHandler(NODE_NAME_WITH_REQUEST_MESSAGE, requestMessage);
 
         JAXBElement<SendRequests> request = buildRequest(user);
         JAXBElement<SendRequestsResponse> response = null;
 
+        log.debug("Send StatementRequest request");
         response = (JAXBElement<SendRequestsResponse>) webServiceTemplate
-                .marshalSendAndReceive(request, requestMessageHandler);
+                .marshalSendAndReceive(request, handler);
 
         String responseId = getResult(response);
+        log.info("Handle StatementRequest response. ResponseId=" + responseId);
         return data.getDto(responseId);
     }
 

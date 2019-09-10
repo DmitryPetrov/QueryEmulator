@@ -8,6 +8,8 @@ import com.emulator.domain.soap.requests.incoming.IncomingData;
 import com.emulator.exception.RequestParameterLengthException;
 import com.emulator.exception.SoapServerBadResponseException;
 import com.emulator.exception.UserIsNotAuthorizedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,12 +21,17 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class IncomingController extends AbstractController {
 
+    private static Logger log = LoggerFactory.getLogger(IncomingController.class);
+
+    private static final String URI = "/request/nextStep";
+
     @Autowired
     private RequestChainPool chainPool;
 
     @PostMapping("/request/nextStep")
     @ResponseBody
     public ResponseBodyData runIncoming(HttpSession httpSession, @RequestBody IncomingData data) {
+        log.info("Request uri='" + URI + "' data='" + data.toString() + "'");
         RequestChain chain = null;
         try {
             AppUser user = getUser(httpSession);
@@ -35,16 +42,12 @@ public class IncomingController extends AbstractController {
 
             return getSoapRequestSuccessResponse(chain);
         } catch (UserIsNotAuthorizedException e) {
-            e.printStackTrace();
             return getUserIsNotAuthorizedResponse();
         } catch (SoapServerBadResponseException e) {
-            e.printStackTrace();
             return getSoapRequestFailResponse(e, chain);
         } catch (RequestParameterLengthException e) {
-            e.printStackTrace();
             return getParameterLengthErrorResponse(e);
         } catch (Exception e) {
-            e.printStackTrace();
             return getServerFailResponse(e, chain);
         }
     }
@@ -56,6 +59,8 @@ public class IncomingController extends AbstractController {
         result.setMessage("Incoming request to Soap server is success. requestID=" + chain.getIncomingResponseId());
         result.setRequestChain(chain);
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
+
+        log.info("Success request." + result.getLogInfo());
         return result;
     }
 
@@ -67,6 +72,8 @@ public class IncomingController extends AbstractController {
         result.setMessage("Incoming request to Soap server is fail. message=" + exception.getSoapResponse());
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
         result.setRequestChain(chain);
+
+        log.info("Failed request." + result.getLogInfo());
         return result;
     }
 

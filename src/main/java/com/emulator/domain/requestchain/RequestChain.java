@@ -10,11 +10,15 @@ import com.emulator.domain.soap.requests.statementrequest.dto.StatementRequestDt
 import com.emulator.exception.ParameterIsNullException;
 import com.emulator.exception.RequestChainPhaseNotReadyOrAlreadyPassedException;
 import com.emulator.exception.UserIsNotAuthorizedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
 
 public class RequestChain {
+
+    private static Logger log = LoggerFactory.getLogger(RequestChain.class);
 
     private static final String STATEMENT_REQUEST_STATUS_DELIVERED = "DELIVERED";
 
@@ -49,6 +53,7 @@ public class RequestChain {
     public void nextStep(StatementRequestData data) {
         checkPhase(Phase.STATEMENT_REQUEST);
 
+        log.info("Run StatementRequest for RequestChain(responseId=" + getResponseId() + ")");
         StatementRequestDto dto = soapClient.sendStatementRequest(user, data);
 
         this.requestId = dto.getRequestId();
@@ -69,6 +74,7 @@ public class RequestChain {
     public void runGetRequestStatus() throws IOException, SAXException {
         checkPhase(Phase.STATEMENT_REQUEST_STATUS);
 
+        log.info("Run GetRequestStatus for RequestChain(responseId=" + getResponseId() + ")");
         GetRequestStatusDto dto = soapClient.sendGetRequestStatus(user, responseId);
 
         this.getRequestStatus = dto;
@@ -81,6 +87,7 @@ public class RequestChain {
     public void nextStep(IncomingData data) {
         checkPhase(Phase.INCOMING);
 
+        log.info("Run Incoming for RequestChain(responseId=" + getResponseId() + ")");
         IncomingDto dto = soapClient.sendIncoming(user, data);
 
         this.incomingRequestId = dto.getRequestId();
@@ -92,6 +99,7 @@ public class RequestChain {
     public void runGetStatementDocument() throws IOException, SAXException {
         checkPhase(Phase.STATEMENT_DOCUMENT);
 
+        log.info("Run GetStatementDocument for RequestChain(responseId=" + getResponseId() + ")");
         GetRequestStatusDto dto = soapClient.sendGetRequestStatus(user, incomingResponseId);
 
         this.statementDocument = dto;

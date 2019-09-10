@@ -303,4 +303,35 @@ public class Sign {
 
         return dto;
     }
+
+    @Override
+    public String toString() {
+        return "Sign{" +
+                "certificateGuid='" + certificateGuid + '\'' +
+                ", content='" + content + '\'' +
+                ", contentLarge='" + contentLarge + '\'' +
+                ", digestScheme='" + digestScheme + '\'' +
+                ", digestSchemeFormat='" + digestSchemeFormat + '\'' +
+                ", digestSchemeVersion='" + digestSchemeVersion + '\'' +
+                ", dtCheck='" + dtCheck + '\'' +
+                ", dtCreate='" + dtCreate + '\'' +
+                ", orgId='" + orgId + '\'' +
+                ", orgName='" + orgName + '\'' +
+                ", position='" + position + '\'' +
+                ", safeTouchAutoSign='" + safeTouchAutoSign + '\'' +
+                ", safeTouchDigestScheme='" + safeTouchDigestScheme + '\'' +
+                ", safeTouchDigestSchemeVersion='" + safeTouchDigestSchemeVersion + '\'' +
+                ", signAuthorityId='" + signAuthorityId + '\'' +
+                ", signHash='" + signHash + '\'' +
+                ", signKey='" + signKey + '\'' +
+                ", signType='" + signType + '\'' +
+                ", signerFullName='" + signerFullName + '\'' +
+                ", userIP='" + userIP + '\'' +
+                ", userMAC='" + userMAC + '\'' +
+                ", userName='" + userName + '\'' +
+                ", valid='" + valid + '\'' +
+                ", confirmSign=" + confirmSign +
+                ", userWorkspace=" + userWorkspace +
+                '}';
+    }
 }

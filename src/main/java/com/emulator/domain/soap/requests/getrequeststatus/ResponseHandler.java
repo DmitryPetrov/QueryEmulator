@@ -10,6 +10,8 @@ import com.emulator.domain.soap.signcollection.Sign;
 import com.emulator.domain.soap.signcollection.SignCollection;
 import com.emulator.domain.soap.signcollection.UserWorkspace;
 import com.emulator.exception.ParameterIsNullException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.*;
@@ -23,12 +25,14 @@ import java.io.InputStream;
 
 @Component
 class ResponseHandler {
+
+    private static Logger log = LoggerFactory.getLogger(ResponseHandler.class);
+
     private static String NOT_PROCESSED_YET = "NOT PROCESSED YET";
 
     private static String MODEL_NODE_NAME = "upg:Model";
 
-    GetRequestStatusResult getResult(JAXBElement<GetRequestStatusResponse> response) throws IOException,
-            SAXException {
+    GetRequestStatusResult getResult(JAXBElement<GetRequestStatusResponse> response) throws IOException, SAXException {
         if (response == null) {
             throw new ParameterIsNullException("GetRequestStatusResponseHandler.response must not be 'null'");
         }
@@ -69,6 +73,7 @@ class ResponseHandler {
         result.setAttrVersion(getAttrValue(attributes, result.ATTR_VERSION_NAME));
 
         NodeList modelList = response.getElementsByTagName(MODEL_NODE_NAME);
+        log.debug("Parse soap envelop: OK");
 
         for (int i = 0; i < modelList.getLength(); i++) {
             Node model = modelList.item(i);
@@ -76,12 +81,16 @@ class ResponseHandler {
             String textContent = model.getTextContent();
             if (textContent.contains("</Statement>")) {
                 setStatement(textContent, result);
+                log.debug("Parse Statement node: OK");
             }
             if (textContent.contains("</StateResponse>")) {
                 setStatusResponse(textContent, result);
+                log.debug("Parse StatusResponse node: OK");
             }
         }
 
+        log.debug("Parse soap body: OK");
+        log.info("Parse GetRequestStatus response: OK");
         return result;
     }
 

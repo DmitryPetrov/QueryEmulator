@@ -6,6 +6,8 @@ import com.emulator.domain.soap.requests.authorization.login.ClientAuthData;
 import com.emulator.domain.soap.requests.authorization.login.ClientAuthDataBuilder;
 import com.emulator.domain.soap.requests.authorization.login.LoginResult;
 import com.emulator.domain.soap.requests.authorization.prelogin.PreLoginResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.client.core.WebServiceTemplate;
@@ -17,6 +19,8 @@ import java.util.List;
 @Component
 public class AuthorizationManager {
 
+    private static Logger log = LoggerFactory.getLogger(AuthorizationManager.class);
+
     @Autowired
     private WebServiceTemplate webServiceTemplate;
 
@@ -24,10 +28,14 @@ public class AuthorizationManager {
     private ClientAuthDataBuilder clientAuthDataBuilder;
 
     public AppUser authorization(AppUser user) throws IOException {
+        log.debug("Authorization for user=" + user);
         PreLoginResult preLoginResult = runPreLogin(user);
+        log.info("Handle PreLogin response. Data=" + preLoginResult);
 
         ClientAuthData authData = clientAuthDataBuilder.build(user, preLoginResult);
         LoginResult loginResult = runLogin(user, preLoginResult, authData);
+
+        log.info("Handle Login response. SessionId=" + loginResult.getSessionId());
         AppUser authorizedUser = new AppUser(user, loginResult.getSessionId());
 
         return authorizedUser;

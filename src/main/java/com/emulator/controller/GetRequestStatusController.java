@@ -7,6 +7,8 @@ import com.emulator.domain.requestchain.RequestChainPool;
 import com.emulator.exception.BadRequestParameterException;
 import com.emulator.exception.SoapServerBadResponseException;
 import com.emulator.exception.UserIsNotAuthorizedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,13 +20,18 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class GetRequestStatusController extends AbstractController {
 
+    private static Logger log = LoggerFactory.getLogger(GetRequestStatusController.class);
+
+    private static final String URI = "/request/nextStep";
+
     @Autowired
     private RequestChainPool chainPool;
 
-    @GetMapping("/request/nextStep")
+    @GetMapping(URI)
     @ResponseBody
     public ResponseBodyData runGetRequestStatus(HttpSession httpSession,
                                                 @RequestParam(name = "responseId") String responseId) {
+        log.info("Request uri='" + URI + "' RequestParam: responseId='" + responseId + "'");
         RequestChain chain = null;
         try {
             AppUser user = getUser(httpSession);
@@ -34,16 +41,12 @@ public class GetRequestStatusController extends AbstractController {
 
             return getSoapRequestSuccessResponse(chain);
         } catch (UserIsNotAuthorizedException e) {
-            e.printStackTrace();
             return getUserIsNotAuthorizedResponse();
         } catch (SoapServerBadResponseException e) {
-            e.printStackTrace();
             return getSoapRequestFailResponse(e, chain);
         } catch (BadRequestParameterException e) {
-            e.printStackTrace();
             return getBadRequestParameterResponse(e);
         } catch (Exception e) {
-            e.printStackTrace();
             return getServerFailResponse(e, chain);
         }
     }
@@ -55,6 +58,8 @@ public class GetRequestStatusController extends AbstractController {
         result.setMessage("GetRequestStatus to Soap server is success.");
         result.setRequestChain(chain);
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
+
+        log.info("Success request." + result.getLogInfo());
         return result;
     }
 
@@ -66,6 +71,8 @@ public class GetRequestStatusController extends AbstractController {
         result.setMessage("GetRequestStatus to Soap server is fail. message=" + exception.getSoapResponse());
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
         result.setRequestChain(chain);
+
+        log.info("Failed request." + result.getLogInfo());
         return result;
     }
 
@@ -73,6 +80,8 @@ public class GetRequestStatusController extends AbstractController {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("ERROR");
         result.setMessage("Parameter " + e.getParameterName() + " not found on server");
+
+        log.info("Failed request." + result.getLogInfo());
         return result;
     }
 

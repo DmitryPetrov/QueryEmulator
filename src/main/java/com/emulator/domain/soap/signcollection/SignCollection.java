@@ -55,4 +55,13 @@ public class SignCollection {
 
         return dto;
     }
+
+    @Override
+    public String toString() {
+        return "SignCollection{" +
+                "bankMessage='" + bankMessage + '\'' +
+                ", digestName='" + digestName + '\'' +
+                ", signs=" + signs +
+                '}';
+    }
 }

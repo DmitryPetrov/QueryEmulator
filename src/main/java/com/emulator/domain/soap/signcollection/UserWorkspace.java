@@ -112,4 +112,19 @@ public class UserWorkspace {
 
         return dto;
     }
+
+    @Override
+    public String toString() {
+        return "UserWorkspace{" +
+                "AVPActive='" + AVPActive + '\'' +
+                ", OSUpdatable='" + OSUpdatable + '\'' +
+                ", addInfo='" + addInfo + '\'' +
+                ", faultPassAttemptCount='" + faultPassAttemptCount + '\'' +
+                ", hashCode='" + hashCode + '\'' +
+                ", notRemoteAccess='" + notRemoteAccess + '\'' +
+                ", outerKeyStorage='" + outerKeyStorage + '\'' +
+                ", passChanged='" + passChanged + '\'' +
+                ", userMAC='" + userMAC + '\'' +
+                '}';
+    }
 }
