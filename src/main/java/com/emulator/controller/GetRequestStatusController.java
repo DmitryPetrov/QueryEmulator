@@ -55,7 +55,7 @@ public class GetRequestStatusController extends AbstractController {
     protected ResponseBodyData getSoapRequestSuccessResponse(RequestChain chain) {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("OK");
-        result.setMessage("GetRequestStatus to Soap server is success.");
+        result.setMessage("GetRequestStatus to Soap server succeed.");
         result.setRequestChain(chain);
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
 
@@ -68,7 +68,7 @@ public class GetRequestStatusController extends AbstractController {
             chain) {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("ERROR");
-        result.setMessage("GetRequestStatus to Soap server is fail. message=" + exception.getSoapResponse());
+        result.setMessage("GetRequestStatus to Soap server failed. Message: " + exception.getSoapResponse());
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
         result.setRequestChain(chain);
 

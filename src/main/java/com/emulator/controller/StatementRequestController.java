@@ -57,7 +57,7 @@ public class StatementRequestController extends AbstractController {
     protected ResponseBodyData getSoapRequestSuccessResponse(RequestChain chain) {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("OK");
-        result.setMessage("StatementRequest to Soap server is success. requestID=" + chain.getResponseId());
+        result.setMessage("StatementRequest to Soap server succeed. Request id=" + chain.getResponseId());
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
 
         log.info("Success request." + result.getLogInfo());
@@ -69,7 +69,7 @@ public class StatementRequestController extends AbstractController {
             chain) {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("ERROR");
-        result.setMessage("StatementRequest to Soap server is fail. message=" + exception.getSoapResponse());
+        result.setMessage("StatementRequest to Soap server failed. Message: " + exception.getSoapResponse());
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
         result.setRequestChain(chain);
 

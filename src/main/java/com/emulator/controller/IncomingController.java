@@ -56,7 +56,7 @@ public class IncomingController extends AbstractController {
     protected ResponseBodyData getSoapRequestSuccessResponse(RequestChain chain) {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("OK");
-        result.setMessage("Incoming request to Soap server is success. requestID=" + chain.getIncomingResponseId());
+        result.setMessage("Incoming request to Soap server succeed." + chain.getIncomingResponseId());
         result.setRequestChain(chain);
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
 
@@ -69,7 +69,7 @@ public class IncomingController extends AbstractController {
             chain) {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("ERROR");
-        result.setMessage("Incoming request to Soap server is fail. message=" + exception.getSoapResponse());
+        result.setMessage("Incoming request to Soap server failed. Message: " + exception.getSoapResponse());
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
         result.setRequestChain(chain);
 

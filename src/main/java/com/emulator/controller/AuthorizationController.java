@@ -53,7 +53,7 @@ public class AuthorizationController extends AbstractController{
     private ResponseBodyData getSoapRequestSuccessResponse(String sessionId) {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("OK");
-        result.setMessage("LogIn to Soap server is success. sessionID=" + sessionId);
+        result.setMessage("Authorization succeed. Session id=" + sessionId);
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
 
         log.info("Success request." + result.getLogInfo());
@@ -65,7 +65,7 @@ public class AuthorizationController extends AbstractController{
             chain) {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("ERROR");
-        result.setMessage("LogIn to Soap server is fail. Message=" + exception.getSoapResponse());
+        result.setMessage("LogIn to Soap server failed. Message: " + exception.getSoapResponse());
         result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
 
         log.info("Failed request." + result.getLogInfo());
