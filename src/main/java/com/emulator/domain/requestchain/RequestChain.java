@@ -78,7 +78,11 @@ public class RequestChain {
         GetRequestStatusDto dto = soapClient.sendGetRequestStatus(user, responseId);
 
         this.getRequestStatus = dto;
-        this.statementRequestStatus = dto.getStateResponseList().get(0).getState();
+        if (dto.isNotProcessedYet()) {
+            this.statementRequestStatus = "NOT PROCESSED YET";
+        } else {
+            this.statementRequestStatus = dto.getStateResponseList().get(0).getState();
+        }
         if (this.statementRequestStatus.equals(STATEMENT_REQUEST_STATUS_DELIVERED)) {
             this.phase = Phase.STATEMENT_REQUEST_STATUS;
         }

@@ -8,6 +8,8 @@ import java.util.List;
 
 public class SignCollection {
 
+    public final String SIGN_COLLECTION_NODE_NAME = "signCollection";
+    public final String SIGN_COLLECTION_2_NODE_NAME = "SignCollection";
     public final String BANK_MESSAGE_NODE_NAME = "bankMessage";
     public final String DIGEST_NAME_NODE_NAME = "digestName";
     public final String SIGNS_NODE_NAME = "signs";

@@ -4,6 +4,8 @@ import com.emulator.domain.soap.signcollection.dto.ConfirmSignDto;
 import com.emulator.domain.soap.signcollection.dto.SignDto;
 import com.emulator.domain.soap.signcollection.dto.UserWorkspaceDto;
 
+import java.util.Objects;
+
 public class Sign {
 
     public final String CERTIFICATE_GUID_NODE_NAME = "certificateGuid";
@@ -333,5 +335,46 @@ public class Sign {
                 ", confirmSign=" + confirmSign +
                 ", userWorkspace=" + userWorkspace +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Sign sign = (Sign) o;
+        return Objects.equals(certificateGuid, sign.certificateGuid) &&
+                Objects.equals(content, sign.content) &&
+                Objects.equals(contentLarge, sign.contentLarge) &&
+                Objects.equals(digestScheme, sign.digestScheme) &&
+                Objects.equals(digestSchemeFormat, sign.digestSchemeFormat) &&
+                Objects.equals(digestSchemeVersion, sign.digestSchemeVersion) &&
+                Objects.equals(dtCheck, sign.dtCheck) &&
+                Objects.equals(dtCreate, sign.dtCreate) &&
+                Objects.equals(orgId, sign.orgId) &&
+                Objects.equals(orgName, sign.orgName) &&
+                Objects.equals(position, sign.position) &&
+                Objects.equals(safeTouchAutoSign, sign.safeTouchAutoSign) &&
+                Objects.equals(safeTouchDigestScheme, sign.safeTouchDigestScheme) &&
+                Objects.equals(safeTouchDigestSchemeVersion, sign.safeTouchDigestSchemeVersion) &&
+                Objects.equals(signAuthorityId, sign.signAuthorityId) &&
+                Objects.equals(signHash, sign.signHash) &&
+                Objects.equals(signKey, sign.signKey) &&
+                Objects.equals(signType, sign.signType) &&
+                Objects.equals(signerFullName, sign.signerFullName) &&
+                Objects.equals(userIP, sign.userIP) &&
+                Objects.equals(userMAC, sign.userMAC) &&
+                Objects.equals(userName, sign.userName) &&
+                Objects.equals(valid, sign.valid) &&
+                Objects.equals(confirmSign, sign.confirmSign) &&
+                Objects.equals(userWorkspace, sign.userWorkspace);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(certificateGuid, content, contentLarge, digestScheme, digestSchemeFormat,
+                digestSchemeVersion, dtCheck, dtCreate, orgId, orgName, position, safeTouchAutoSign, safeTouchDigestScheme, safeTouchDigestSchemeVersion, signAuthorityId, signHash, signKey, signType, signerFullName, userIP, userMAC, userName, valid);
     }
 }

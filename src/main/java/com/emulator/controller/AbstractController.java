@@ -51,6 +51,7 @@ public abstract class AbstractController {
         result.setRequestChain(chain);
 
         log.error("Server error." + result.getLogInfo());
+        exception.printStackTrace();
         return result;
     }
 

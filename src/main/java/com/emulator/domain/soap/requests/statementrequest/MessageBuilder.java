@@ -1,5 +1,6 @@
 package com.emulator.domain.soap.requests.statementrequest;
 
+import com.emulator.domain.soap.signcollection.SignCollectionMessageBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.*;
@@ -17,6 +18,9 @@ class MessageBuilder {
 
     @Autowired
     private DocumentBuilder docBuilder;
+
+    @Autowired
+    private SignCollectionMessageBuilder singBuilder;
 
     String build(StatementRequestData data) {
         return buildStatementRequest(data);
@@ -66,6 +70,11 @@ class MessageBuilder {
         createTextElement(statementRequestElement, data.TO_DATE_NODE_NAME, data.getToDate());
 
         buildElementAccounts(statementRequestElement, data);
+
+        if (data.getSignCollection() != null) {
+            Element signCollectionElement = singBuilder.build(statementRequestElement, data.getSignCollection());
+            statementRequestElement.appendChild(signCollectionElement);
+        }
 
         return toString(statementRequestElement);
     }

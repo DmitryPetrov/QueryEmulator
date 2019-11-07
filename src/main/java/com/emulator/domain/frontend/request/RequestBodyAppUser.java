@@ -7,7 +7,7 @@ import com.emulator.exception.RequestParameterLengthException;
 public class RequestBodyAppUser extends RequestParameters {
 
     private final String USERNAME_DEFAULT_VALUE = "testui";
-    private final String PASSWORD_DEFAULT_VALUE = "ZWF5S2";
+    private final String PASSWORD_DEFAULT_VALUE = "9ULT45";
 
     private String userName = "";
     private String password = "";
