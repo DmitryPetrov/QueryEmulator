@@ -38,6 +38,7 @@ src/main/resources/static/dev.js
 
 #log file
 *.log
+queryEmulator.log.*
 
 #
 src/main/java/com/emulator/domain/soap/com/bssys/sbns/upg/
