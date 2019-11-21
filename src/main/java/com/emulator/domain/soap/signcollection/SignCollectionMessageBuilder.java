@@ -1,13 +1,8 @@
 package com.emulator.domain.soap.signcollection;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.*;
 
-import javax.xml.parsers.DocumentBuilder;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Component("SignCollectionMessageBuilder")
