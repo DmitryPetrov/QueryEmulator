@@ -5,24 +5,36 @@ import com.emulator.domain.requestchain.RequestChain;
 import com.emulator.domain.soap.SoapMessageList;
 import com.emulator.domain.soap.requests.authorization.AppUser;
 import com.emulator.exception.RequestParameterLengthException;
-import com.emulator.exception.SoapServerBadResponseException;
 import com.emulator.exception.UserIsNotAuthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 
-public abstract class AbstractController {
+@Service
+public class ServiceController {
 
-    private static Logger log = LoggerFactory.getLogger(AbstractController.class);
+    private static Logger log = LoggerFactory.getLogger(ServiceController.class);
 
-    protected abstract ResponseBodyData getSoapRequestSuccessResponse(RequestChain chain);
+    private SoapMessageList messageList;
 
-    protected abstract ResponseBodyData getSoapRequestFailResponse(SoapServerBadResponseException exception,
-                                                                   RequestChain chain);
+    /*
+        Constructor for tests
+    */
+    public ServiceController(Logger logger, SoapMessageList messageList) {
+        this.log = logger;
+        this.messageList = messageList;
+    }
 
-    protected AppUser getUser(HttpSession httpSession) {
+    @Autowired
+    public ServiceController(SoapMessageList messageList) {
+        this.log = LoggerFactory.getLogger(this.getClass());
+        this.messageList = messageList;
+    }
+
+    public AppUser getUser(HttpSession httpSession) {
         AppUser user = (AppUser) httpSession.getAttribute("user");
         if (user == null) {
             throw new UserIsNotAuthorizedException("User is not authorized");
@@ -30,46 +42,39 @@ public abstract class AbstractController {
         return user;
     }
 
-    @Autowired
-    SoapMessageList soapMessageList;
-
-    protected ResponseBodyData getServerFailResponse(Exception exception) {
+    public ResponseBodyData getServerFailResponse(Exception exception) {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("ERROR");
         result.setMessage(exception.getMessage());
-        result.setSoapMessageList(soapMessageList.getMessageList());
-
+        result.setSoapMessageList(messageList.getMessageList());
         log.error("Server error." + result.getLogInfo());
         return result;
     }
 
-    protected ResponseBodyData getServerFailResponse(Exception exception, RequestChain chain) {
+    public ResponseBodyData getServerFailResponse(Exception exception, RequestChain chain) {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("ERROR");
         result.setMessage(exception.getMessage());
-        result.setSoapMessageList(soapMessageList.getLastRequestMessageList());
+        result.setSoapMessageList(messageList.getLastRequestMessageList());
         result.setRequestChain(chain);
-
         log.error("Server error." + result.getLogInfo());
         exception.printStackTrace();
         return result;
     }
 
-    protected ResponseBodyData getParameterLengthErrorResponse(RequestParameterLengthException exception) {
+    public ResponseBodyData getParameterLengthErrorResponse(RequestParameterLengthException exception) {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("ERROR");
         result.setMessage("Request parameters is invalid. Parameter '" + exception.getParameterName()
                 + "' must be shorter than " + exception.getMaxLength() + " characters!");
-
         log.error("Length error in request parameter." + result.getLogInfo());
         return result;
     }
 
-    protected ResponseBodyData getUserIsNotAuthorizedResponse() {
+    public ResponseBodyData getUserIsNotAuthorizedResponse() {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("ERROR");
         result.setMessage("User is not authorized");
-
         log.error("User is not authorized." + result.getLogInfo());
         return result;
     }
