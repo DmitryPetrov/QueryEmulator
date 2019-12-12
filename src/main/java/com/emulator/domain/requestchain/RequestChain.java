@@ -54,7 +54,7 @@ public class RequestChain {
         checkPhase(Phase.STATEMENT_REQUEST);
 
         log.info("Run StatementRequest for RequestChain(responseId=" + getResponseId() + ")");
-        StatementRequestDto dto = soapClient.sendStatementRequest(user, data);
+        StatementRequestDto dto = soapClient.doRequest(user, data);
 
         this.requestId = dto.getRequestId();
         this.responseId = dto.getResponseId();
@@ -75,7 +75,7 @@ public class RequestChain {
         checkPhase(Phase.STATEMENT_REQUEST_STATUS);
 
         log.info("Run GetRequestStatus for RequestChain(responseId=" + getResponseId() + ")");
-        GetRequestStatusDto dto = soapClient.sendGetRequestStatus(user, responseId);
+        GetRequestStatusDto dto = soapClient.doRequest(user, responseId);
 
         this.getRequestStatus = dto;
         if (dto.isNotProcessedYet()) {
@@ -92,7 +92,7 @@ public class RequestChain {
         checkPhase(Phase.INCOMING);
 
         log.info("Run Incoming for RequestChain(responseId=" + getResponseId() + ")");
-        IncomingDto dto = soapClient.sendIncoming(user, data);
+        IncomingDto dto = soapClient.doRequest(user, data);
 
         this.incomingRequestId = dto.getRequestId();
         this.incomingResponseId = dto.getResponseId();
@@ -104,7 +104,7 @@ public class RequestChain {
         checkPhase(Phase.STATEMENT_DOCUMENT);
 
         log.info("Run GetStatementDocument for RequestChain(responseId=" + getResponseId() + ")");
-        GetRequestStatusDto dto = soapClient.sendGetRequestStatus(user, incomingResponseId);
+        GetRequestStatusDto dto = soapClient.doRequest(user, incomingResponseId);
 
         this.statementDocument = dto;
         if (dto.isNotProcessedYet()) {

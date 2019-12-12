@@ -29,14 +29,14 @@ public class SoapClient {
     @Autowired
     StatementRequestManager statementRequestManager;
 
-    public StatementRequestDto sendStatementRequest(AppUser user, StatementRequestData data) {
+    public StatementRequestDto doRequest(AppUser user, StatementRequestData data) {
         return statementRequestManager.runStatementRequest(user, data);
     }
 
     @Autowired
     GetRequestStatusManager getRequestStatusManager;
 
-    public GetRequestStatusDto sendGetRequestStatus(AppUser user, String requestId) throws IOException,
+    public GetRequestStatusDto doRequest(AppUser user, String requestId) throws IOException,
             SAXException {
         return getRequestStatusManager.runGetRequestStatus(user, requestId);
     }
@@ -44,7 +44,7 @@ public class SoapClient {
     @Autowired
     IncomingManager incomingManager;
 
-    public IncomingDto sendIncoming(AppUser user, IncomingData data) {
+    public IncomingDto doRequest(AppUser user, IncomingData data) {
         return incomingManager.runIncoming(user, data);
     }
 }
