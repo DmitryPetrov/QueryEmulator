@@ -1,10 +1,11 @@
 package com.emulator.controller;
 
-import com.emulator.domain.soap.SoapMessageList;
-import com.emulator.domain.soap.requests.authorization.AppUser;
 import com.emulator.domain.frontend.response.ResponseBodyData;
 import com.emulator.domain.requestchain.RequestChain;
 import com.emulator.domain.requestchain.RequestChainPool;
+import com.emulator.domain.requestchain.StatementRequestChain;
+import com.emulator.domain.soap.SoapMessageList;
+import com.emulator.domain.soap.requests.authorization.AppUser;
 import com.emulator.domain.soap.requests.statementrequest.StatementRequestData;
 import com.emulator.exception.RequestParameterLengthException;
 import com.emulator.exception.SoapServerBadResponseException;
@@ -34,7 +35,7 @@ public class StatementRequestController {
         Constructor for tests
     */
     public StatementRequestController(Logger logger, RequestChainPool chainPool, ServiceController serviceController,
-                                SoapMessageList messageList) {
+                                      SoapMessageList messageList) {
         this.log = logger;
         this.chainPool = chainPool;
         this.service = serviceController;
@@ -43,7 +44,7 @@ public class StatementRequestController {
 
     @Autowired
     public StatementRequestController(RequestChainPool chainPool, ServiceController serviceController,
-                                SoapMessageList messageList) {
+                                      SoapMessageList messageList) {
         this.log = LoggerFactory.getLogger(this.getClass());
         this.chainPool = chainPool;
         this.service = serviceController;
@@ -54,12 +55,12 @@ public class StatementRequestController {
     @ResponseBody
     public ResponseBodyData runStatementRequest(HttpSession httpSession, @RequestBody StatementRequestData data) {
         log.info("Request uri='" + URI + "' data='" + data.toString() + "'");
-        RequestChain chain = null;
+        StatementRequestChain chain = null;
         try {
             AppUser user = service.getUser(httpSession);
             data.check();
 
-            chain = chainPool.createRequestChain(user);
+            chain = chainPool.createStatementRequestChain(user);
             chain.nextStep(data);
             chainPool.addToPool(chain);
 

@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,9 +26,13 @@ public class RequestChainPool {
     @Autowired
     SoapClient soapClient;
 
-    public RequestChain createRequestChain(AppUser user) {
+    public StatementRequestChain createStatementRequestChain(AppUser user) {
         log.debug("Created new request chain for user." + user);
-        return new RequestChain(user, soapClient);
+        return new StatementRequestChain(user, soapClient);
+    }
+
+    public PayRequestChain createPayRequestChain(AppUser user) {
+        throw new NotImplementedException();
     }
 
     public void addToPool(RequestChain chain) {
@@ -48,6 +53,10 @@ public class RequestChainPool {
         chainList.add(chain);
     }
 
+    public void addToPool(PayRequestChain chain) {
+        throw new NotImplementedException();
+    }
+
     public RequestChain getRequestChain(AppUser user, String responseId) {
         return getChainList(user).stream()
                 .filter(requestChain -> responseId.equals(requestChain.getResponseId()))
@@ -62,5 +71,4 @@ public class RequestChainPool {
                 .flatMap(x -> x.getValue().stream())
                 .collect(Collectors.toList());
     }
-
 }
