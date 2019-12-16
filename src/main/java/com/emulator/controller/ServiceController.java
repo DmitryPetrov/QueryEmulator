@@ -4,7 +4,9 @@ import com.emulator.domain.frontend.response.ResponseBodyData;
 import com.emulator.domain.requestchain.RequestChain;
 import com.emulator.domain.soap.SoapMessageList;
 import com.emulator.domain.soap.requests.authorization.AppUser;
+import com.emulator.exception.BadRequestParameterException;
 import com.emulator.exception.RequestParameterLengthException;
+import com.emulator.exception.SoapServerBadResponseException;
 import com.emulator.exception.UserIsNotAuthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,13 +54,8 @@ public class ServiceController {
     }
 
     public ResponseBodyData getServerFailResponse(Exception exception, RequestChain chain) {
-        ResponseBodyData result = new ResponseBodyData();
-        result.setStatus("ERROR");
-        result.setMessage(exception.getMessage());
-        result.setSoapMessageList(messageList.getLastRequestMessageList());
+        ResponseBodyData result = getServerFailResponse(exception);
         result.setRequestChain(chain);
-        log.error("Server error." + result.getLogInfo());
-        exception.printStackTrace();
         return result;
     }
 
@@ -78,4 +75,25 @@ public class ServiceController {
         log.error("User is not authorized." + result.getLogInfo());
         return result;
     }
+
+    public ResponseBodyData getSoapRequestSuccessResponse(RequestChain chain, String requestName) {
+        ResponseBodyData result = new ResponseBodyData();
+        result.setStatus("OK");
+        result.setMessage(requestName+ " to Soap server succeed. Request id=" + chain.getResponseId());
+        result.setSoapMessageList(messageList.getLastRequestMessageList());
+        log.info("Success request." + result.getLogInfo());
+        return result;
+    }
+
+    public ResponseBodyData getSoapRequestFailResponse(SoapServerBadResponseException exception, RequestChain chain,
+                                                       String requestName) {
+        ResponseBodyData result = new ResponseBodyData();
+        result.setStatus("ERROR");
+        result.setMessage(requestName + " to Soap server failed. Message: " + exception.getSoapResponse());
+        result.setSoapMessageList(messageList.getLastRequestMessageList());
+        result.setRequestChain(chain);
+        log.info("Failed request." + result.getLogInfo());
+        return result;
+    }
+
 }
