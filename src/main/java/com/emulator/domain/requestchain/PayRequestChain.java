@@ -7,6 +7,7 @@ import com.emulator.domain.soap.requests.incoming.IncomingData;
 import com.emulator.domain.soap.requests.incoming.IncomingDto;
 import com.emulator.domain.soap.requests.statementrequest.dto.StatementRequestDto;
 import org.xml.sax.SAXException;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.IOException;
 
@@ -14,83 +15,83 @@ public class PayRequestChain implements RequestChain{
 
 
     public void nextStep(RequestParameters data) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void nextStep() throws IOException, SAXException {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void nextStep(IncomingData data) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void checkPhase(Phase newPhase) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public AppUser getUser() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public Phase getPhase() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public String getRequestId() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public String getResponseId() {
-        return null;
+        throw new NotImplementedException();
     }
 
     public String getStatementRequestStatus() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public String getIncomingRequestId() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public String getIncomingResponseId() {
-        return null;
+        throw new NotImplementedException();
     }
 
     public String getStatementDocumentStatus() {
-        return null;
+        throw new NotImplementedException();
     }
 
     public StatementRequestDto getStatementRequest() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public GetRequestStatusDto getGetRequestStatus() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public IncomingDto getIncoming() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public GetRequestStatusDto getStatementDocument() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public int getPhaseNum() {
-        return 0;
+        throw new NotImplementedException();
     }
 }
