@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Service
 public class ServiceController {
@@ -72,6 +73,15 @@ public class ServiceController {
     public ResponseBodyData getServerFailResponse(Exception exception, RequestChain chain) {
         ResponseBodyData result = getServerFailResponse(exception);
         result.setRequestChain(chain);
+        return result;
+    }
+
+    public ResponseBodyData getSuccessResponse(List<RequestChain> chainList) {
+        ResponseBodyData result = new ResponseBodyData();
+        result.setStatus("OK");
+        result.setMessage("Request list");
+        result.setRequestChainList(chainList);
+        log.info("Success request." + result.getLogInfo());
         return result;
     }
 

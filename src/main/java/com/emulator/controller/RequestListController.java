@@ -48,22 +48,11 @@ public class RequestListController {
         try {
             AppUser user = service.getUser(httpSession);
             List<RequestChain> chainList = chainPool.getChainList(user);
-            return getSuccessResponse(chainList);
+            return service.getSuccessResponse(chainList);
         } catch (UserIsNotAuthorizedException e) {
             return service.getUserIsNotAuthorizedResponse();
         } catch (Exception e) {
             return service.getServerFailResponse(e);
         }
     }
-
-    private ResponseBodyData getSuccessResponse(List<RequestChain> chainList) {
-        ResponseBodyData result = new ResponseBodyData();
-        result.setStatus("OK");
-        result.setMessage("Request list");
-        result.setRequestChainList(chainList);
-
-        log.info("Success request." + result.getLogInfo());
-        return result;
-    }
-
 }
