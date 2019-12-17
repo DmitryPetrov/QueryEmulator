@@ -35,7 +35,7 @@ public class ServiceController {
         this.messageList = messageList;
     }
 
-    public AppUser getUser(HttpSession httpSession) {
+    AppUser getUser(HttpSession httpSession) {
         AppUser user = (AppUser) httpSession.getAttribute("user");
         if (user == null) {
             throw new UserIsNotAuthorizedException("User is not authorized");
@@ -43,7 +43,7 @@ public class ServiceController {
         return user;
     }
 
-    public ResponseBodyData getUserIsNotAuthorizedResponse() {
+    ResponseBodyData getUserIsNotAuthorizedResponse() {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("ERROR");
         result.setMessage("User is not authorized.");
@@ -51,7 +51,7 @@ public class ServiceController {
         return result;
     }
 
-    public ResponseBodyData getParameterLengthErrorResponse(RequestParameterLengthException exception) {
+    ResponseBodyData getParameterLengthErrorResponse(RequestParameterLengthException exception) {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("ERROR");
         result.setMessage("Request parameters is invalid. Parameter '" + exception.getParameterName()
@@ -60,7 +60,7 @@ public class ServiceController {
         return result;
     }
 
-    public ResponseBodyData getServerFailResponse(Exception exception) {
+    ResponseBodyData getServerFailResponse(Exception exception) {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("ERROR");
         result.setMessage(exception.getMessage());
@@ -69,13 +69,13 @@ public class ServiceController {
         return result;
     }
 
-    public ResponseBodyData getServerFailResponse(Exception exception, RequestChain chain) {
+    ResponseBodyData getServerFailResponse(Exception exception, RequestChain chain) {
         ResponseBodyData result = getServerFailResponse(exception);
         result.setRequestChain(chain);
         return result;
     }
 
-    public ResponseBodyData getSoapRequestFailResponse(SoapServerBadResponseException exception, String requestName) {
+    ResponseBodyData getSoapRequestFailResponse(SoapServerBadResponseException exception, String requestName) {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("ERROR");
         result.setMessage(requestName + " to Soap server failed. Message: " + exception.getSoapResponse());
@@ -84,14 +84,14 @@ public class ServiceController {
         return result;
     }
 
-    public ResponseBodyData getSoapRequestFailResponse(SoapServerBadResponseException exception, RequestChain chain,
-                                                       String requestName) {
+    ResponseBodyData getSoapRequestFailResponse(SoapServerBadResponseException exception, RequestChain chain,
+                                                String requestName) {
         ResponseBodyData result = getSoapRequestFailResponse(exception, requestName);
         result.setRequestChain(chain);
         return result;
     }
 
-    public ResponseBodyData getSuccessResponse(List<RequestChain> chainList) {
+    ResponseBodyData getSuccessResponse(List<RequestChain> chainList) {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("OK");
         result.setMessage("Request list");
@@ -100,7 +100,7 @@ public class ServiceController {
         return result;
     }
 
-    public ResponseBodyData getSoapRequestSuccessResponse(RequestChain chain, String requestName) {
+    ResponseBodyData getSoapRequestSuccessResponse(RequestChain chain, String requestName) {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("OK");
         result.setMessage(requestName + " to Soap server succeed. Request id=" + chain.getResponseId());
@@ -109,7 +109,7 @@ public class ServiceController {
         return result;
     }
 
-    public ResponseBodyData getSoapRequestSuccessResponse(AppUser user) {
+    ResponseBodyData getSoapRequestSuccessResponse(AppUser user) {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("OK");
         result.setMessage("Authorization succeed. Session id=" + user.getSessionId());
@@ -119,7 +119,7 @@ public class ServiceController {
         return result;
     }
 
-    public ResponseBodyData getSuccessResponseLastRequestSoapMessage() {
+    ResponseBodyData getSuccessResponseLastRequestSoapMessage() {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("OK");
         result.setMessage("Last Request soap message list");
@@ -128,7 +128,7 @@ public class ServiceController {
         return result;
     }
 
-    public ResponseBodyData getSuccessResponseAllSoapMessage() {
+    ResponseBodyData getSuccessResponseAllSoapMessage() {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("OK");
         result.setMessage("All soap message list");
@@ -137,7 +137,7 @@ public class ServiceController {
         return result;
     }
 
-    public ResponseBodyData getSuccessResponseRemoveAllSoapMessage() {
+    ResponseBodyData getSuccessResponseRemoveAllSoapMessage() {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("OK");
         result.setMessage("Remove soap message list");
@@ -146,7 +146,7 @@ public class ServiceController {
         return result;
     }
 
-    public void clearSoapMessageList() {
+    void clearSoapMessageList() {
         messageList.clear();
     }
 }
