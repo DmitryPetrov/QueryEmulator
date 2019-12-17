@@ -64,7 +64,6 @@ public class AppUser{
 
     @Override
     public int hashCode() {
-
         return Objects.hash(userName, password, sessionId);
     }
 
