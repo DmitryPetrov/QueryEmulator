@@ -18,7 +18,7 @@ import java.util.List;
 @Service
 public class ServiceController {
 
-    private static Logger log = LoggerFactory.getLogger(ServiceController.class);
+    private static Logger log;
     private SoapMessageList messageList;
 
     /*
@@ -46,7 +46,7 @@ public class ServiceController {
     public ResponseBodyData getUserIsNotAuthorizedResponse() {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("ERROR");
-        result.setMessage("User is not authorized");
+        result.setMessage("User is not authorized.");
         log.error("User is not authorized." + result.getLogInfo());
         return result;
     }
@@ -75,34 +75,6 @@ public class ServiceController {
         return result;
     }
 
-    public ResponseBodyData getSuccessResponse(List<RequestChain> chainList) {
-        ResponseBodyData result = new ResponseBodyData();
-        result.setStatus("OK");
-        result.setMessage("Request list");
-        result.setRequestChainList(chainList);
-        log.info("Success request." + result.getLogInfo());
-        return result;
-    }
-
-    public ResponseBodyData getSoapRequestSuccessResponse(RequestChain chain, String requestName) {
-        ResponseBodyData result = new ResponseBodyData();
-        result.setStatus("OK");
-        result.setMessage(requestName+ " to Soap server succeed. Request id=" + chain.getResponseId());
-        result.setSoapMessageList(messageList.getLastRequestMessageList());
-        log.info("Success request." + result.getLogInfo());
-        return result;
-    }
-
-    public ResponseBodyData getSoapRequestSuccessResponse(AppUser user) {
-        ResponseBodyData result = new ResponseBodyData();
-        result.setStatus("OK");
-        result.setMessage("Authorization succeed. Session id=" + user.getSessionId());
-        result.setSoapMessageList(messageList.getLastRequestMessageList());
-
-        log.info("Success request." + result.getLogInfo());
-        return result;
-    }
-
     public ResponseBodyData getSoapRequestFailResponse(SoapServerBadResponseException exception, String requestName) {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("ERROR");
@@ -119,12 +91,39 @@ public class ServiceController {
         return result;
     }
 
+    public ResponseBodyData getSuccessResponse(List<RequestChain> chainList) {
+        ResponseBodyData result = new ResponseBodyData();
+        result.setStatus("OK");
+        result.setMessage("Request list");
+        result.setRequestChainList(chainList);
+        log.info("Success request." + result.getLogInfo());
+        return result;
+    }
+
+    public ResponseBodyData getSoapRequestSuccessResponse(RequestChain chain, String requestName) {
+        ResponseBodyData result = new ResponseBodyData();
+        result.setStatus("OK");
+        result.setMessage(requestName + " to Soap server succeed. Request id=" + chain.getResponseId());
+        result.setSoapMessageList(messageList.getLastRequestMessageList());
+        log.info("Success request." + result.getLogInfo());
+        return result;
+    }
+
+    public ResponseBodyData getSoapRequestSuccessResponse(AppUser user) {
+        ResponseBodyData result = new ResponseBodyData();
+        result.setStatus("OK");
+        result.setMessage("Authorization succeed. Session id=" + user.getSessionId());
+        result.setSoapMessageList(messageList.getLastRequestMessageList());
+
+        log.info("Success request." + result.getLogInfo());
+        return result;
+    }
+
     public ResponseBodyData getSuccessResponseLastRequestSoapMessage() {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("OK");
         result.setMessage("Last Request soap message list");
         result.setSoapMessageList(messageList.getLastRequestMessageList());
-
         log.info("Success request." + result.getLogInfo());
         return result;
     }
@@ -132,9 +131,8 @@ public class ServiceController {
     public ResponseBodyData getSuccessResponseAllSoapMessage() {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("OK");
-        result.setMessage("Soap message list");
+        result.setMessage("All soap message list");
         result.setSoapMessageList(messageList.getMessageList());
-
         log.info("Success request." + result.getLogInfo());
         return result;
     }
@@ -144,7 +142,6 @@ public class ServiceController {
         result.setStatus("OK");
         result.setMessage("Remove soap message list");
         result.setSoapMessageList(messageList.getMessageList());
-
         log.info("Success request." + result.getLogInfo());
         return result;
     }
