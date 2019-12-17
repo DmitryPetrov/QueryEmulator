@@ -2,6 +2,7 @@ package com.emulator.domain.requestchain;
 
 import com.emulator.domain.soap.SoapClient;
 import com.emulator.domain.soap.requests.authorization.AppUser;
+import com.emulator.domain.soap.requests.incoming.IncomingData;
 import com.emulator.exception.ParameterIsNullException;
 import com.emulator.exception.RequestChainIsNotExistException;
 import org.slf4j.Logger;
@@ -65,7 +66,11 @@ public class RequestChainPool {
                         " and user=" + user + " not found"));
     }
 
-    public List<RequestChain> getChainList(AppUser user) {
+    public RequestChain getRequestChain(AppUser user, IncomingData data) {
+        return getRequestChain(user, data.getAttrRequestId());
+    }
+
+        public List<RequestChain> getChainList(AppUser user) {
         return pool.entrySet().stream()
                 .filter(x -> user.equals(x.getKey()))
                 .flatMap(x -> x.getValue().stream())

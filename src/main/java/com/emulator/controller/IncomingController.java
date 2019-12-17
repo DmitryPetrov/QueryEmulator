@@ -54,7 +54,7 @@ public class IncomingController {
             AppUser user = service.getUser(httpSession);
             data.check();
 
-            chain = chainPool.getRequestChain(user, data.getAttrRequestId());
+            chain = chainPool.getRequestChain(user, data);
             chain.nextStep(data);
 
             return service.getSoapRequestSuccessResponse(chain, REQUEST_NAME);
