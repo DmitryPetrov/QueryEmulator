@@ -1,6 +1,6 @@
 package com.emulator.controller;
 
-import com.emulator.domain.frontend.request.RequestBodyAppUser;
+import com.emulator.domain.soap.requests.authorization.AppUserData;
 import com.emulator.domain.frontend.response.ResponseBodyData;
 import com.emulator.domain.requestchain.RequestChain;
 import com.emulator.domain.soap.SoapClient;
@@ -20,7 +20,6 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class AuthorizationController {
-
     private static Logger log;
 
     private static final String URI = "/login";
@@ -51,12 +50,13 @@ public class AuthorizationController {
 
     @PostMapping(URI)
     @ResponseBody
-    public ResponseBodyData login(HttpSession httpSession, @RequestBody RequestBodyAppUser requestData) {
-        log.info("Request uri='" + URI + "' data='" + requestData.toString() + "'");
-        try {
-            requestData.check();
+    public ResponseBodyData login(HttpSession httpSession, @RequestBody AppUserData data) {
+        log.info("Request uri='" + URI + "' data='" + data.toString() + "'");
 
-            AppUser user = requestData.getAppUser();
+        try {
+            data.check();
+
+            AppUser user = data.getAppUser();
             AppUser authorizedUser = soapClient.authorization(user);
 
             log.debug("User was authorized. " + authorizedUser);

@@ -1,10 +1,9 @@
-package com.emulator.domain.frontend.request;
+package com.emulator.domain.soap.requests.authorization;
 
-import com.emulator.domain.soap.requests.authorization.AppUser;
 import com.emulator.domain.soap.requests.RequestParameters;
 import com.emulator.exception.RequestParameterLengthException;
 
-public class RequestBodyAppUser extends RequestParameters {
+public class AppUserData extends RequestParameters {
 
     private final String USERNAME_DEFAULT_VALUE = "testui";
     private final String PASSWORD_DEFAULT_VALUE = "9ULT45";
@@ -40,7 +39,7 @@ public class RequestBodyAppUser extends RequestParameters {
 
     @Override
     public String toString() {
-        return "RequestBodyAppUser{" +
+        return "AppUserData{" +
                 "userName='" + userName + '\'' +
                 ", password='" + password + '\'' +
                 '}';
