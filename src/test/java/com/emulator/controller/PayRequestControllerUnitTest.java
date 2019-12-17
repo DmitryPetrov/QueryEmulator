@@ -27,9 +27,10 @@ class PayRequestControllerUnitTest {
         PayRequestChain chain = Mockito.mock(PayRequestChain.class);
         HttpSession session = Mockito.mock(HttpSession.class);
         PayRequestData data = Mockito.mock(PayRequestData.class);
-        Mockito.when(chainPool.createPayRequestChain(any())).thenReturn(chain);
-        PayRequestController controller = new PayRequestController(log, chainPool, serviceController);
 
+        Mockito.when(chainPool.createPayRequestChain(any())).thenReturn(chain);
+
+        PayRequestController controller = new PayRequestController(log, chainPool, serviceController);
         ResponseBodyData result = controller.runPayRequest(session, data);
 
         Assertions.assertNull(result);
@@ -48,9 +49,10 @@ class PayRequestControllerUnitTest {
         ServiceController serviceController = Mockito.mock(ServiceController.class);
         HttpSession session = Mockito.mock(HttpSession.class);
         PayRequestData data = Mockito.mock(PayRequestData.class);
-        Mockito.when(serviceController.getUser(any())).thenThrow(UserIsNotAuthorizedException.class);
-        PayRequestController controller = new PayRequestController(log, chainPool, serviceController);
 
+        Mockito.when(serviceController.getUser(any())).thenThrow(UserIsNotAuthorizedException.class);
+
+        PayRequestController controller = new PayRequestController(log, chainPool, serviceController);
         ResponseBodyData result = controller.runPayRequest(session, data);
 
         Assertions.assertNull(result);
@@ -66,10 +68,11 @@ class PayRequestControllerUnitTest {
         PayRequestChain chain = Mockito.mock(PayRequestChain.class);
         HttpSession session = Mockito.mock(HttpSession.class);
         PayRequestData data = Mockito.mock(PayRequestData.class);
+
         Mockito.when(chainPool.createPayRequestChain(any())).thenReturn(chain);
         doThrow(new SoapServerBadResponseException("test")).when(chain).nextStep(data);
-        PayRequestController controller = new PayRequestController(log, chainPool, serviceController);
 
+        PayRequestController controller = new PayRequestController(log, chainPool, serviceController);
         ResponseBodyData result = controller.runPayRequest(session, data);
 
         Assertions.assertNull(result);
@@ -87,9 +90,10 @@ class PayRequestControllerUnitTest {
         ServiceController serviceController = Mockito.mock(ServiceController.class);
         HttpSession session = Mockito.mock(HttpSession.class);
         PayRequestData data = Mockito.mock(PayRequestData.class);
-        doThrow(new RequestParameterLengthException("test")).when(data).check();
-        PayRequestController controller = new PayRequestController(log, chainPool, serviceController);
 
+        doThrow(new RequestParameterLengthException("test")).when(data).check();
+
+        PayRequestController controller = new PayRequestController(log, chainPool, serviceController);
         ResponseBodyData result = controller.runPayRequest(session, data);
 
         Assertions.assertNull(result);
@@ -106,10 +110,11 @@ class PayRequestControllerUnitTest {
         PayRequestChain chain = Mockito.mock(PayRequestChain.class);
         HttpSession session = Mockito.mock(HttpSession.class);
         PayRequestData data = Mockito.mock(PayRequestData.class);
+
         Mockito.when(chainPool.createPayRequestChain(any())).thenReturn(chain);
         doThrow(new RuntimeException("test")).when(chainPool).addToPool(any());
-        PayRequestController controller = new PayRequestController(log, chainPool, serviceController);
 
+        PayRequestController controller = new PayRequestController(log, chainPool, serviceController);
         ResponseBodyData result = controller.runPayRequest(session, data);
 
         Assertions.assertNull(result);

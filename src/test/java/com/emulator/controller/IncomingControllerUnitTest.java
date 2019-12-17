@@ -27,9 +27,10 @@ class IncomingControllerUnitTest {
         HttpSession session = Mockito.mock(HttpSession.class);
         RequestChain chain = Mockito.mock(RequestChain.class);
         IncomingData data = Mockito.mock(IncomingData.class);
-        Mockito.when(chainPool.getRequestChain(any(), any())).thenReturn(chain);
-        IncomingController controller = new IncomingController(log, chainPool, serviceController);
 
+        Mockito.when(chainPool.getRequestChain(any(), any())).thenReturn(chain);
+
+        IncomingController controller = new IncomingController(log, chainPool, serviceController);
         ResponseBodyData result = controller.runIncoming(session, data);
 
         Assertions.assertNull(result);
@@ -47,9 +48,10 @@ class IncomingControllerUnitTest {
         ServiceController serviceController = Mockito.mock(ServiceController.class);
         HttpSession session = Mockito.mock(HttpSession.class);
         IncomingData data = Mockito.mock(IncomingData.class);
-        Mockito.when(serviceController.getUser(session)).thenThrow(UserIsNotAuthorizedException.class);
-        IncomingController controller = new IncomingController(log, chainPool, serviceController);
 
+        Mockito.when(serviceController.getUser(session)).thenThrow(UserIsNotAuthorizedException.class);
+
+        IncomingController controller = new IncomingController(log, chainPool, serviceController);
         ResponseBodyData result = controller.runIncoming(session, data);
 
         Assertions.assertNull(result);
@@ -65,10 +67,11 @@ class IncomingControllerUnitTest {
         HttpSession session = Mockito.mock(HttpSession.class);
         RequestChain chain = Mockito.mock(RequestChain.class);
         IncomingData data = Mockito.mock(IncomingData.class);
+
         Mockito.when(chainPool.getRequestChain(any(), any())).thenReturn(chain);
         doThrow(new SoapServerBadResponseException("test")).when(chain).nextStep(data);
-        IncomingController controller = new IncomingController(log, chainPool, serviceController);
 
+        IncomingController controller = new IncomingController(log, chainPool, serviceController);
         ResponseBodyData result = controller.runIncoming(session, data);
 
         Assertions.assertNull(result);
@@ -85,9 +88,10 @@ class IncomingControllerUnitTest {
         ServiceController serviceController = Mockito.mock(ServiceController.class);
         HttpSession session = Mockito.mock(HttpSession.class);
         IncomingData data = Mockito.mock(IncomingData.class);
-        doThrow(new RequestParameterLengthException("test")).when(data).check();
-        IncomingController controller = new IncomingController(log, chainPool, serviceController);
 
+        doThrow(new RequestParameterLengthException("test")).when(data).check();
+
+        IncomingController controller = new IncomingController(log, chainPool, serviceController);
         ResponseBodyData result = controller.runIncoming(session, data);
 
         Assertions.assertNull(result);
@@ -104,10 +108,11 @@ class IncomingControllerUnitTest {
         HttpSession session = Mockito.mock(HttpSession.class);
         RequestChain chain = Mockito.mock(RequestChain.class);
         IncomingData data = Mockito.mock(IncomingData.class);
+
         Mockito.when(chainPool.getRequestChain(any(), any())).thenReturn(chain);
         doThrow(new RuntimeException("test")).when(chain).nextStep(data);
-        IncomingController controller = new IncomingController(log, chainPool, serviceController);
 
+        IncomingController controller = new IncomingController(log, chainPool, serviceController);
         ResponseBodyData result = controller.runIncoming(session, data);
 
         Assertions.assertNull(result);

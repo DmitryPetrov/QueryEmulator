@@ -27,9 +27,10 @@ class StatementRequestControllerUnitTest {
         StatementRequestChain chain = Mockito.mock(StatementRequestChain.class);
         HttpSession session = Mockito.mock(HttpSession.class);
         StatementRequestData data = Mockito.mock(StatementRequestData.class);
-        Mockito.when(chainPool.createStatementRequestChain(any())).thenReturn(chain);
-        StatementRequestController controller = new StatementRequestController(log, chainPool, serviceController);
 
+        Mockito.when(chainPool.createStatementRequestChain(any())).thenReturn(chain);
+
+        StatementRequestController controller = new StatementRequestController(log, chainPool, serviceController);
         ResponseBodyData result = controller.runStatementRequest(session, data);
 
         Assertions.assertNull(result);
@@ -48,9 +49,10 @@ class StatementRequestControllerUnitTest {
         ServiceController serviceController = Mockito.mock(ServiceController.class);
         HttpSession session = Mockito.mock(HttpSession.class);
         StatementRequestData data = Mockito.mock(StatementRequestData.class);
-        Mockito.when(serviceController.getUser(any())).thenThrow(UserIsNotAuthorizedException.class);
-        StatementRequestController controller = new StatementRequestController(log, chainPool, serviceController);
 
+        Mockito.when(serviceController.getUser(any())).thenThrow(UserIsNotAuthorizedException.class);
+
+        StatementRequestController controller = new StatementRequestController(log, chainPool, serviceController);
         ResponseBodyData result = controller.runStatementRequest(session, data);
 
         Assertions.assertNull(result);
@@ -66,10 +68,11 @@ class StatementRequestControllerUnitTest {
         StatementRequestChain chain = Mockito.mock(StatementRequestChain.class);
         HttpSession session = Mockito.mock(HttpSession.class);
         StatementRequestData data = Mockito.mock(StatementRequestData.class);
+
         Mockito.when(chainPool.createStatementRequestChain(any())).thenReturn(chain);
         doThrow(new SoapServerBadResponseException("test")).when(chain).nextStep(data);
-        StatementRequestController controller = new StatementRequestController(log, chainPool, serviceController);
 
+        StatementRequestController controller = new StatementRequestController(log, chainPool, serviceController);
         ResponseBodyData result = controller.runStatementRequest(session, data);
 
         Assertions.assertNull(result);
@@ -87,9 +90,10 @@ class StatementRequestControllerUnitTest {
         ServiceController serviceController = Mockito.mock(ServiceController.class);
         HttpSession session = Mockito.mock(HttpSession.class);
         StatementRequestData data = Mockito.mock(StatementRequestData.class);
-        doThrow(new RequestParameterLengthException("test")).when(data).check();
-        StatementRequestController controller = new StatementRequestController(log, chainPool, serviceController);
 
+        doThrow(new RequestParameterLengthException("test")).when(data).check();
+
+        StatementRequestController controller = new StatementRequestController(log, chainPool, serviceController);
         ResponseBodyData result = controller.runStatementRequest(session, data);
 
         Assertions.assertNull(result);
@@ -106,10 +110,11 @@ class StatementRequestControllerUnitTest {
         StatementRequestChain chain = Mockito.mock(StatementRequestChain.class);
         HttpSession session = Mockito.mock(HttpSession.class);
         StatementRequestData data = Mockito.mock(StatementRequestData.class);
+
         Mockito.when(chainPool.createStatementRequestChain(any())).thenReturn(chain);
         doThrow(new RuntimeException("test")).when(chainPool).addToPool(chain);
-        StatementRequestController controller = new StatementRequestController(log, chainPool, serviceController);
 
+        StatementRequestController controller = new StatementRequestController(log, chainPool, serviceController);
         ResponseBodyData result = controller.runStatementRequest(session, data);
 
         Assertions.assertNull(result);

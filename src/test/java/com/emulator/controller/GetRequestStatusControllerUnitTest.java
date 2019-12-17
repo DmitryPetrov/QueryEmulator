@@ -26,9 +26,10 @@ class GetRequestStatusControllerUnitTest {
         HttpSession session = Mockito.mock(HttpSession.class);
         RequestChain chain = Mockito.mock(RequestChain.class);
         String responseId = "test string";
-        Mockito.when(chainPool.getRequestChain(any(), eq(responseId))).thenReturn(chain);
-        GetRequestStatusController controller = new GetRequestStatusController(log, chainPool, serviceController);
 
+        Mockito.when(chainPool.getRequestChain(any(), eq(responseId))).thenReturn(chain);
+
+        GetRequestStatusController controller = new GetRequestStatusController(log, chainPool, serviceController);
         ResponseBodyData result = controller.runGetRequestStatus(session, responseId);
 
         Assertions.assertNull(result);
@@ -44,9 +45,10 @@ class GetRequestStatusControllerUnitTest {
         RequestChainPool chainPool = Mockito.mock(RequestChainPool.class);
         ServiceController serviceController = Mockito.mock(ServiceController.class);
         HttpSession session = Mockito.mock(HttpSession.class);
-        Mockito.when(serviceController.getUser(session)).thenThrow(UserIsNotAuthorizedException.class);
-        GetRequestStatusController controller = new GetRequestStatusController(log, chainPool, serviceController);
 
+        Mockito.when(serviceController.getUser(session)).thenThrow(UserIsNotAuthorizedException.class);
+
+        GetRequestStatusController controller = new GetRequestStatusController(log, chainPool, serviceController);
         ResponseBodyData result = controller.runGetRequestStatus(session, "");
 
         Assertions.assertNull(result);
@@ -62,10 +64,11 @@ class GetRequestStatusControllerUnitTest {
         HttpSession session = Mockito.mock(HttpSession.class);
         RequestChain chain = Mockito.mock(RequestChain.class);
         String responseId = "test string";
+
         Mockito.when(chainPool.getRequestChain(any(), eq(responseId))).thenReturn(chain);
         doThrow(new SoapServerBadResponseException("test")).when(chain).nextStep();
-        GetRequestStatusController controller = new GetRequestStatusController(log, chainPool, serviceController);
 
+        GetRequestStatusController controller = new GetRequestStatusController(log, chainPool, serviceController);
         ResponseBodyData result = controller.runGetRequestStatus(session, responseId);
 
         Assertions.assertNull(result);
@@ -83,10 +86,11 @@ class GetRequestStatusControllerUnitTest {
         HttpSession session = Mockito.mock(HttpSession.class);
         RequestChain chain = Mockito.mock(RequestChain.class);
         String responseId = "test string";
+
         Mockito.when(chainPool.getRequestChain(any(), eq(responseId))).thenReturn(chain);
         doThrow(new RuntimeException("test")).when(chain).nextStep();
-        GetRequestStatusController controller = new GetRequestStatusController(log, chainPool, serviceController);
 
+        GetRequestStatusController controller = new GetRequestStatusController(log, chainPool, serviceController);
         ResponseBodyData result = controller.runGetRequestStatus(session, responseId);
 
         Assertions.assertNull(result);
