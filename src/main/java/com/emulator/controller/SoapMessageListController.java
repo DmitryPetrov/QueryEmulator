@@ -16,29 +16,25 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class SoapMessageListController {
 
-    private static Logger log;
-
     private static final String URI_GET_ALL_MESSAGE = "/soapMessage/list/all";
     private static final String URI_GET_LAST_REQUEST_MESSAGE = "/soapMessage/list/lastRequest";
     private static final String URI_REMOVE_ALL_MESSAGE = "/soapMessage/remove/all";
 
+    private static Logger log;
     private ServiceController service;
-    private SoapMessageList messageList;
 
     /*
         Constructor for tests
     */
-    public SoapMessageListController(Logger logger, ServiceController serviceController, SoapMessageList messageList) {
+    public SoapMessageListController(Logger logger, ServiceController serviceController) {
         this.log = logger;
         this.service = serviceController;
-        this.messageList = messageList;
     }
 
     @Autowired
-    public SoapMessageListController(ServiceController serviceController, SoapMessageList messageList) {
+    public SoapMessageListController(ServiceController serviceController) {
         this.log = LoggerFactory.getLogger(this.getClass());
         this.service = serviceController;
-        this.messageList = messageList;
     }
 
     @GetMapping(URI_GET_ALL_MESSAGE)
@@ -47,7 +43,7 @@ public class SoapMessageListController {
         log.info("Request uri='" + URI_GET_ALL_MESSAGE + "'");
         try {
             AppUser user = service.getUser(httpSession);
-            return getSuccessResponseList();
+            return service.getSuccessResponseAllSoapMessage();
         } catch (UserIsNotAuthorizedException e) {
             return service.getUserIsNotAuthorizedResponse();
         } catch (Exception e) {
@@ -61,7 +57,7 @@ public class SoapMessageListController {
         log.info("Request uri='" + URI_GET_LAST_REQUEST_MESSAGE + "'");
         try {
             AppUser user = service.getUser(httpSession);
-            return getSuccessResponseLastRequest();
+            return service.getSuccessResponseLastRequestSoapMessage();
         } catch (UserIsNotAuthorizedException e) {
             return service.getUserIsNotAuthorizedResponse();
         } catch (Exception e) {
@@ -75,47 +71,12 @@ public class SoapMessageListController {
         log.info("Request uri='" + URI_REMOVE_ALL_MESSAGE + "'");
         try {
             AppUser user = service.getUser(httpSession);
-            clearSoapMessageList();
-            return getSuccessResponseRemoveAllMessage();
+            service.clearSoapMessageList();
+            return service.getSuccessResponseRemoveAllSoapMessage();
         } catch (UserIsNotAuthorizedException e) {
             return service.getUserIsNotAuthorizedResponse();
         } catch (Exception e) {
             return service.getServerFailResponse(e);
         }
     }
-
-    private void clearSoapMessageList() {
-        messageList.clear();
-    }
-
-    private ResponseBodyData getSuccessResponseLastRequest() {
-        ResponseBodyData result = new ResponseBodyData();
-        result.setStatus("OK");
-        result.setMessage("Last Request soap message list");
-        result.setSoapMessageList(messageList.getLastRequestMessageList());
-
-        log.info("Success request." + result.getLogInfo());
-        return result;
-    }
-
-    private ResponseBodyData getSuccessResponseList() {
-        ResponseBodyData result = new ResponseBodyData();
-        result.setStatus("OK");
-        result.setMessage("Soap message list");
-        result.setSoapMessageList(messageList.getMessageList());
-
-        log.info("Success request." + result.getLogInfo());
-        return result;
-    }
-
-    private ResponseBodyData getSuccessResponseRemoveAllMessage() {
-        ResponseBodyData result = new ResponseBodyData();
-        result.setStatus("OK");
-        result.setMessage("Remove soap message list");
-        result.setSoapMessageList(messageList.getMessageList());
-
-        log.info("Success request." + result.getLogInfo());
-        return result;
-    }
-
 }

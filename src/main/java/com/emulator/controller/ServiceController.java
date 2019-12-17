@@ -4,7 +4,6 @@ import com.emulator.domain.frontend.response.ResponseBodyData;
 import com.emulator.domain.requestchain.RequestChain;
 import com.emulator.domain.soap.SoapMessageList;
 import com.emulator.domain.soap.requests.authorization.AppUser;
-import com.emulator.exception.BadRequestParameterException;
 import com.emulator.exception.RequestParameterLengthException;
 import com.emulator.exception.SoapServerBadResponseException;
 import com.emulator.exception.UserIsNotAuthorizedException;
@@ -120,4 +119,37 @@ public class ServiceController {
         return result;
     }
 
+    public ResponseBodyData getSuccessResponseLastRequestSoapMessage() {
+        ResponseBodyData result = new ResponseBodyData();
+        result.setStatus("OK");
+        result.setMessage("Last Request soap message list");
+        result.setSoapMessageList(messageList.getLastRequestMessageList());
+
+        log.info("Success request." + result.getLogInfo());
+        return result;
+    }
+
+    public ResponseBodyData getSuccessResponseAllSoapMessage() {
+        ResponseBodyData result = new ResponseBodyData();
+        result.setStatus("OK");
+        result.setMessage("Soap message list");
+        result.setSoapMessageList(messageList.getMessageList());
+
+        log.info("Success request." + result.getLogInfo());
+        return result;
+    }
+
+    public ResponseBodyData getSuccessResponseRemoveAllSoapMessage() {
+        ResponseBodyData result = new ResponseBodyData();
+        result.setStatus("OK");
+        result.setMessage("Remove soap message list");
+        result.setSoapMessageList(messageList.getMessageList());
+
+        log.info("Success request." + result.getLogInfo());
+        return result;
+    }
+
+    public void clearSoapMessageList() {
+        messageList.clear();
+    }
 }
