@@ -20,7 +20,6 @@ import java.io.IOException;
 public class StatementRequestChain implements RequestChain {
 
     private static Logger log = LoggerFactory.getLogger(StatementRequestChain.class);
-
     private static final String STATEMENT_REQUEST_STATUS_DELIVERED = "DELIVERED";
 
     private final AppUser user;
@@ -45,7 +44,7 @@ public class StatementRequestChain implements RequestChain {
             throw new ParameterIsNullException("AppUser must not be 'null'");
         }
         if (user.getSessionId().equals("")) {
-            throw new UserIsNotAuthorizedException("AppUser user must not be authorized");
+            throw new UserIsNotAuthorizedException("AppUser user must be authorized");
         }
         this.user = user;
         this.soapClient = soapClient;
@@ -125,7 +124,6 @@ public class StatementRequestChain implements RequestChain {
         }
     }
 
-    @Override
     public void checkPhase(Phase newPhase) {
         if (this.phase.ordinal() < (newPhase.ordinal() - 1)) {
             throw new RequestChainPhaseNotReadyOrAlreadyPassedException(newPhase + " phase not ready. Current phase: " +
