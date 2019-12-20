@@ -50,6 +50,7 @@ public class StatementRequestChain implements RequestChain {
         this.soapClient = soapClient;
     }
 
+    @Override
     public void nextStep(RequestParameters data) {
         checkPhase(Phase.STATEMENT_REQUEST);
 
@@ -141,8 +142,8 @@ public class StatementRequestChain implements RequestChain {
     }
 
     @Override
-    public Phase getPhase() {
-        return phase;
+    public String getPhase() {
+        return phase.name();
     }
 
     @Override
@@ -159,12 +160,10 @@ public class StatementRequestChain implements RequestChain {
         return statementRequestStatus;
     }
 
-    @Override
     public String getIncomingRequestId() {
         return incomingRequestId;
     }
 
-    @Override
     public String getIncomingResponseId() {
         return incomingResponseId;
     }
@@ -177,17 +176,14 @@ public class StatementRequestChain implements RequestChain {
         return statementRequest;
     }
 
-    @Override
     public GetRequestStatusDto getGetRequestStatus() {
         return getRequestStatus;
     }
 
-    @Override
     public IncomingDto getIncoming() {
         return incoming;
     }
 
-    @Override
     public GetRequestStatusDto getStatementDocument() {
         return statementDocument;
     }
