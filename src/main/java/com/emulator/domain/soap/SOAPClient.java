@@ -7,12 +7,15 @@ import com.emulator.domain.soap.requests.getrequeststatus.dto.GetRequestStatusDt
 import com.emulator.domain.soap.requests.incoming.IncomingData;
 import com.emulator.domain.soap.requests.incoming.IncomingDto;
 import com.emulator.domain.soap.requests.incoming.IncomingManager;
+import com.emulator.domain.soap.requests.payrequest.PayRequestData;
+import com.emulator.domain.soap.requests.payrequest.dto.PayRequestDto;
 import com.emulator.domain.soap.requests.statementrequest.StatementRequestData;
 import com.emulator.domain.soap.requests.statementrequest.StatementRequestManager;
 import com.emulator.domain.soap.requests.statementrequest.dto.StatementRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.IOException;
 
@@ -46,5 +49,9 @@ public class SoapClient {
 
     public IncomingDto doRequest(AppUser user, IncomingData data) {
         return incomingManager.runIncoming(user, data);
+    }
+
+    public PayRequestDto doRequest(AppUser user, PayRequestData data) {
+        throw new NotImplementedException();
     }
 }
