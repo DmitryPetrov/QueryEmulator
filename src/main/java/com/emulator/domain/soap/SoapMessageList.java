@@ -11,18 +11,22 @@ import java.util.List;
 @Component
 public class SoapMessageList {
 
-    private static Logger log = LoggerFactory.getLogger(StatementRequestController.class);
+    private static Logger log;
 
     private List<String> messageList = new ArrayList<>();
-    private List<String> lastSoapRequest = new ArrayList<>();
+
+    public SoapMessageList(Logger log) {
+        this.log = log;
+    }
+
+    public SoapMessageList() {
+        this.log = LoggerFactory.getLogger(StatementRequestController.class);
+    }
 
     public void add(String message) {
         message = formatMessage(message);
-
         log.info(message);
-
-        lastSoapRequest.add(message);
-        messageList.add(new String(message));
+        messageList.add(message);
     }
 
     private String formatMessage(String message) {
@@ -39,17 +43,8 @@ public class SoapMessageList {
         return message;
     }
 
-    public String getLastRequestAsString() {
-        String result = "";
-        for (String message : messageList) {
-            result += message;
-            result += System.lineSeparator();
-        }
-        return result;
-    }
-
     public List<String> getLastRequestMessageList() {
-        return lastSoapRequest;
+        return messageList.subList((messageList.size() - 2), messageList.size());
     }
 
     public List<String> getMessageList() {
@@ -65,14 +60,8 @@ public class SoapMessageList {
         return result;
     }
 
-    public void clearLastRequestMessageList() {
-        log.debug("Clear last request message list");
-        lastSoapRequest.clear();
-    }
-
     public void clear() {
         log.debug("Clear all message list");
         messageList.clear();
-        clearLastRequestMessageList();
     }
 }
