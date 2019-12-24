@@ -64,7 +64,7 @@ public class ServiceController {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("ERROR");
         result.setMessage(exception.getMessage());
-        result.setSoapMessageList(messageList.getMessageList());
+        result.setSoapMessageList(messageList.getLastRequestMessageList());
         log.error("Server error." + result.getLogInfo());
         return result;
     }
@@ -114,7 +114,6 @@ public class ServiceController {
         result.setStatus("OK");
         result.setMessage("Authorization succeed. Session id=" + user.getSessionId());
         result.setSoapMessageList(messageList.getLastRequestMessageList());
-
         log.info("Success request." + result.getLogInfo());
         return result;
     }

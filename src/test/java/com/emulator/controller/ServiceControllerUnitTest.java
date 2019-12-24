@@ -87,7 +87,7 @@ class ServiceControllerUnitTest {
         String errorMessage = "test";
 
         Mockito.when(exception.getMessage()).thenReturn(errorMessage);
-        Mockito.when(messageList.getMessageList()).thenReturn(list);
+        Mockito.when(messageList.getLastRequestMessageList()).thenReturn(list);
 
         ResponseBodyData data = new ServiceController(log, messageList).getServerFailResponse(exception);
 
@@ -106,7 +106,7 @@ class ServiceControllerUnitTest {
         String errorMessage = "test";
 
         Mockito.when(exception.getMessage()).thenReturn(errorMessage);
-        Mockito.when(messageList.getMessageList()).thenReturn(list);
+        Mockito.when(messageList.getLastRequestMessageList()).thenReturn(list);
 
         ResponseBodyData data = new ServiceController(log, messageList).getServerFailResponse(exception, chain);
 
