@@ -105,6 +105,7 @@ public class ServiceController {
         result.setStatus("OK");
         result.setMessage(requestName + " to Soap server succeed. Request id=" + chain.getResponseId());
         result.setSoapMessageList(messageList.getLastRequestMessageList());
+        result.setRequestChain(chain);
         log.info("Success request." + result.getLogInfo());
         return result;
     }

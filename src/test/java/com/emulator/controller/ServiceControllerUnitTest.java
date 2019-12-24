@@ -191,6 +191,7 @@ class ServiceControllerUnitTest {
         Assertions.assertEquals("OK", data.getStatus());
         Assertions.assertTrue(data.getMessage().contains(requestName));
         Assertions.assertTrue(data.getMessage().contains(responseId));
+        Assertions.assertEquals(chain, data.getRequestChain());
         Assertions.assertEquals(list, data.getSoapMessageList());
     }
 
