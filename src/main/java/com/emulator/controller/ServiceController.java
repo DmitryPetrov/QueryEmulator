@@ -66,6 +66,7 @@ public class ServiceController {
         result.setMessage(exception.getMessage());
         result.setSoapMessageList(messageList.getLastRequestMessageList());
         log.error("Server error." + result.getLogInfo());
+        log.error(exception.getMessage());
         return result;
     }
 
@@ -81,6 +82,7 @@ public class ServiceController {
         result.setMessage(requestName + " to Soap server failed. Message: " + exception.getSoapResponse());
         result.setSoapMessageList(messageList.getLastRequestMessageList());
         log.info("Failed request." + result.getLogInfo());
+        log.info(exception.getMessage());
         return result;
     }
 
