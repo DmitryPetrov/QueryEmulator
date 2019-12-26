@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 
 @Service
@@ -66,7 +68,7 @@ public class ServiceController {
         result.setMessage(exception.getMessage());
         result.setSoapMessageList(messageList.getLastRequestMessageList());
         log.error("Server error." + result.getLogInfo());
-        log.error(exception.getMessage());
+        log.error(getStackTrace(exception));
         return result;
     }
 
@@ -82,8 +84,15 @@ public class ServiceController {
         result.setMessage(requestName + " to Soap server failed. Message: " + exception.getSoapResponse());
         result.setSoapMessageList(messageList.getLastRequestMessageList());
         log.info("Failed request." + result.getLogInfo());
-        log.info(exception.getMessage());
+        log.info(getStackTrace(exception));
         return result;
+    }
+
+    private String getStackTrace(Exception exception) {
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(stringWriter);
+        exception.printStackTrace(printWriter);
+        return stringWriter.toString();
     }
 
     ResponseBodyData getSoapRequestFailResponse(SoapServerBadResponseException exception, RequestChain chain,
