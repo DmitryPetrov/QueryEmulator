@@ -28,12 +28,13 @@ public class RequestChainPool {
     SoapClient soapClient;
 
     public StatementRequestChain createStatementRequestChain(AppUser user) {
-        log.debug("Created new request chain for user." + user);
+        log.debug("Created new StatementRequestChain for user." + user);
         return new StatementRequestChain(user, soapClient);
     }
 
     public PayRequestChain createPayRequestChain(AppUser user) {
-        throw new NotImplementedException();
+        log.debug("Created new PayRequestChain for user." + user);
+        return new PayRequestChain(user, soapClient);
     }
 
     public void addToPool(RequestChain chain) {
@@ -52,10 +53,6 @@ public class RequestChainPool {
 
         log.debug("RequestChain(responseId=" + chain.getResponseId() + ") was added to RequestChainPool");
         chainList.add(chain);
-    }
-
-    public void addToPool(PayRequestChain chain) {
-        throw new NotImplementedException();
     }
 
     public RequestChain getRequestChain(AppUser user, String responseId) {

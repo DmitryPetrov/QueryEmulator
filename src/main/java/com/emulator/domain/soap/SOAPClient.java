@@ -8,6 +8,7 @@ import com.emulator.domain.soap.requests.incoming.IncomingData;
 import com.emulator.domain.soap.requests.incoming.IncomingDto;
 import com.emulator.domain.soap.requests.incoming.IncomingManager;
 import com.emulator.domain.soap.requests.payrequest.PayRequestData;
+import com.emulator.domain.soap.requests.payrequest.PayRequestManager;
 import com.emulator.domain.soap.requests.payrequest.dto.PayRequestDto;
 import com.emulator.domain.soap.requests.statementrequest.StatementRequestData;
 import com.emulator.domain.soap.requests.statementrequest.StatementRequestManager;
@@ -51,7 +52,10 @@ public class SoapClient {
         return incomingManager.runIncoming(user, data);
     }
 
+    @Autowired
+    PayRequestManager payRequestManager;
+
     public PayRequestDto doRequest(AppUser user, PayRequestData data) {
-        throw new NotImplementedException();
+        return payRequestManager.runPayRequest(user, data);
     }
 }
