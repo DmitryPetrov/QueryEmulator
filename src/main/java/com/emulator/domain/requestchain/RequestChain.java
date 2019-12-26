@@ -24,4 +24,7 @@ public interface RequestChain {
     String getResponseId();
 
     int getPhaseNum();
+
+    String getType();
+
 }

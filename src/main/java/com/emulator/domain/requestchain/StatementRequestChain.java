@@ -23,6 +23,8 @@ public class StatementRequestChain implements RequestChain {
     private static final String REQUEST_STATUS_DELIVERED = "DELIVERED";
     private static final String REQUEST_STATUS_ACCEPTED = "ACCEPTED";
     private static final String REQUEST_STATUS_NOT_PROCESSED_YET = "NOT PROCESSED YET";
+    private static final String TYPE = "STATEMENT_REQUEST_CHAIN";
+
 
     /*
         START_PHASE = нет успешно отправленных запросов
@@ -176,6 +178,11 @@ public class StatementRequestChain implements RequestChain {
     @Override
     public String getResponseId() {
         return chainData.getResponseId();
+    }
+
+    @Override
+    public String getType() {
+        return TYPE;
     }
 
     public String getStatementRequestStatus() {
