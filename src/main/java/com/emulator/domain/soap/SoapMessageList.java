@@ -47,6 +47,10 @@ public class SoapMessageList {
         return messageList.subList((messageList.size() - 2), messageList.size());
     }
 
+    public String getLastMessage() {
+        return messageList.get(messageList.size() - 1);
+    }
+
     public List<String> getMessageList() {
         return messageList;
     }

@@ -1,5 +1,6 @@
 package com.emulator.domain.soap.requests.getrequeststatus;
 
+import com.emulator.domain.soap.SoapMessageList;
 import com.emulator.domain.soap.com.bssys.sbns.upg.GetRequestStatusResponse;
 import com.emulator.domain.soap.requests.ErrorResponseHandler;
 import com.emulator.domain.soap.requests.getrequeststatus.statement.Operation;
@@ -27,10 +28,11 @@ import java.io.InputStream;
 class ResponseHandler {
 
     private static Logger log = LoggerFactory.getLogger(ResponseHandler.class);
-
     private static String NOT_PROCESSED_YET = "NOT PROCESSED YET";
-
     private static String MODEL_NODE_NAME = "upg:Model";
+
+    @Autowired
+    private SoapMessageList messageList;
 
     GetRequestStatusResult getResult(JAXBElement<GetRequestStatusResponse> response) throws IOException, SAXException {
         if (response == null) {
@@ -46,7 +48,7 @@ class ResponseHandler {
     private GetRequestStatusResult parse(String responseMessage) throws IOException, SAXException {
         errorHandler.check(responseMessage);
 
-        if (responseMessage.contains(NOT_PROCESSED_YET)) {
+        if (messageList.getLastMessage().contains(NOT_PROCESSED_YET)) {
             GetRequestStatusResult result = new GetRequestStatusResult();
             result.setNotProcessedYet(true);
             return result;
