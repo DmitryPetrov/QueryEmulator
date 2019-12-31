@@ -22,9 +22,7 @@ public class StatementRequestChain implements RequestChain {
     private static Logger log;
     private static final String REQUEST_STATUS_DELIVERED = "DELIVERED";
     private static final String REQUEST_STATUS_ACCEPTED = "ACCEPTED";
-    private static final String REQUEST_STATUS_NOT_PROCESSED_YET = "NOT PROCESSED YET";
     private static final String TYPE = "STATEMENT_REQUEST_CHAIN";
-
 
     /*
         START_PHASE = нет успешно отправленных запросов

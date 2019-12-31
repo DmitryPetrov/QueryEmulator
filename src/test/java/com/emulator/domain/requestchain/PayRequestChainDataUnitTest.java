@@ -49,30 +49,46 @@ class PayRequestChainDataUnitTest {
         Assertions.assertEquals(responseId, chainData.getIncomingResponseId());
     }
 
-    @Test
-    void add_getRequestStatusDto1_savedObject() throws Exception {
-        GetRequestStatusDto dto = Mockito.mock(GetRequestStatusDto.class);
-        List<StateResponseDto> stateResponseDtoList = Mockito.mock(List.class);
+    private static final String STATE = "state";
+    private static final String EXT_ID = "ext id";
+
+    /*
+    Не использовал Mock для листа т.к. для получения incomingStatus используется StreamAPI,
+    коротый не работает с моками
+     */
+    private GetRequestStatusDto getMockGetRequestStatusDto() {
         StateResponseDto stateResponseDto = Mockito.mock(StateResponseDto.class);
-        String state = "test";
+        List<StateResponseDto> stateResponseDtoList = new ArrayList<StateResponseDto>(){{add(stateResponseDto);}};
+        GetRequestStatusDto dto = Mockito.mock(GetRequestStatusDto.class);
 
         Mockito.when(dto.isNotProcessedYet()).thenReturn(false);
         Mockito.when(dto.getStateResponseList()).thenReturn(stateResponseDtoList);
-        Mockito.when(stateResponseDtoList.get(0)).thenReturn(stateResponseDto);
-        Mockito.when(stateResponseDto.getState()).thenReturn(state);
+        Mockito.when(stateResponseDto.getState()).thenReturn(STATE);
+        Mockito.when(stateResponseDto.getExtId()).thenReturn(EXT_ID);
+
+        return dto;
+    }
+
+    private GetRequestStatusDto getMockGetRequestStatusDtoNotProcessedYet() {
+        GetRequestStatusDto dto = Mockito.mock(GetRequestStatusDto.class);
+        Mockito.when(dto.isNotProcessedYet()).thenReturn(true);
+        return dto;
+    }
+
+    @Test
+    void add_getRequestStatusDto1_savedObject() throws Exception {
+        GetRequestStatusDto dto = getMockGetRequestStatusDto();
 
         PayRequestChainData chainData = new PayRequestChainData();
         chainData.add(dto);
 
         Assertions.assertEquals(dto, chainData.getGetRequestStatus1());
-        Assertions.assertEquals(state, chainData.getPayRequestStatus());
+        Assertions.assertEquals(STATE, chainData.getPayRequestStatus());
     }
 
     @Test
     void add_getRequestStatusDto1_notProcessedYetStatus() throws Exception {
-        GetRequestStatusDto dto = Mockito.mock(GetRequestStatusDto.class);
-
-        Mockito.when(dto.isNotProcessedYet()).thenReturn(true);
+        GetRequestStatusDto dto = getMockGetRequestStatusDtoNotProcessedYet();
 
         PayRequestChainData chainData = new PayRequestChainData();
         chainData.add(dto);
@@ -82,21 +98,12 @@ class PayRequestChainDataUnitTest {
     }
 
     @Test
-    void add_getRequestStatusDto2_savedObject() throws Exception {
+    void add_getReqStatDto1ThenGetReqStatDto2_savedGetReqStatDto2() throws Exception {
         PayRequestDto payRequestDto = Mockito.mock(PayRequestDto.class);
-        GetRequestStatusDto dto1 = Mockito.mock(GetRequestStatusDto.class);
-        GetRequestStatusDto dto2 = Mockito.mock(GetRequestStatusDto.class);
-        StateResponseDto stateResponseDto = Mockito.mock(StateResponseDto.class);
-        List<StateResponseDto> stateResponseDtoList = new ArrayList<StateResponseDto>(){{add(stateResponseDto);}};
-        String state = "test";
-        String externalId = "externalId test";
+        GetRequestStatusDto dto1 = getMockGetRequestStatusDto();
+        GetRequestStatusDto dto2 = getMockGetRequestStatusDto();
 
-        Mockito.when(payRequestDto.getExternalId()).thenReturn(externalId);
-        Mockito.when(dto1.isNotProcessedYet()).thenReturn(true);
-        Mockito.when(dto2.isNotProcessedYet()).thenReturn(false);
-        Mockito.when(dto2.getStateResponseList()).thenReturn(stateResponseDtoList);
-        Mockito.when(stateResponseDto.getState()).thenReturn(state);
-        Mockito.when(stateResponseDto.getExtId()).thenReturn(externalId);
+        Mockito.when(payRequestDto.getExternalId()).thenReturn(EXT_ID);
 
         PayRequestChainData chainData = new PayRequestChainData();
         chainData.add(payRequestDto);
@@ -104,21 +111,40 @@ class PayRequestChainDataUnitTest {
         chainData.add(dto2);
 
         Assertions.assertEquals(dto2, chainData.getGetRequestStatus2());
-        Assertions.assertEquals(state, chainData.getIncomingStatus());
+        Assertions.assertEquals(STATE, chainData.getIncomingStatus());
     }
 
     @Test
-    void add_getRequestStatusDto2_notProcessedYetStatus() throws Exception {
-        GetRequestStatusDto dto = Mockito.mock(GetRequestStatusDto.class);
-
-        Mockito.when(dto.isNotProcessedYet()).thenReturn(true);
+    void add_getReqStatDto1ThenGetReqStatDto2_notProcessedYetStatus() throws Exception {
+        GetRequestStatusDto dto1 = getMockGetRequestStatusDto();
+        GetRequestStatusDto dto2 = getMockGetRequestStatusDtoNotProcessedYet();
 
         PayRequestChainData chainData = new PayRequestChainData();
-        chainData.add(dto);
-        chainData.add(dto);
+        chainData.add(dto1);
+        chainData.add(dto2);
 
-        Assertions.assertEquals(dto, chainData.getGetRequestStatus2());
+        Assertions.assertEquals(dto1, chainData.getGetRequestStatus1());
+        Assertions.assertEquals(dto2, chainData.getGetRequestStatus2());
         Assertions.assertEquals("NOT PROCESSED YET", chainData.getIncomingStatus());
+    }
+
+    @Test
+    void add_getReqStatDto1NotProcessedYetThenGetReqStatDto2_savedGetReqStatDto1() throws Exception {
+        PayRequestDto payRequestDto = Mockito.mock(PayRequestDto.class);
+        GetRequestStatusDto dto1 = getMockGetRequestStatusDtoNotProcessedYet();
+        GetRequestStatusDto dto2 = getMockGetRequestStatusDto();
+
+        Mockito.when(payRequestDto.getExternalId()).thenReturn(EXT_ID);
+
+        PayRequestChainData chainData = new PayRequestChainData();
+        chainData.add(payRequestDto);
+        chainData.add(dto1);
+        chainData.add(dto2);
+
+        Assertions.assertEquals(dto2, chainData.getGetRequestStatus1());
+        Assertions.assertEquals(STATE, chainData.getPayRequestStatus());
+        Assertions.assertNull(chainData.getGetRequestStatus2());
+        Assertions.assertNull(chainData.getIncomingStatus());
     }
 
 }

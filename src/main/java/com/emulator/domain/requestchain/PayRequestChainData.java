@@ -9,6 +9,8 @@ import java.io.IOException;
 
 public class PayRequestChainData {
 
+    private static final String NOT_PROCESSED_YET_STATUS = "NOT PROCESSED YET";
+
     private String requestId;
     private String responseId;
 
@@ -32,25 +34,26 @@ public class PayRequestChainData {
         responseId = payRequestResponseId;
     }
 
-    public void add(GetRequestStatusDto getRequestStatusDto) throws IOException, SAXException {
-        if (getRequestStatus1 == null) {
-            addGetRequestStatus1(getRequestStatusDto);
-        } else {
-            addGetRequestStatus2(getRequestStatusDto);
-        }
-    }
-
     public void add(IncomingDto incomingDto) {
         this.incoming = incomingDto;
         incomingRequestId = incomingDto.getRequestId();
         incomingResponseId = incomingDto.getResponseId();
     }
 
+    public void add(GetRequestStatusDto getRequestStatusDto) throws IOException, SAXException {
+        if ((getRequestStatus1 == null) ||
+                (payRequestStatus.equals(NOT_PROCESSED_YET_STATUS))) {
+            addGetRequestStatus1(getRequestStatusDto);
+        } else {
+            addGetRequestStatus2(getRequestStatusDto);
+        }
+    }
+
     private void addGetRequestStatus1(GetRequestStatusDto getRequestStatusDto) throws IOException, SAXException {
         this.getRequestStatus1 = getRequestStatusDto;
 
         if (getRequestStatus1.isNotProcessedYet()) {
-            payRequestStatus = "NOT PROCESSED YET";
+            payRequestStatus = NOT_PROCESSED_YET_STATUS;
         } else {
             payRequestStatus = getRequestStatus1.getStateResponseList().get(0).getState();
         }
@@ -60,7 +63,7 @@ public class PayRequestChainData {
         this.getRequestStatus2 = getRequestStatusDto;
 
         if (getRequestStatus2.isNotProcessedYet()) {
-            this.incomingStatus = "NOT PROCESSED YET";
+            this.incomingStatus = NOT_PROCESSED_YET_STATUS;
         } else {
             String extId = payRequest.getExternalId();
             this.incomingStatus = getRequestStatus2.getStateResponseList().stream()

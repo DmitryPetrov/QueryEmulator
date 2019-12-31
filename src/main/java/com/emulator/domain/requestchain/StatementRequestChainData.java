@@ -8,7 +8,9 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 
 public class StatementRequestChainData {
-    
+
+    private static final String NOT_PROCESSED_YET_STATUS = "NOT PROCESSED YET";
+
     private String requestId;
     private String responseId;
 
@@ -33,7 +35,8 @@ public class StatementRequestChainData {
     }
 
     public void add(GetRequestStatusDto getRequestStatusDto) throws IOException, SAXException {
-        if (getRequestStatus1 == null) {
+        if ((getRequestStatus1 == null) ||
+                (statementRequestStatus.equals(NOT_PROCESSED_YET_STATUS))) {
             addGetRequestStatus1(getRequestStatusDto);
         } else {
             addGetRequestStatus2(getRequestStatusDto);
@@ -50,7 +53,7 @@ public class StatementRequestChainData {
         this.getRequestStatus1 = getRequestStatusDto;
 
         if (getRequestStatus1.isNotProcessedYet()) {
-            statementRequestStatus = "NOT PROCESSED YET";
+            statementRequestStatus = NOT_PROCESSED_YET_STATUS;
         } else {
             statementRequestStatus = getRequestStatus1.getStateResponseList().get(0).getState();
         }
@@ -60,7 +63,7 @@ public class StatementRequestChainData {
         this.getRequestStatus2 = getRequestStatusDto;
 
         if (getRequestStatus2.isNotProcessedYet()) {
-            this.incomingStatus = "NOT PROCESSED YET";
+            this.incomingStatus = NOT_PROCESSED_YET_STATUS;
         } else {
             String extId = statementRequest.getExternalId();
             this.incomingStatus = getRequestStatus2.getStateResponseList().stream()
