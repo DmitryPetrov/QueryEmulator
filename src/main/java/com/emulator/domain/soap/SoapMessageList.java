@@ -44,10 +44,30 @@ public class SoapMessageList {
     }
 
     public List<String> getLastRequestMessageList() {
-        return messageList.subList((messageList.size() - 2), messageList.size());
+        List<String> result = null;
+
+        int size = messageList.size();
+        if (size == 0) {
+            result = new ArrayList<String>();
+            result.add("");
+            result.add("");
+        }
+        if (size == 1) {
+            result = new ArrayList<String>();
+            result.add(messageList.get(0));
+            result.add("");
+        }
+        if (size >= 2) {
+            result = messageList.subList((size - 2), size);
+        }
+
+        return result;
     }
 
     public String getLastMessage() {
+        if (messageList.size() == 0) {
+            return "";
+        }
         return messageList.get(messageList.size() - 1);
     }
 
