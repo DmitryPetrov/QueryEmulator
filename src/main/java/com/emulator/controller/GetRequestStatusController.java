@@ -4,15 +4,14 @@ import com.emulator.domain.frontend.response.ResponseBodyData;
 import com.emulator.domain.requestchain.RequestChain;
 import com.emulator.domain.requestchain.RequestChainPool;
 import com.emulator.domain.soap.requests.authorization.AppUser;
+import com.emulator.domain.soap.requests.getrequeststatus.GetRequestStatusData;
 import com.emulator.exception.SoapServerBadResponseException;
 import com.emulator.exception.UserIsNotAuthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
@@ -21,7 +20,7 @@ public class GetRequestStatusController {
 
     private static Logger log;
 
-    private static final String URI = "/request/nextStep";
+    private static final String URI = "/request/nextStep/getRequestStatus";
     private static final String REQUEST_NAME= "GetRequestStatus";
 
     private ServiceController service;
@@ -43,16 +42,15 @@ public class GetRequestStatusController {
         this.service = serviceController;
     }
 
-    @GetMapping(URI)
+    @PostMapping(URI)
     @ResponseBody
-    public ResponseBodyData runGetRequestStatus(HttpSession httpSession,
-                                                @RequestParam(name = "responseId") String responseId) {
-        log.info("Request uri='" + URI + "' RequestParam: responseId='" + responseId + "'");
+    public ResponseBodyData runGetRequestStatus(HttpSession httpSession, @RequestBody GetRequestStatusData data) {
+        log.info("Request uri='" + URI + "' RequestParam: responseId='" + data.getResponseId() + "'");
         RequestChain chain = null;
         try {
             AppUser user = service.getUser(httpSession);
 
-            chain = chainPool.getRequestChain(user, responseId);
+            chain = chainPool.getRequestChain(user, data);
             chain.nextStep();
 
             return service.getSoapRequestSuccessResponse(chain, REQUEST_NAME);

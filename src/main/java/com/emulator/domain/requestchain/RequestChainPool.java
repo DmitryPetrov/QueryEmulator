@@ -1,7 +1,9 @@
 package com.emulator.domain.requestchain;
 
 import com.emulator.domain.soap.SoapClient;
+import com.emulator.domain.soap.com.bssys.sbns.upg.GetRequestStatus;
 import com.emulator.domain.soap.requests.authorization.AppUser;
+import com.emulator.domain.soap.requests.getrequeststatus.GetRequestStatusData;
 import com.emulator.domain.soap.requests.incoming.IncomingData;
 import com.emulator.exception.ParameterIsNullException;
 import com.emulator.exception.RequestChainIsNotExistException;
@@ -55,12 +57,16 @@ public class RequestChainPool {
         chainList.add(chain);
     }
 
-    public RequestChain getRequestChain(AppUser user, String responseId) {
+    private RequestChain getRequestChain(AppUser user, String responseId) {
         return getChainList(user).stream()
                 .filter(requestChain -> responseId.equals(requestChain.getResponseId()))
                 .findFirst()
                 .orElseThrow(() -> new RequestChainIsNotExistException("RequestChain with responseId=" + responseId +
                         " and user=" + user + " not found"));
+    }
+
+    public RequestChain getRequestChain(AppUser user, GetRequestStatusData data) {
+        return getRequestChain(user, data.getResponseId());
     }
 
     public RequestChain getRequestChain(AppUser user, IncomingData data) {
