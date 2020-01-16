@@ -14,13 +14,19 @@ import java.io.StringWriter;
 import java.util.List;
 
 @Component("StatementRequestMessageBuilder")
-class MessageBuilder {
+public class MessageBuilder {
 
-    @Autowired
     private DocumentBuilder docBuilder;
+    private SignCollectionMessageBuilder singBuilder;
+    private Transformer transformer;
 
     @Autowired
-    private SignCollectionMessageBuilder singBuilder;
+    public MessageBuilder(DocumentBuilder docBuilder, SignCollectionMessageBuilder singBuilder,
+                          Transformer transformer) {
+        this.docBuilder = docBuilder;
+        this.singBuilder = singBuilder;
+        this.transformer = transformer;
+    }
 
     String build(StatementRequestData data) {
         return buildStatementRequest(data);
@@ -111,10 +117,6 @@ class MessageBuilder {
         element.appendChild(text);
         parentElement.appendChild(element);
     }
-
-
-    @Autowired
-    private Transformer transformer;
 
     private String toString(Node element) {
         DOMSource source = new DOMSource(element);

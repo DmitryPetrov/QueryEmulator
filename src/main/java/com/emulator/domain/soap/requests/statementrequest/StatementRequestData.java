@@ -267,9 +267,6 @@ public class StatementRequestData extends RequestParameters {
     }
 
     public SignCollection getSignCollection() {
-        if (this.signCollection == null) {
-            this.setSignCollection(new SignCollection());
-        }
         return signCollection;
     }
 
