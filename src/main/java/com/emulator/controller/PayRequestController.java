@@ -23,7 +23,7 @@ public class PayRequestController {
 
     private static Logger log;
 
-    private static final String URI = "/request/new/payRequest";
+    private static final String URI = "/requests/payRequest";
     private static final String REQUEST_NAME= "PayRequest";
 
     private ServiceController service;

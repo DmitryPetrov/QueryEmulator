@@ -1,13 +1,13 @@
 package com.emulator.controller;
 
 import com.emulator.domain.frontend.response.ResponseBodyData;
-import com.emulator.domain.soap.SoapMessageList;
 import com.emulator.domain.soap.requests.authorization.AppUser;
 import com.emulator.exception.UserIsNotAuthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -16,9 +16,8 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class SoapMessageListController {
 
-    private static final String URI_GET_ALL_MESSAGE = "/soapMessage/list/all";
-    private static final String URI_GET_LAST_REQUEST_MESSAGE = "/soapMessage/list/lastRequest";
-    private static final String URI_REMOVE_ALL_MESSAGE = "/soapMessage/remove/all";
+    private static final String URI_SOAP_MESSAGES = "/soapMessages";
+    private static final String URI_LAST_REQUEST_SOAP_MESSAGES = "/soapMessages/lastRequest";
 
     private static Logger log;
     private ServiceController service;
@@ -37,10 +36,10 @@ public class SoapMessageListController {
         this.service = serviceController;
     }
 
-    @GetMapping(URI_GET_ALL_MESSAGE)
+    @GetMapping(URI_SOAP_MESSAGES)
     @ResponseBody
     public ResponseBodyData getAllMessage(HttpSession httpSession) {
-        log.info("Request uri='" + URI_GET_ALL_MESSAGE + "'");
+        log.info("Request uri='" + URI_SOAP_MESSAGES + "'");
         try {
             AppUser user = service.getUser(httpSession);
             return service.getSuccessResponseAllSoapMessage();
@@ -51,10 +50,10 @@ public class SoapMessageListController {
         }
     }
 
-    @GetMapping(URI_GET_LAST_REQUEST_MESSAGE)
+    @GetMapping(URI_LAST_REQUEST_SOAP_MESSAGES)
     @ResponseBody
     public ResponseBodyData getLastRequestMessage(HttpSession httpSession) {
-        log.info("Request uri='" + URI_GET_LAST_REQUEST_MESSAGE + "'");
+        log.info("Request uri='" + URI_LAST_REQUEST_SOAP_MESSAGES + "'");
         try {
             AppUser user = service.getUser(httpSession);
             return service.getSuccessResponseLastRequestSoapMessage();
@@ -65,10 +64,10 @@ public class SoapMessageListController {
         }
     }
 
-    @GetMapping(URI_REMOVE_ALL_MESSAGE)
+    @DeleteMapping(URI_SOAP_MESSAGES)
     @ResponseBody
     public ResponseBodyData removeAllMessage(HttpSession httpSession) {
-        log.info("Request uri='" + URI_REMOVE_ALL_MESSAGE + "'");
+        log.info("Request uri='" + URI_SOAP_MESSAGES + "'");
         try {
             AppUser user = service.getUser(httpSession);
             service.clearSoapMessageList();

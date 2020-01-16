@@ -23,7 +23,7 @@ public class IncomingController {
 
     private static Logger log;
 
-    private static final String URI = "/request/nextStep";
+    private static final String URI = "/requests/incoming";
     private static final String REQUEST_NAME= "Incoming";
 
     private ServiceController service;
@@ -45,7 +45,7 @@ public class IncomingController {
         this.service = serviceController;
     }
 
-    @PostMapping("/request/nextStep")
+    @PostMapping(URI)
     @ResponseBody
     public ResponseBodyData runIncoming(HttpSession httpSession, @RequestBody IncomingData data) {
         log.info("Request uri='" + URI + "' data='" + data.toString() + "'");

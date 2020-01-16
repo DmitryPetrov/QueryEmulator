@@ -19,7 +19,7 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class AuthorizationController {
 
-    private static final String URI = "/login";
+    private static final String URI = "/authorization";
     private static final String REQUEST_NAME= "Authorization";
 
     private static Logger log;

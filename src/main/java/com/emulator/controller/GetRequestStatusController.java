@@ -20,7 +20,7 @@ public class GetRequestStatusController {
 
     private static Logger log;
 
-    private static final String URI = "/request/nextStep/getRequestStatus";
+    private static final String URI = "/requests/getRequestStatus";
     private static final String REQUEST_NAME= "GetRequestStatus";
 
     private ServiceController service;

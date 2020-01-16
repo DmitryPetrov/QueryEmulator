@@ -20,7 +20,7 @@ public class RequestListController {
 
     private static Logger log;
 
-    private static final String URI = "/request/list";
+    private static final String URI = "/requestChains";
 
     private ServiceController service;
     private RequestChainPool chainPool;

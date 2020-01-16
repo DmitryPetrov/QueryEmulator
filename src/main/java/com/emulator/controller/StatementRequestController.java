@@ -24,7 +24,7 @@ public class StatementRequestController {
 
     private static Logger log;
 
-    private static final String URI = "/request/new/statementRequest";
+    private static final String URI = "/requests/statementRequest";
     private static final String REQUEST_NAME= "StatementRequest";
 
     private ServiceController service;
