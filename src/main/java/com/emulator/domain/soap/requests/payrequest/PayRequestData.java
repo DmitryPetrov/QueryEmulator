@@ -115,7 +115,7 @@ public class PayRequestData extends RequestParameters {
     private final String VAT_CALCULATION_RULE_DEFAULT_VALUE = "";
     private final String VAT_RATE_DEFAULT_VALUE = "";
     private final String VAT_SUM_DEFAULT_VALUE = "";
-    private final String REQUEST_ID_ATTR_DEFAULT_VALUE = "";
+    private final String REQUEST_ID_ATTR_DEFAULT_VALUE = "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa";
     private final String VERSION_ATTR_DEFAULT_VALUE = "1";
     private final String XMLNS_ATTR_DEFAULT_VALUE = "http://bssys.com/sbns/integration";
     private final String UPG_NAMESPACE_DEFAULT_VALUE = "http://bssys.com/upg/request";
