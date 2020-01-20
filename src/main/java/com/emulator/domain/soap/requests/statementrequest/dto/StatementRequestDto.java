@@ -28,7 +28,7 @@ public class StatementRequestDto extends DataTransferObject {
     private String orgName = "";
     private String template = "";
     private String toDate = "";
-    private List<DataAccountDto> accounts = new ArrayList<>();
+    private List<AccDto> accounts = new ArrayList<>();
     private SignCollectionDto signCollection;
 
 
@@ -184,7 +184,7 @@ public class StatementRequestDto extends DataTransferObject {
         this.toDate = toDate;
     }
 
-    public List<DataAccountDto> getAccounts() {
+    public List<AccDto> getAccounts() {
         return accounts;
     }
 

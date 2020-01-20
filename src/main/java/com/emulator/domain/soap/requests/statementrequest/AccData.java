@@ -1,10 +1,10 @@
 package com.emulator.domain.soap.requests.statementrequest;
 
 import com.emulator.domain.soap.requests.RequestParameters;
-import com.emulator.domain.soap.requests.statementrequest.dto.DataAccountDto;
+import com.emulator.domain.soap.requests.statementrequest.dto.AccDto;
 import com.emulator.exception.RequestParameterLengthException;
 
-public class DataAccount extends RequestParameters {
+public class AccData extends RequestParameters {
 
     static final String ACCOUNT_NODE_NAME = "account";
     static final String BANK_BIC_NODE_NAME = "bankBIC";
@@ -53,8 +53,8 @@ public class DataAccount extends RequestParameters {
         this.bankName = checkNull(bankName, BANK_NAME_DEFAULT_VALUE);
     }
 
-    public DataAccountDto getDto() {
-        DataAccountDto dto = new DataAccountDto();
+    public AccDto getDto() {
+        AccDto dto = new AccDto();
         dto.setAccount(this.getAccount());
         dto.setBankBIC(this.getBankBIC());
         dto.setBankName(this.getBankName());
@@ -63,7 +63,7 @@ public class DataAccount extends RequestParameters {
 
     @Override
     public String toString() {
-        return "DataAccount{" +
+        return "AccData{" +
                 "account='" + account + '\'' +
                 ", bankBIC='" + bankBIC + '\'' +
                 ", bankName='" + bankName + '\'' +

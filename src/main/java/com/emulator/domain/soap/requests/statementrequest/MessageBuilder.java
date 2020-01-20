@@ -91,8 +91,8 @@ public class MessageBuilder {
         Element accounts = doc.createElement(data.ACCOUNTS_NODE_NAME);
         parentElement.appendChild(accounts);
 
-        List<DataAccount> accountList = data.getAccounts();
-        for (DataAccount accountData : accountList) {
+        List<AccData> accountList = data.getAccounts();
+        for (AccData accountData : accountList) {
             Element acc = doc.createElement(data.ACC_NODE_NAME);
             accounts.appendChild(acc);
 

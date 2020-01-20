@@ -1,7 +1,7 @@
 package com.emulator.domain.soap.requests.statementrequest;
 
 import com.emulator.domain.soap.requests.RequestParameters;
-import com.emulator.domain.soap.requests.statementrequest.dto.DataAccountDto;
+import com.emulator.domain.soap.requests.statementrequest.dto.AccDto;
 import com.emulator.domain.soap.requests.statementrequest.dto.StatementRequestDto;
 import com.emulator.domain.soap.signcollection.SignCollection;
 import com.emulator.exception.RequestParameterLengthException;
@@ -92,7 +92,7 @@ public class StatementRequestData extends RequestParameters {
     private String orgName = ORG_NAME_NODE_DEFAULT_VALUE;
     private String template = TEMPLATE_NODE_DEFAULT_VALUE;
     private String toDate = TO_DATE_NODE_DEFAULT_VALUE;
-    private List<DataAccount> accounts = new ArrayList<>();
+    private List<AccData> accounts = new ArrayList<>();
     private SignCollection signCollection;
 
     public final String attrRequestId = REQUEST_ID_ATTR_DEFAULT_VALUE;
@@ -116,7 +116,7 @@ public class StatementRequestData extends RequestParameters {
         checkStringLength(ORG_INN_NODE_NAME, getOrgInn(), ORG_INN_NODE_MAX_LENGTH);
         checkStringLength(ORG_NAME_NODE_NAME, getOrgName(), ORG_NAME_NODE_MAX_LENGTH);
 
-        for (DataAccount accountData : getAccounts()) {
+        for (AccData accountData : getAccounts()) {
             accountData.check();
         }
     }
@@ -258,11 +258,11 @@ public class StatementRequestData extends RequestParameters {
         this.toDate = checkNull(toDate, TO_DATE_NODE_DEFAULT_VALUE);
     }
 
-    public List<DataAccount> getAccounts() {
+    public List<AccData> getAccounts() {
         return accounts;
     }
 
-    public void setAccounts(List<DataAccount> accounts) {
+    public void setAccounts(List<AccData> accounts) {
         this.accounts = accounts;
     }
 
@@ -297,8 +297,8 @@ public class StatementRequestData extends RequestParameters {
         dto.setTemplate(this.getTemplate());
         dto.setToDate(this.getToDate());
 
-        List<DataAccountDto> accountsDto = dto.getAccounts();
-        for (DataAccount account: this.getAccounts()) {
+        List<AccDto> accountsDto = dto.getAccounts();
+        for (AccData account: this.getAccounts()) {
             accountsDto.add(account.getDto());
         }
 

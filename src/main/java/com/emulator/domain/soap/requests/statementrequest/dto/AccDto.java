@@ -1,6 +1,6 @@
 package com.emulator.domain.soap.requests.statementrequest.dto;
 
-public class DataAccountDto {
+public class AccDto {
 
     private String account = "";
     private String bankBIC = "";

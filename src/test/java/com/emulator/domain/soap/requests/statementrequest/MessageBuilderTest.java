@@ -58,7 +58,7 @@ class MessageBuilderTest {
         data.setTemplate("f");
         data.setToDate("g");
 
-        DataAccount dataAccount = new DataAccount();
+        AccData dataAccount = new AccData();
         dataAccount.setAccount("h");
         dataAccount.setBankBIC("j");
         dataAccount.setBankName("k");
