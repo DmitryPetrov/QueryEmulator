@@ -302,7 +302,9 @@ public class StatementRequestData extends RequestParameters {
             accountsDto.add(account.getDto());
         }
 
-        dto.setSignCollection(this.getSignCollection().getDto());
+        if (this.getSignCollection() != null) {
+            dto.setSignCollection(this.getSignCollection().getDto());
+        }
 
         dto.setRequestId(dto.getAttrRequestId());
         dto.setResponseId(responseId);
