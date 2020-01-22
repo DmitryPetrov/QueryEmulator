@@ -48,14 +48,11 @@ public class SoapMessageList {
 
         int size = messageList.size();
         if (size == 0) {
-            result = new ArrayList<String>();
-            result.add("");
-            result.add("");
+            result = new ArrayList<>();
         }
         if (size == 1) {
-            result = new ArrayList<String>();
+            result = new ArrayList<>();
             result.add(messageList.get(0));
-            result.add("");
         }
         if (size >= 2) {
             result = messageList.subList((size - 2), size);

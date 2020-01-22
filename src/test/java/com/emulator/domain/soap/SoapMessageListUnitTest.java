@@ -13,19 +13,17 @@ import static org.junit.jupiter.api.Assertions.*;
 class SoapMessageListUnitTest {
 
     @Test
-    void getLastRequestMessageList_0Messages_2EmptyString() {
+    void getLastRequestMessageList_0Messages_EmptyList() {
         Logger log = Mockito.mock(Logger.class);
 
         SoapMessageList list = new SoapMessageList(log);
         List<String> messages = list.getLastRequestMessageList();
 
-        Assertions.assertEquals(2, messages.size());
-        Assertions.assertEquals("", messages.get(0));
-        Assertions.assertEquals("", messages.get(1));
+        Assertions.assertEquals(0, messages.size());
     }
 
     @Test
-    void getLastRequestMessageList_1Messages_LastMessagesAndEmptyString() {
+    void getLastRequestMessageList_1Messages_ListContains1LastMessage() {
         Logger log = Mockito.mock(Logger.class);
         String test = "test";
 
@@ -33,13 +31,12 @@ class SoapMessageListUnitTest {
         list.add(test);
         List<String> messages = list.getLastRequestMessageList();
 
-        Assertions.assertEquals(2, messages.size());
+        Assertions.assertEquals(1, messages.size());
         Assertions.assertEquals(test, messages.get(0));
-        Assertions.assertEquals("", messages.get(1));
     }
 
     @Test
-    void getLastRequestMessageList_3Messages_2LastMessages() {
+    void getLastRequestMessageList_3Messages_ListContains2LastMessages() {
         Logger log = Mockito.mock(Logger.class);
         String test1 = "test1";
         String test2 = "test2";
@@ -57,7 +54,7 @@ class SoapMessageListUnitTest {
     }
 
     @Test
-    void getLastMessage_0Messages_EmptyString() {
+    void getLastMessage_0Messages_EmptyList() {
         Logger log = Mockito.mock(Logger.class);
 
         SoapMessageList list = new SoapMessageList(log);
@@ -67,7 +64,7 @@ class SoapMessageListUnitTest {
     }
 
     @Test
-    void getLastMessage_1Messages_1Message() {
+    void getLastMessage_1Messages_ListContains1LastMessage() {
         Logger log = Mockito.mock(Logger.class);
         String test = "test";
 
