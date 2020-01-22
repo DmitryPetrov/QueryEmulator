@@ -56,7 +56,6 @@ public class IncomingController {
 
             chain = chainPool.getRequestChain(user, data);
             chain.nextStep(data);
-            chainPool.addToPool(chain);
 
             return service.getSoapRequestSuccessResponse(chain, REQUEST_NAME);
         } catch (UserIsNotAuthorizedException e) {
