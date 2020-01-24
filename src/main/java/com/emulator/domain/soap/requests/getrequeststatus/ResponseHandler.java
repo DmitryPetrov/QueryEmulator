@@ -23,6 +23,7 @@ import javax.xml.parsers.DocumentBuilder;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 @Component
 class ResponseHandler {
@@ -384,7 +385,7 @@ class ResponseHandler {
     DocumentBuilder docBuilder;
 
     private Document toDocument(String response) throws IOException, SAXException {
-        InputStream inputStream = new ByteArrayInputStream(response.getBytes());
+        InputStream inputStream = new ByteArrayInputStream(response.getBytes((StandardCharsets.UTF_8)));
         return docBuilder.parse(inputStream);
     }
 
