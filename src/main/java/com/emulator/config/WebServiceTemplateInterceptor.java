@@ -11,6 +11,8 @@ import java.io.IOException;
 
 public class WebServiceTemplateInterceptor implements ClientInterceptor {
 
+    private static final String CHARSET_NAME_UTF8 = "UTF-8";
+
     @Override
     public boolean handleRequest(MessageContext messageContext) throws WebServiceClientException {
         saveRequestMessage(messageContext);
@@ -40,8 +42,7 @@ public class WebServiceTemplateInterceptor implements ClientInterceptor {
     private void saveResponseMessage(MessageContext messageContext) {
         try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
             messageContext.getResponse().writeTo(stream);
-            String responseStr = new String(stream.toByteArray());
-            soapMessageList.add(responseStr);
+            soapMessageList.add(stream.toString(CHARSET_NAME_UTF8));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -50,8 +51,7 @@ public class WebServiceTemplateInterceptor implements ClientInterceptor {
     private void saveRequestMessage(MessageContext messageContext) {
         try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
             messageContext.getRequest().writeTo(stream);
-            String responseStr = new String(stream.toByteArray());
-            soapMessageList.add(responseStr);
+            soapMessageList.add(stream.toString(CHARSET_NAME_UTF8));
         } catch (IOException e) {
             e.printStackTrace();
         }
