@@ -108,4 +108,27 @@ class AuthorizationControllerUnitTest {
         Mockito.verify(session).setAttribute(eq(attrName), eq(authorizedUser));
         Mockito.verify(serviceController).getServerFailResponse(any());
     }
+
+    @Test
+    void login_secondAuthorizationRequest_getAppUserFromSession() throws Exception {
+        Logger log = Mockito.mock(Logger.class);
+        SoapClient soapClient = Mockito.mock(SoapClient.class);
+        ServiceController serviceController = Mockito.mock(ServiceController.class);
+        HttpSession session = Mockito.mock(HttpSession.class);
+        AppUserData data = Mockito.mock(AppUserData.class);
+        AppUser user = Mockito.mock(AppUser.class);
+        AppUser authorizedUser = Mockito.mock(AppUser.class);
+        String attrName = "user";
+
+        Mockito.when(data.getAppUser()).thenReturn(user);
+        Mockito.when(soapClient.authorization(user)).thenReturn(authorizedUser);
+        Mockito.when(session.getAttribute(eq(attrName))).thenReturn(authorizedUser);
+
+        AuthorizationController controller = new AuthorizationController(log, soapClient, serviceController);
+        controller.login(session, data);
+
+        Mockito.verify(data).check();
+        Mockito.verify(session).getAttribute(eq(attrName));
+        Mockito.verify(serviceController).getSoapRequestSuccessResponse(authorizedUser);
+    }
 }

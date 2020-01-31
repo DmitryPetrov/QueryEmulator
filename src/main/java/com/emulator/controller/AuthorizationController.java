@@ -49,14 +49,16 @@ public class AuthorizationController {
         try {
             data.check();
 
-            AppUser user = data.getAppUser();
-            AppUser authorizedUser = soapClient.authorization(user);
+            AppUser user = (AppUser) session.getAttribute("user");
+            if (user == null) {
+                user = soapClient.authorization(data.getAppUser());
 
-            log.debug("User was authorized. " + authorizedUser);
+                log.debug("User was authorized. " + user);
 
-            session.setAttribute("user", authorizedUser);
+                session.setAttribute("user", user);
+            }
 
-            return service.getSoapRequestSuccessResponse(authorizedUser);
+            return service.getSoapRequestSuccessResponse(user);
         } catch (SoapServerBadResponseException e) {
             return service.getSoapRequestFailResponse(e, REQUEST_NAME);
         } catch (RequestParameterLengthException e) {
