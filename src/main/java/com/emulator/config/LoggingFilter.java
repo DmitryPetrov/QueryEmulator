@@ -13,7 +13,7 @@ public class LoggingFilter extends AbstractRequestLoggingFilter {
 
     @Override
     protected void beforeRequest(HttpServletRequest httpServletRequest, String s) {
-
+        logger.debug(s);
     }
 
     @Override
