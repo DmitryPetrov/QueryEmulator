@@ -1,64 +1,39 @@
 package com.emulator.controller;
 
 import com.emulator.domain.frontend.response.ResponseBodyData;
-import com.emulator.domain.soap.SoapClient;
-import com.emulator.domain.soap.requests.authorization.AppUser;
 import com.emulator.domain.soap.requests.authorization.AppUserData;
 import com.emulator.exception.RequestParameterLengthException;
 import com.emulator.exception.SoapServerBadResponseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.emulator.service.AuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 
 @Controller
+@RequestMapping("/authorization")
 public class AuthorizationController {
 
-    private static final String URI = "/authorization";
     private static final String REQUEST_NAME= "Authorization";
 
-    private static Logger log;
     private ServiceController service;
-    private SoapClient soapClient;
-
-    /*
-        Constructor for tests
-    */
-    public AuthorizationController(Logger logger, SoapClient soapClient, ServiceController serviceController) {
-        this.log = logger;
-        this.soapClient = soapClient;
-        this.service = serviceController;
-    }
+    private AuthorizationService authService;
 
     @Autowired
-    public AuthorizationController(SoapClient soapClient, ServiceController serviceController) {
-        this.log = LoggerFactory.getLogger(this.getClass());
-        this.soapClient = soapClient;
+    public AuthorizationController(AuthorizationService authService, ServiceController serviceController) {
+        this.authService = authService;
         this.service = serviceController;
     }
 
-    @PostMapping(URI)
+    @PostMapping
     @ResponseBody
     public ResponseBodyData login(HttpSession session, @RequestBody AppUserData data) {
-        log.info("Request uri='" + URI + "' data='" + data.toString() + "'");
         try {
-            data.check();
-
-            AppUser user = (AppUser) session.getAttribute("user");
-            if (user == null) {
-                user = soapClient.authorization(data.getAppUser());
-
-                log.debug("User was authorized. " + user);
-
-                session.setAttribute("user", user);
-            }
-
-            return service.getSoapRequestSuccessResponse(user);
+            return authService.authorization(session, data);
         } catch (SoapServerBadResponseException e) {
             return service.getSoapRequestFailResponse(e, REQUEST_NAME);
         } catch (RequestParameterLengthException e) {

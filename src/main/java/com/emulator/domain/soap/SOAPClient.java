@@ -1,6 +1,7 @@
 package com.emulator.domain.soap;
 
 import com.emulator.domain.soap.requests.authorization.AppUser;
+import com.emulator.domain.soap.requests.authorization.AppUserData;
 import com.emulator.domain.soap.requests.authorization.AuthorizationManager;
 import com.emulator.domain.soap.requests.getrequeststatus.GetRequestStatusManager;
 import com.emulator.domain.soap.requests.getrequeststatus.dto.GetRequestStatusDto;
@@ -26,8 +27,8 @@ public class SoapClient {
     @Autowired
     AuthorizationManager authManager;
 
-    public AppUser authorization(AppUser user) throws IOException {
-        return authManager.authorization(user);
+    public AppUser authorization(AppUserData userData) throws IOException {
+        return authManager.authorization(userData.getAppUser());
     }
 
     @Autowired
