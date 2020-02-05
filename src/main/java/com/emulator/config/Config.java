@@ -101,8 +101,6 @@ public class Config {
         int maxPayloadLength = 10000;
 
         LoggingFilter loggingFilter = new LoggingFilter();
-        loggingFilter.setIncludeQueryString(true);
-        loggingFilter.setIncludePayload(true);
         loggingFilter.setMaxPayloadLength(maxPayloadLength);
         log.debug("LoggingFilter was built. Max payload length: " + maxPayloadLength);
         return loggingFilter;

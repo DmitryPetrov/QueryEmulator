@@ -12,12 +12,15 @@ public class LoggingFilter extends AbstractRequestLoggingFilter {
     }
 
     @Override
-    protected void beforeRequest(HttpServletRequest httpServletRequest, String s) {
-        logger.debug(s);
+    protected void beforeRequest(HttpServletRequest request, String s) {
+        String logMessage = "Request";
+        logMessage += " method={" + request.getMethod() + "}";
+        logMessage += " URI={" + request.getRequestURI() + "}";
+        logger.debug(logMessage);
     }
 
     @Override
     protected void afterRequest(HttpServletRequest httpServletRequest, String s) {
-        logger.debug(s);
+
     }
 }
