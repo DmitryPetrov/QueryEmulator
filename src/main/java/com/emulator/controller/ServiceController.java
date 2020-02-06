@@ -121,43 +121,4 @@ public class ServiceController {
         return result;
     }
 
-    ResponseBodyData getSoapRequestSuccessResponse(AppUser user) {
-        ResponseBodyData result = new ResponseBodyData();
-        result.setStatus("OK");
-        result.setMessage("Authorization succeed. Session id=" + user.getSessionId());
-        result.setSoapMessageList(messageStorage.getLastRequestMessageList());
-        log.info("Success request." + result.getLogInfo());
-        return result;
-    }
-
-    ResponseBodyData getSuccessResponseLastRequestSoapMessage() {
-        ResponseBodyData result = new ResponseBodyData();
-        result.setStatus("OK");
-        result.setMessage("Last Request soap message list");
-        result.setSoapMessageList(messageStorage.getLastRequestMessageList());
-        log.info("Success request." + result.getLogInfo());
-        return result;
-    }
-
-    ResponseBodyData getSuccessResponseAllSoapMessage() {
-        ResponseBodyData result = new ResponseBodyData();
-        result.setStatus("OK");
-        result.setMessage("All soap message list");
-        result.setSoapMessageList(messageStorage.getMessageList());
-        log.info("Success request." + result.getLogInfo());
-        return result;
-    }
-
-    ResponseBodyData getSuccessResponseRemoveAllSoapMessage() {
-        ResponseBodyData result = new ResponseBodyData();
-        result.setStatus("OK");
-        result.setMessage("Remove soap message list");
-        result.setSoapMessageList(messageStorage.getMessageList());
-        log.info("Success request." + result.getLogInfo());
-        return result;
-    }
-
-    void clearSoapMessageList() {
-        messageStorage.clear();
-    }
 }
