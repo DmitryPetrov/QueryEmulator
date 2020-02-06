@@ -9,17 +9,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class SoapMessageList {
+public class SoapMessageStorage {
 
     private static Logger log;
 
     private List<String> messageList = new ArrayList<>();
 
-    public SoapMessageList(Logger log) {
+    public SoapMessageStorage(Logger log) {
         this.log = log;
     }
 
-    public SoapMessageList() {
+    public SoapMessageStorage() {
         this.log = LoggerFactory.getLogger(StatementRequestController.class);
     }
 

@@ -1,6 +1,6 @@
 package com.emulator.config;
 
-import com.emulator.domain.soap.SoapMessageList;
+import com.emulator.domain.soap.SoapMessageStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
@@ -37,12 +37,12 @@ public class WebServiceTemplateInterceptor implements ClientInterceptor {
     }
 
     @Autowired
-    private SoapMessageList soapMessageList;
+    private SoapMessageStorage storage;
 
     private void saveResponseMessage(MessageContext messageContext) {
         try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
             messageContext.getResponse().writeTo(stream);
-            soapMessageList.add(stream.toString(CHARSET_NAME_UTF8));
+            storage.add(stream.toString(CHARSET_NAME_UTF8));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -51,7 +51,7 @@ public class WebServiceTemplateInterceptor implements ClientInterceptor {
     private void saveRequestMessage(MessageContext messageContext) {
         try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
             messageContext.getRequest().writeTo(stream);
-            soapMessageList.add(stream.toString(CHARSET_NAME_UTF8));
+            storage.add(stream.toString(CHARSET_NAME_UTF8));
         } catch (IOException e) {
             e.printStackTrace();
         }

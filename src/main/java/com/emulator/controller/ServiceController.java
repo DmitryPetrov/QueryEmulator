@@ -2,7 +2,7 @@ package com.emulator.controller;
 
 import com.emulator.domain.frontend.response.ResponseBodyData;
 import com.emulator.domain.requestchain.RequestChain;
-import com.emulator.domain.soap.SoapMessageList;
+import com.emulator.domain.soap.SoapMessageStorage;
 import com.emulator.domain.soap.requests.authorization.AppUser;
 import com.emulator.exception.RequestParameterLengthException;
 import com.emulator.exception.SoapServerBadResponseException;
@@ -21,20 +21,20 @@ import java.util.List;
 public class ServiceController {
 
     private static Logger log;
-    private SoapMessageList messageList;
+    private SoapMessageStorage messageStorage;
 
     /*
         Constructor for tests
     */
-    public ServiceController(Logger logger, SoapMessageList messageList) {
+    public ServiceController(Logger logger, SoapMessageStorage messageStorage) {
         this.log = logger;
-        this.messageList = messageList;
+        this.messageStorage = messageStorage;
     }
 
     @Autowired
-    public ServiceController(SoapMessageList messageList) {
+    public ServiceController(SoapMessageStorage messageStorage) {
         this.log = LoggerFactory.getLogger(this.getClass());
-        this.messageList = messageList;
+        this.messageStorage = messageStorage;
     }
 
     AppUser getUser(HttpSession httpSession) {
@@ -66,7 +66,7 @@ public class ServiceController {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("ERROR");
         result.setMessage(exception.getMessage());
-        result.setSoapMessageList(messageList.getLastRequestMessageList());
+        result.setSoapMessageList(messageStorage.getLastRequestMessageList());
         log.error("Server error." + result.getLogInfo());
         log.error(getStackTrace(exception));
         return result;
@@ -82,7 +82,7 @@ public class ServiceController {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("ERROR");
         result.setMessage(requestName + " to Soap server failed. Message: " + exception.getSoapResponse());
-        result.setSoapMessageList(messageList.getLastRequestMessageList());
+        result.setSoapMessageList(messageStorage.getLastRequestMessageList());
         log.info("Failed request." + result.getLogInfo());
         log.info(getStackTrace(exception));
         return result;
@@ -115,7 +115,7 @@ public class ServiceController {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("OK");
         result.setMessage(requestName + " to Soap server succeed. Request id=" + chain.getResponseId());
-        result.setSoapMessageList(messageList.getLastRequestMessageList());
+        result.setSoapMessageList(messageStorage.getLastRequestMessageList());
         result.setRequestChain(chain);
         log.info("Success request." + result.getLogInfo());
         return result;
@@ -125,7 +125,7 @@ public class ServiceController {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("OK");
         result.setMessage("Authorization succeed. Session id=" + user.getSessionId());
-        result.setSoapMessageList(messageList.getLastRequestMessageList());
+        result.setSoapMessageList(messageStorage.getLastRequestMessageList());
         log.info("Success request." + result.getLogInfo());
         return result;
     }
@@ -134,7 +134,7 @@ public class ServiceController {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("OK");
         result.setMessage("Last Request soap message list");
-        result.setSoapMessageList(messageList.getLastRequestMessageList());
+        result.setSoapMessageList(messageStorage.getLastRequestMessageList());
         log.info("Success request." + result.getLogInfo());
         return result;
     }
@@ -143,7 +143,7 @@ public class ServiceController {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("OK");
         result.setMessage("All soap message list");
-        result.setSoapMessageList(messageList.getMessageList());
+        result.setSoapMessageList(messageStorage.getMessageList());
         log.info("Success request." + result.getLogInfo());
         return result;
     }
@@ -152,12 +152,12 @@ public class ServiceController {
         ResponseBodyData result = new ResponseBodyData();
         result.setStatus("OK");
         result.setMessage("Remove soap message list");
-        result.setSoapMessageList(messageList.getMessageList());
+        result.setSoapMessageList(messageStorage.getMessageList());
         log.info("Success request." + result.getLogInfo());
         return result;
     }
 
     void clearSoapMessageList() {
-        messageList.clear();
+        messageStorage.clear();
     }
 }

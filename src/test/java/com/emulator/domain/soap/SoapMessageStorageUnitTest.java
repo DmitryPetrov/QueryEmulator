@@ -8,15 +8,13 @@ import org.slf4j.Logger;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class SoapMessageListUnitTest {
+class SoapMessageStorageUnitTest {
 
     @Test
     void getLastRequestMessageList_0Messages_EmptyList() {
         Logger log = Mockito.mock(Logger.class);
 
-        SoapMessageList list = new SoapMessageList(log);
+        SoapMessageStorage list = new SoapMessageStorage(log);
         List<String> messages = list.getLastRequestMessageList();
 
         Assertions.assertEquals(0, messages.size());
@@ -27,7 +25,7 @@ class SoapMessageListUnitTest {
         Logger log = Mockito.mock(Logger.class);
         String test = "test";
 
-        SoapMessageList list = new SoapMessageList(log);
+        SoapMessageStorage list = new SoapMessageStorage(log);
         list.add(test);
         List<String> messages = list.getLastRequestMessageList();
 
@@ -42,7 +40,7 @@ class SoapMessageListUnitTest {
         String test2 = "test2";
         String test3 = "test3";
 
-        SoapMessageList list = new SoapMessageList(log);
+        SoapMessageStorage list = new SoapMessageStorage(log);
         list.add(test1);
         list.add(test2);
         list.add(test3);
@@ -57,7 +55,7 @@ class SoapMessageListUnitTest {
     void getLastMessage_0Messages_EmptyList() {
         Logger log = Mockito.mock(Logger.class);
 
-        SoapMessageList list = new SoapMessageList(log);
+        SoapMessageStorage list = new SoapMessageStorage(log);
         String message = list.getLastMessage();
 
         Assertions.assertEquals("", message);
@@ -68,7 +66,7 @@ class SoapMessageListUnitTest {
         Logger log = Mockito.mock(Logger.class);
         String test = "test";
 
-        SoapMessageList list = new SoapMessageList(log);
+        SoapMessageStorage list = new SoapMessageStorage(log);
         list.add(test);
         String message = list.getLastMessage();
 

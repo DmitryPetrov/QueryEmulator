@@ -1,6 +1,6 @@
 package com.emulator.domain.soap.requests;
 
-import com.emulator.domain.soap.SoapMessageList;
+import com.emulator.domain.soap.SoapMessageStorage;
 import com.emulator.exception.SoapServerBadResponseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,15 +25,15 @@ public class ErrorResponseHandler {
     }
 
     @Autowired
-    private SoapMessageList soapMessageList;
+    private SoapMessageStorage storage;
 
     private void handleError(String response) {
         String exceptionMessage = response;
         exceptionMessage += "\n>SAOP Messages:";
-        exceptionMessage += soapMessageList.getMessageListAsString();
+        exceptionMessage += storage.getMessageListAsString();
 
         SoapServerBadResponseException exception = new SoapServerBadResponseException(exceptionMessage);
-        exception.setSoapMessageList(soapMessageList.getMessageList());
+        exception.setSoapMessageList(storage.getMessageList());
         exception.setSoapResponse(response);
         throw exception;
     }
