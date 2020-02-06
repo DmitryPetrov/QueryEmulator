@@ -1,12 +1,12 @@
 package com.emulator.domain.organisation;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
-public class OrganisationPool {
+@Repository
+public class OrganisationRepository {
 
     private List<OrganisationData> pool = new ArrayList<>();
 

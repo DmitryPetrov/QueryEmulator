@@ -1,7 +1,7 @@
 package com.emulator.service;
 
 import com.emulator.domain.organisation.OrganisationData;
-import com.emulator.domain.organisation.OrganisationPool;
+import com.emulator.domain.organisation.OrganisationRepository;
 import com.emulator.domain.organisation.OrganisationResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,22 +15,22 @@ import java.util.List;
 public class OrganisationService {
 
     private static Logger log;
-    private OrganisationPool pool;
+    private OrganisationRepository orgRepo;
     private UserService service;
 
     /*
         Constructor for tests
     */
-    public OrganisationService(Logger logger, OrganisationPool pool, UserService service) {
+    public OrganisationService(Logger logger, OrganisationRepository orgRepo, UserService service) {
         this.log = logger;
-        this.pool = pool;
+        this.orgRepo = orgRepo;
         this.service = service;
     }
 
     @Autowired
-    public OrganisationService(OrganisationPool pool, UserService service) {
+    public OrganisationService(OrganisationRepository orgRepo, UserService service) {
         this.log = LoggerFactory.getLogger(this.getClass());
-        this.pool = pool;
+        this.orgRepo = orgRepo;
         this.service = service;
     }
 
@@ -38,14 +38,14 @@ public class OrganisationService {
         log.debug("OrganisationService: Add organisation data='" + org.toString() + "'");
         service.authorizationCheck(session);
         org.check();
-        pool.add(org);
+        orgRepo.add(org);
         return getSuccessPostOrganisations();
     }
 
     public OrganisationResponse getAll(HttpSession session) {
         log.debug("OrganisationService: Get organisations");
         service.authorizationCheck(session);
-        return getSuccessGetOrganisations(pool.getAll());
+        return getSuccessGetOrganisations(orgRepo.getAll());
     }
 
 
@@ -54,7 +54,7 @@ public class OrganisationService {
         service.authorizationCheck(session);
         org.check();
         long id = Long.parseLong(organisationId);
-        pool.update(id, org);
+        orgRepo.update(id, org);
         return getSuccessPutOrganisations();
     }
 
@@ -62,7 +62,7 @@ public class OrganisationService {
         log.debug("OrganisationService: Remove organisation id='" + organisationId + "'");
         service.authorizationCheck(session);
         long id = Long.parseLong(organisationId);
-        pool.remove(id);
+        orgRepo.remove(id);
         return getSuccessDeleteOrganisations();
     }
 

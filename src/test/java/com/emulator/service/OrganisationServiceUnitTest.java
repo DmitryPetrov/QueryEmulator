@@ -1,7 +1,7 @@
 package com.emulator.service;
 
 import com.emulator.domain.organisation.OrganisationData;
-import com.emulator.domain.organisation.OrganisationPool;
+import com.emulator.domain.organisation.OrganisationRepository;
 import com.emulator.domain.organisation.OrganisationResponse;
 import com.emulator.exception.UserIsNotAuthorizedException;
 import org.junit.Assert;
@@ -22,7 +22,7 @@ public class OrganisationServiceUnitTest {
         // given
         Logger log = Mockito.mock(Logger.class);
         UserService service = Mockito.mock(UserService.class);
-        OrganisationPool pool = Mockito.mock(OrganisationPool.class);
+        OrganisationRepository pool = Mockito.mock(OrganisationRepository.class);
         HttpSession session = Mockito.mock(HttpSession.class);
         OrganisationData org = Mockito.mock(OrganisationData.class);
 
@@ -42,7 +42,7 @@ public class OrganisationServiceUnitTest {
         // given
         Logger log = Mockito.mock(Logger.class);
         UserService service = Mockito.mock(UserService.class);
-        OrganisationPool pool = Mockito.mock(OrganisationPool.class);
+        OrganisationRepository pool = Mockito.mock(OrganisationRepository.class);
         HttpSession session = Mockito.mock(HttpSession.class);
         List<OrganisationData> orgs = Mockito.mock(List.class);
 
@@ -64,7 +64,7 @@ public class OrganisationServiceUnitTest {
         // given
         Logger log = Mockito.mock(Logger.class);
         UserService service = Mockito.mock(UserService.class);
-        OrganisationPool pool = Mockito.mock(OrganisationPool.class);
+        OrganisationRepository pool = Mockito.mock(OrganisationRepository.class);
         HttpSession session = Mockito.mock(HttpSession.class);
         OrganisationData data = Mockito.mock(OrganisationData.class);
         String id = "1";
@@ -85,7 +85,7 @@ public class OrganisationServiceUnitTest {
         // given
         Logger log = Mockito.mock(Logger.class);
         UserService service = Mockito.mock(UserService.class);
-        OrganisationPool pool = Mockito.mock(OrganisationPool.class);
+        OrganisationRepository pool = Mockito.mock(OrganisationRepository.class);
         HttpSession session = Mockito.mock(HttpSession.class);
         String id = "1";
 
@@ -104,7 +104,7 @@ public class OrganisationServiceUnitTest {
         // given
         Logger log = Mockito.mock(Logger.class);
         UserService service = Mockito.mock(UserService.class);
-        OrganisationPool pool = Mockito.mock(OrganisationPool.class);
+        OrganisationRepository pool = Mockito.mock(OrganisationRepository.class);
         HttpSession session = Mockito.mock(HttpSession.class);
         OrganisationData org = Mockito.mock(OrganisationData.class);
 
@@ -121,7 +121,7 @@ public class OrganisationServiceUnitTest {
         // given
         Logger log = Mockito.mock(Logger.class);
         UserService service = Mockito.mock(UserService.class);
-        OrganisationPool pool = Mockito.mock(OrganisationPool.class);
+        OrganisationRepository pool = Mockito.mock(OrganisationRepository.class);
         HttpSession session = Mockito.mock(HttpSession.class);
 
         doThrow(new UserIsNotAuthorizedException("")).when(service).authorizationCheck(session);
@@ -137,7 +137,7 @@ public class OrganisationServiceUnitTest {
         // given
         Logger log = Mockito.mock(Logger.class);
         UserService service = Mockito.mock(UserService.class);
-        OrganisationPool pool = Mockito.mock(OrganisationPool.class);
+        OrganisationRepository pool = Mockito.mock(OrganisationRepository.class);
         HttpSession session = Mockito.mock(HttpSession.class);
         OrganisationData org = Mockito.mock(OrganisationData.class);
         String id = "1";
@@ -155,7 +155,7 @@ public class OrganisationServiceUnitTest {
         // given
         Logger log = Mockito.mock(Logger.class);
         UserService service = Mockito.mock(UserService.class);
-        OrganisationPool pool = Mockito.mock(OrganisationPool.class);
+        OrganisationRepository pool = Mockito.mock(OrganisationRepository.class);
         HttpSession session = Mockito.mock(HttpSession.class);
         String id = "1";
 
