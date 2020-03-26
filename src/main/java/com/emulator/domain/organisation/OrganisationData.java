@@ -2,19 +2,16 @@ package com.emulator.domain.organisation;
 
 import com.emulator.domain.soap.requests.RequestParameters;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class OrganisationData extends RequestParameters {
 
     private String orgName = "";
     private String orgId = "";
-    private String payerName = "";
-    private String payerAccount = "";
-    private String payerInn = "";
-    private String payerId = "";
-    private String payerBankName = "";
-    private String payerBankBic = "";
-    private String payerBankCorrAccount = "";
+    private String orgInn = "";
+    private List<OrganisationAccountData> accounts = new ArrayList<>();
 
     @Override
     public void check() {
@@ -26,13 +23,8 @@ public class OrganisationData extends RequestParameters {
         return "OrganisationData{" +
                 "orgName='" + orgName + '\'' +
                 ", orgId='" + orgId + '\'' +
-                ", payerName='" + payerName + '\'' +
-                ", payerAccount='" + payerAccount + '\'' +
-                ", payerInn='" + payerInn + '\'' +
-                ", payerId='" + payerId + '\'' +
-                ", payerBankName='" + payerBankName + '\'' +
-                ", payerBankBic='" + payerBankBic + '\'' +
-                ", payerBankCorrAccount='" + payerBankCorrAccount + '\'' +
+                ", orgInn='" + orgInn + '\'' +
+                ", accounts=" + accounts +
                 '}';
     }
 
@@ -42,22 +34,17 @@ public class OrganisationData extends RequestParameters {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        OrganisationData that = (OrganisationData) o;
-        return Objects.equals(orgName, that.orgName) &&
-                Objects.equals(orgId, that.orgId) &&
-                Objects.equals(payerName, that.payerName) &&
-                Objects.equals(payerAccount, that.payerAccount) &&
-                Objects.equals(payerInn, that.payerInn) &&
-                Objects.equals(payerId, that.payerId) &&
-                Objects.equals(payerBankName, that.payerBankName) &&
-                Objects.equals(payerBankBic, that.payerBankBic) &&
-                Objects.equals(payerBankCorrAccount, that.payerBankCorrAccount);
+        OrganisationData data = (OrganisationData) o;
+        return Objects.equals(orgName, data.orgName) &&
+                Objects.equals(orgId, data.orgId) &&
+                Objects.equals(orgInn, data.orgInn) &&
+                Objects.equals(accounts, data.accounts);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(orgName, orgId, payerName, payerAccount, payerInn, payerId, payerBankName, payerBankBic, payerBankCorrAccount);
+        return Objects.hash(orgName, orgId, orgInn, accounts);
     }
 
     public String getOrgName() {
@@ -76,60 +63,19 @@ public class OrganisationData extends RequestParameters {
         this.orgId = orgId;
     }
 
-    public String getPayerName() {
-        return payerName;
+    public String getOrgInn() {
+        return orgInn;
     }
 
-    public void setPayerName(String payerName) {
-        this.payerName = payerName;
+    public void setOrgInn(String orgInn) {
+        this.orgInn = orgInn;
     }
 
-    public String getPayerAccount() {
-        return payerAccount;
+    public List<OrganisationAccountData> getAccounts() {
+        return accounts;
     }
 
-    public void setPayerAccount(String payerAccount) {
-        this.payerAccount = payerAccount;
+    public void setAccounts(List<OrganisationAccountData> accounts) {
+        this.accounts = accounts;
     }
-
-    public String getPayerInn() {
-        return payerInn;
-    }
-
-    public void setPayerInn(String payerInn) {
-        this.payerInn = payerInn;
-    }
-
-    public String getPayerId() {
-        return payerId;
-    }
-
-    public void setPayerId(String payerId) {
-        this.payerId = payerId;
-    }
-
-    public String getPayerBankName() {
-        return payerBankName;
-    }
-
-    public void setPayerBankName(String payerBankName) {
-        this.payerBankName = payerBankName;
-    }
-
-    public String getPayerBankBic() {
-        return payerBankBic;
-    }
-
-    public void setPayerBankBic(String payerBankBic) {
-        this.payerBankBic = payerBankBic;
-    }
-
-    public String getPayerBankCorrAccount() {
-        return payerBankCorrAccount;
-    }
-
-    public void setPayerBankCorrAccount(String payerBankCorrAccount) {
-        this.payerBankCorrAccount = payerBankCorrAccount;
-    }
-
 }

@@ -19,14 +19,7 @@ public class OrganisationControllerIntegrationTest_userNotAuthorized {
         OrganisationData data = new OrganisationData();
         data.setOrgId("");
         data.setOrgName("");
-        data.setPayerAccount("");
-        data.setPayerBankBic("");
-        data.setPayerBankCorrAccount("");
-        data.setPayerBankName("");
-        data.setPayerId("");
-        data.setPayerInn("");
-        data.setPayerName("");
-
+        data.setOrgInn("");
         return data;
     }
 
