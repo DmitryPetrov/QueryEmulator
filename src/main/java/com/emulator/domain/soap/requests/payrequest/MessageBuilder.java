@@ -68,11 +68,11 @@ public class MessageBuilder {
 
         createTextElement(payRequestElement, data.ACCEPT_TERM_NODE_NAME, data.getAcceptTerm());
         createTextElement(payRequestElement, data.ACCOUNT_ID_NODE_NAME, data.getAccountId());
-        createTextElement(payRequestElement, data.BANK_ACCEPT_DATE_NODE_NAME, data.getBankAcceptDate());
+        //createTextElement(payRequestElement, data.BANK_ACCEPT_DATE_NODE_NAME, data.getBankAcceptDate());
         createTextElement(payRequestElement, data.BANK_MESSAGE_NODE_NAME, data.getBankMessage());
         createTextElement(payRequestElement, data.BANK_MESSAGE_AUTHOR_NODE_NAME, data.getBankMessageAuthor());
         createTextElement(payRequestElement, data.DOC_DATE_NODE_NAME, data.getDocDate());
-        createTextElement(payRequestElement, data.DOC_DISPATCH_DATE_NODE_NAME, data.getDocDispatchDate());
+        //createTextElement(payRequestElement, data.DOC_DISPATCH_DATE_NODE_NAME, data.getDocDispatchDate());
         createTextElement(payRequestElement, data.DOC_ID_NODE_NAME, data.getDocId());
         createTextElement(payRequestElement, data.DOC_NUMBER_NODE_NAME, data.getDocNumber());
         createTextElement(payRequestElement, data.DOCUMENT_SUM_NODE_NAME, data.getDocumentSum());
@@ -81,7 +81,7 @@ public class MessageBuilder {
         createTextElement(payRequestElement, data.LAST_MODIFY_DATE_NODE_NAME, data.getLastModifyDate());
         createTextElement(payRequestElement, data.MESSAGE_ONLY_FOR_BANK_NODE_NAME, data.getMessageOnlyForBank());
         createTextElement(payRequestElement, data.NEW_STATE_NODE_NAME, data.getNewState());
-        createTextElement(payRequestElement, data.OPERATION_DATE_NODE_NAME, data.getOperationDate());
+        //createTextElement(payRequestElement, data.OPERATION_DATE_NODE_NAME, data.getOperationDate());
         createTextElement(payRequestElement, data.OPERATION_TYPE_NODE_NAME, data.getOperationType());
         createTextElement(payRequestElement, data.ORG_ID_NODE_NAME, data.getOrgId());
         createTextElement(payRequestElement, data.ORG_NAME_NODE_NAME, data.getOrgName());
@@ -106,7 +106,7 @@ public class MessageBuilder {
         createTextElement(payRequestElement, data.RECEIVER_BANK_NAME_NODE_NAME, data.getReceiverBankName());
         createTextElement(payRequestElement, data.RECEIVER_INN_NODE_NAME, data.getReceiverInn());
         createTextElement(payRequestElement, data.RECEIVER_NAME_NODE_NAME, data.getReceiverName());
-        createTextElement(payRequestElement, data.RECIEVE_D_PAYER_BANK_NODE_NAME, data.getRecieveDPayerBank());
+        //createTextElement(payRequestElement, data.RECIEVE_D_PAYER_BANK_NODE_NAME, data.getRecieveDPayerBank());
         createTextElement(payRequestElement, data.RESERV_23_NODE_NAME, data.getReserv23());
         createTextElement(payRequestElement, data.TEMPLATE_NODE_NAME, data.getTemplate());
         createTextElement(payRequestElement, data.UIP_NODE_NAME, data.getUip());
