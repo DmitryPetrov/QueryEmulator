@@ -46,11 +46,11 @@ public class SignCollectionMessageBuilder {
             Element signElem = doc.createElement(signCollection.SIGN_NODE_NAME);
             signs.appendChild(signElem);
 
-            String signHash = sign.getSignHash().replaceAll(":", "").toUpperCase();
+            String signHash = sign.getSignHash();
             createTextElement(signElem, sign.SIGN_HASH_NODE_NAME, signHash);
             createTextElement(signElem, sign.CERTIFICATE_GUID_NODE_NAME, sign.getCertificateGuid());
-            createTextElement(signElem, sign.CONTENT_NODE_NAME, sign.getContent().replaceAll("\n", ""));
-
+            createTextElement(signElem, sign.CONTENT_NODE_NAME, sign.getContent());
+            
             createTextElement(signElem, sign.SIGN_TYPE_NODE_NAME, sign.getSignType());
             createTextElement(signElem, sign.SIGN_AUTHORITY_ID_NODE_NAME, sign.getSignAuthorityId());
             createTextElement(signElem, sign.SIGNER_FULL_NAME_NODE_NAME, sign.getSignerFullName());
