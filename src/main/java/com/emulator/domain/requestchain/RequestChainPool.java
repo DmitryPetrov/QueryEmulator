@@ -1,7 +1,6 @@
 package com.emulator.domain.requestchain;
 
 import com.emulator.domain.soap.SoapClient;
-import com.emulator.domain.soap.com.bssys.sbns.upg.GetRequestStatus;
 import com.emulator.domain.soap.requests.authorization.AppUser;
 import com.emulator.domain.soap.requests.getrequeststatus.GetRequestStatusData;
 import com.emulator.domain.soap.requests.incoming.IncomingData;
@@ -11,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.HashMap;

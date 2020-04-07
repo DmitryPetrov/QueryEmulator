@@ -1,10 +1,7 @@
 package com.emulator.domain.soap.requests.payrequest.dto;
 
 import com.emulator.domain.soap.requests.DataTransferObject;
-import com.emulator.domain.soap.requests.payrequest.PayRequestPartData;
-import com.emulator.domain.soap.signcollection.SignCollection;
 import com.emulator.domain.soap.signcollection.dto.SignCollectionDto;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.List;
