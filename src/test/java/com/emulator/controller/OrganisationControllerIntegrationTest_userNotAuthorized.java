@@ -3,6 +3,7 @@ package com.emulator.controller;
 import com.emulator.domain.frontend.response.Response;
 import com.emulator.domain.organisation.OrganisationData;
 import com.emulator.domain.organisation.OrganisationRepository;
+import com.emulator.domain.organisation.OrganisationTransformer;
 import com.emulator.domain.soap.SoapMessageStorage;
 import com.emulator.service.OrganisationService;
 import com.emulator.service.UserService;
@@ -35,7 +36,8 @@ public class OrganisationControllerIntegrationTest_userNotAuthorized {
         ServiceController serviceController = new ServiceController(log, messageStorage);
 
         UserService service = new UserService();
-        OrganisationService orgService = new OrganisationService(log, orgRepo, service);
+        OrganisationTransformer transformer = new OrganisationTransformer();
+        OrganisationService orgService = new OrganisationService(log, orgRepo, service, transformer);
 
         return new OrganisationController(serviceController, orgService);
     }

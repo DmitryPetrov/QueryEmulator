@@ -1,14 +1,13 @@
 package com.emulator.service;
 
-import com.emulator.domain.organisation.OrganisationData;
-import com.emulator.domain.organisation.OrganisationRepository;
-import com.emulator.domain.organisation.OrganisationResponse;
+import com.emulator.domain.organisation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -17,44 +16,57 @@ public class OrganisationService {
     private static Logger log;
     private OrganisationRepository orgRepo;
     private UserService service;
+    private OrganisationTransformer transformer;
 
     /*
         Constructor for tests
     */
-    public OrganisationService(Logger logger, OrganisationRepository orgRepo, UserService service) {
+    public OrganisationService(Logger logger, OrganisationRepository orgRepo, UserService service,
+                               OrganisationTransformer transformer) {
         this.log = logger;
         this.orgRepo = orgRepo;
         this.service = service;
+        this.transformer = transformer;
     }
 
     @Autowired
-    public OrganisationService(OrganisationRepository orgRepo, UserService service) {
+    public OrganisationService(OrganisationRepository orgRepo, UserService service,
+                               OrganisationTransformer transformer) {
         this.log = LoggerFactory.getLogger(this.getClass());
         this.orgRepo = orgRepo;
         this.service = service;
+        this.transformer = transformer;
     }
 
-    public OrganisationResponse add(HttpSession session, OrganisationData org) {
-        log.debug("OrganisationService: Add organisation data='" + org.toString() + "'");
+    public OrganisationResponse add(HttpSession session, OrganisationData orgData) {
+        log.debug("OrganisationService: Add organisation data='" + orgData.toString() + "'");
         service.authorizationCheck(session);
-        org.check();
-        orgRepo.add(org);
+        orgData.check();
+        Organisation organisation = transformer.transform(orgData);
+        orgRepo.save(organisation);
         return getSuccessPostOrganisations();
     }
 
     public OrganisationResponse getAll(HttpSession session) {
         log.debug("OrganisationService: Get organisations");
         service.authorizationCheck(session);
-        return getSuccessGetOrganisations(orgRepo.getAll());
+        List<Organisation> orgs = orgRepo.findAll();
+        List<OrganisationData> orgsData = new ArrayList<>(orgs.size());
+        for (Organisation org : orgs) {
+            orgsData.add(transformer.transform(org));
+        }
+        return getSuccessGetOrganisations(orgsData);
     }
 
 
-    public OrganisationResponse update(HttpSession session, String organisationId, OrganisationData org) {
-        log.debug("OrganisationService: Update organisation id='" + organisationId + "' data='" + org.toString() + "'");
+    public OrganisationResponse update(HttpSession session, String organisationId,
+                                       OrganisationData orgData) {
+        log.debug("OrganisationService: Update organisation id='" + organisationId + "' data='" + orgData.toString() + "'");
         service.authorizationCheck(session);
-        org.check();
+        orgData.check();
         long id = Long.parseLong(organisationId);
-        orgRepo.update(id, org);
+        Organisation org = transformer.transform(orgData);
+        orgRepo.update(org, id);
         return getSuccessPutOrganisations();
     }
 
@@ -62,7 +74,7 @@ public class OrganisationService {
         log.debug("OrganisationService: Remove organisation id='" + organisationId + "'");
         service.authorizationCheck(session);
         long id = Long.parseLong(organisationId);
-        orgRepo.remove(id);
+        orgRepo.deleteById(id);
         return getSuccessDeleteOrganisations();
     }
 

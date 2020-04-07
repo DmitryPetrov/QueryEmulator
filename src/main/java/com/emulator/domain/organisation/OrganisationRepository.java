@@ -1,31 +1,16 @@
 package com.emulator.domain.organisation;
 
+import org.hibernate.cfg.NotYetImplementedException;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class OrganisationRepository {
+public interface OrganisationRepository extends JpaRepository<Organisation, Long> {
 
-    private List<OrganisationData> pool = new ArrayList<>();
-
-    public void add(OrganisationData org) {
-        pool.add(org);
-    }
-
-    public void update(long id, OrganisationData org) {
-        if (id >= (pool.size() - 1)) {
-            return;
-        }
-        pool.set((int) id, org);
-    }
-
-    public void remove(long id) {
-        pool.remove(id);
-    }
-
-    public List<OrganisationData> getAll() {
-        return pool;
+    default void update(Organisation org, long id) {
+        throw new NotYetImplementedException();
     }
 }

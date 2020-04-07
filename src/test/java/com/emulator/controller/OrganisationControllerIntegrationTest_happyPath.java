@@ -1,9 +1,7 @@
 package com.emulator.controller;
 
 import com.emulator.domain.frontend.response.Response;
-import com.emulator.domain.organisation.OrganisationData;
-import com.emulator.domain.organisation.OrganisationRepository;
-import com.emulator.domain.organisation.OrganisationResponse;
+import com.emulator.domain.organisation.*;
 import com.emulator.domain.soap.requests.authorization.AppUser;
 import com.emulator.service.OrganisationService;
 import com.emulator.service.UserService;
@@ -14,8 +12,10 @@ import org.slf4j.Logger;
 
 import javax.servlet.http.HttpSession;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
 class OrganisationControllerIntegrationTest_happyPath {
@@ -45,7 +45,8 @@ class OrganisationControllerIntegrationTest_happyPath {
         HttpSession session = getSessionMock();
 
         UserService service = new UserService();
-        OrganisationService orgService = new OrganisationService(log, orgRepo, service);
+        OrganisationTransformer transformer = new OrganisationTransformer();
+        OrganisationService orgService = new OrganisationService(log, orgRepo, service, transformer);
         OrganisationData data = getOrganisationData();
 
         // when
@@ -54,7 +55,35 @@ class OrganisationControllerIntegrationTest_happyPath {
         // then
         Assert.assertNotNull(response);
         Assert.assertEquals("OK", response.getStatus());
-        Mockito.verify(orgRepo).add(data);
+        Mockito.verify(orgRepo).save(any(Organisation.class));
+    }
+
+    private List<Organisation> getOrgs() {
+        List<Organisation> result = new ArrayList<>();
+        Organisation org = new Organisation();
+        List<Account> accounts = new ArrayList<Account>();
+        Account account = new Account();
+
+        account.setOrganisation(org);
+        account.setBankSettlementType("BankSettlementType");
+        account.setBankName("BankName");
+        account.setBankCorrAccount("BankCorrAccount");
+        account.setBankCity("BankCity");
+        account.setBankBic("BankBic");
+        account.setAccountId("AccountId");
+        account.setAccount("Account");
+        account.setId(0);
+
+        accounts.add(account);
+
+        org.setAccounts(accounts);
+        org.setOrgName("test org name");
+        org.setOrgInn("test org inn");
+        org.setOrgId("test org id");
+        org.setId(0);
+
+        result.add(org);
+        return result;
     }
 
     @Test
@@ -66,10 +95,11 @@ class OrganisationControllerIntegrationTest_happyPath {
         HttpSession session = getSessionMock();
 
         UserService service = new UserService();
-        OrganisationService orgService = new OrganisationService(log, orgRepo, service);
-        List<OrganisationData> orgs = Mockito.mock(List.class);
+        OrganisationTransformer transformer = new OrganisationTransformer();
+        OrganisationService orgService = new OrganisationService(log, orgRepo, service, transformer);
+        List<Organisation> orgs = getOrgs();
 
-        Mockito.when(orgRepo.getAll()).thenReturn(orgs);
+        Mockito.when(orgRepo.findAll()).thenReturn(orgs);
 
         // when
         OrganisationController controller = new OrganisationController(serviceController, orgService);
@@ -78,7 +108,7 @@ class OrganisationControllerIntegrationTest_happyPath {
         // then
         Assert.assertNotNull(response);
         Assert.assertEquals("OK", response.getStatus());
-        Assert.assertSame(orgs, response.getOrganisations());
+        Assert.assertEquals(orgs.get(0).getOrgId(), response.getOrganisations().get(0).getOrgId());
     }
 
     @Test
@@ -90,7 +120,8 @@ class OrganisationControllerIntegrationTest_happyPath {
         HttpSession session = getSessionMock();
 
         UserService service = new UserService();
-        OrganisationService orgService = new OrganisationService(log, orgRepo, service);
+        OrganisationTransformer transformer = new OrganisationTransformer();
+        OrganisationService orgService = new OrganisationService(log, orgRepo, service, transformer);
         OrganisationData data = getOrganisationData();
         String id = "1";
 
@@ -100,7 +131,7 @@ class OrganisationControllerIntegrationTest_happyPath {
         // then
         Assert.assertNotNull(response);
         Assert.assertEquals("OK", response.getStatus());
-        Mockito.verify(orgRepo).update(Long.parseLong(id), data);
+        Mockito.verify(orgRepo).update(any(Organisation.class), eq(Long.parseLong(id)));
     }
 
     @Test
@@ -112,7 +143,8 @@ class OrganisationControllerIntegrationTest_happyPath {
         HttpSession session = getSessionMock();
 
         UserService service = new UserService();
-        OrganisationService orgService = new OrganisationService(log, orgRepo, service);
+        OrganisationTransformer transformer = new OrganisationTransformer();
+        OrganisationService orgService = new OrganisationService(log, orgRepo, service, transformer);
         String id = "1";
 
         // when
@@ -121,6 +153,6 @@ class OrganisationControllerIntegrationTest_happyPath {
         // then
         Assert.assertNotNull(response);
         Assert.assertEquals("OK", response.getStatus());
-        Mockito.verify(orgRepo).remove(Long.parseLong(id));
+        Mockito.verify(orgRepo).deleteById(Long.parseLong(id));
     }
 }
