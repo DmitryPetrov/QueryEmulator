@@ -6,6 +6,7 @@ import com.emulator.exception.RequestParameterLengthException;
 import com.emulator.exception.SoapServerBadResponseException;
 import com.emulator.service.AuthorizationService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -15,15 +16,24 @@ import static org.mockito.ArgumentMatchers.any;
 
 class AuthorizationControllerUnitTest {
 
+    private ServiceController serviceController;
+    private AuthorizationService authService;
+    private HttpSession session;
+    private AppUserData data;
+    private ResponseBodyData response;
+
+    @BeforeEach
+    void before() {
+        serviceController = Mockito.mock(ServiceController.class);
+        authService = Mockito.mock(AuthorizationService.class);
+        session = Mockito.mock(HttpSession.class);
+        data = Mockito.mock(AppUserData.class);
+        response = Mockito.mock(ResponseBodyData.class);
+    }
+
     @Test
     void login_happyPath_callGetSuccessResponse() throws Exception {
         // given
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        AuthorizationService authService = Mockito.mock(AuthorizationService.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        AppUserData data = Mockito.mock(AppUserData.class);
-        ResponseBodyData response = Mockito.mock(ResponseBodyData.class);
-
         Mockito.when(authService.authorization(session, data)).thenReturn(response);
 
         // when
@@ -37,11 +47,6 @@ class AuthorizationControllerUnitTest {
     @Test
     void login_badResponseFromSoapServer_callGetErrorResponse() throws Exception {
         // given
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        AuthorizationService authService = Mockito.mock(AuthorizationService.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        AppUserData data = Mockito.mock(AppUserData.class);
-
         Mockito.when(authService.authorization(session, data)).thenThrow(SoapServerBadResponseException.class);
 
         // when
@@ -55,11 +60,6 @@ class AuthorizationControllerUnitTest {
     @Test
     void login_invalidData_callGetErrorResponse() throws Exception {
         // given
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        AuthorizationService authService = Mockito.mock(AuthorizationService.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        AppUserData data = Mockito.mock(AppUserData.class);
-
         Mockito.when(authService.authorization(session, data)).thenThrow(RequestParameterLengthException.class);
 
         // when
@@ -73,11 +73,6 @@ class AuthorizationControllerUnitTest {
     @Test
     void login_serverError_callGetErrorResponse() throws Exception {
         // given
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        AuthorizationService authService = Mockito.mock(AuthorizationService.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        AppUserData data = Mockito.mock(AppUserData.class);
-
         Mockito.when(authService.authorization(session, data)).thenThrow(RuntimeException.class);
 
         // when
@@ -87,6 +82,5 @@ class AuthorizationControllerUnitTest {
         Mockito.verify(authService).authorization(session, data);
         Mockito.verify(serviceController).getServerFailResponse(any());
     }
-
 
 }

@@ -8,6 +8,7 @@ import com.emulator.exception.RequestParameterLengthException;
 import com.emulator.exception.SoapServerBadResponseException;
 import com.emulator.exception.UserIsNotAuthorizedException;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
@@ -19,20 +20,33 @@ import static org.mockito.Mockito.doThrow;
 
 class StatementRequestControllerUnitTest {
 
+    private Logger log;
+    private RequestChainPool chainPool;
+    private ServiceController serviceController;
+    private StatementRequestChain chain;
+    private HttpSession session;
+    private StatementRequestData data;
+
+    @BeforeEach
+    void before() {
+        log = Mockito.mock(Logger.class);
+        chainPool = Mockito.mock(RequestChainPool.class);
+        serviceController = Mockito.mock(ServiceController.class);
+        chain = Mockito.mock(StatementRequestChain.class);
+        session = Mockito.mock(HttpSession.class);
+        data = Mockito.mock(StatementRequestData.class);
+    }
+
     @Test
     void runStatementRequest_validData_callGetSuccessResponse() throws Exception {
-        Logger log = Mockito.mock(Logger.class);
-        RequestChainPool chainPool = Mockito.mock(RequestChainPool.class);
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        StatementRequestChain chain = Mockito.mock(StatementRequestChain.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        StatementRequestData data = Mockito.mock(StatementRequestData.class);
-
+        //given
         Mockito.when(chainPool.createStatementRequestChain(any())).thenReturn(chain);
 
+        //when
         StatementRequestController controller = new StatementRequestController(log, chainPool, serviceController);
         ResponseBodyData result = controller.runStatementRequest(session, data);
 
+        //then
         Assertions.assertNull(result);
         Mockito.verify(serviceController).getUser(session);
         Mockito.verify(data).check();
@@ -44,17 +58,14 @@ class StatementRequestControllerUnitTest {
 
     @Test
     void runStatementRequest_sessionHaveNotUser_callGetErrorResponse() throws Exception {
-        Logger log = Mockito.mock(Logger.class);
-        RequestChainPool chainPool = Mockito.mock(RequestChainPool.class);
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        StatementRequestData data = Mockito.mock(StatementRequestData.class);
-
+        //given
         Mockito.when(serviceController.getUser(any())).thenThrow(UserIsNotAuthorizedException.class);
 
+        //when
         StatementRequestController controller = new StatementRequestController(log, chainPool, serviceController);
         ResponseBodyData result = controller.runStatementRequest(session, data);
 
+        //then
         Assertions.assertNull(result);
         Mockito.verify(serviceController).getUser(session);
         Mockito.verify(serviceController).getUserIsNotAuthorizedResponse();
@@ -62,19 +73,15 @@ class StatementRequestControllerUnitTest {
 
     @Test
     void runStatementRequest_badResponseFromSoapServer_callGetErrorResponse() throws Exception {
-        Logger log = Mockito.mock(Logger.class);
-        RequestChainPool chainPool = Mockito.mock(RequestChainPool.class);
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        StatementRequestChain chain = Mockito.mock(StatementRequestChain.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        StatementRequestData data = Mockito.mock(StatementRequestData.class);
-
+        //given
         Mockito.when(chainPool.createStatementRequestChain(any())).thenReturn(chain);
         doThrow(new SoapServerBadResponseException("test")).when(chain).nextStep(data);
 
+        //when
         StatementRequestController controller = new StatementRequestController(log, chainPool, serviceController);
         ResponseBodyData result = controller.runStatementRequest(session, data);
 
+        //then
         Assertions.assertNull(result);
         Mockito.verify(serviceController).getUser(session);
         Mockito.verify(data).check();
@@ -85,17 +92,14 @@ class StatementRequestControllerUnitTest {
 
     @Test
     void runStatementRequest_invalidData_callGetErrorResponse() throws Exception {
-        Logger log = Mockito.mock(Logger.class);
-        RequestChainPool chainPool = Mockito.mock(RequestChainPool.class);
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        StatementRequestData data = Mockito.mock(StatementRequestData.class);
-
+        //given
         doThrow(new RequestParameterLengthException("test")).when(data).check();
 
+        //when
         StatementRequestController controller = new StatementRequestController(log, chainPool, serviceController);
         ResponseBodyData result = controller.runStatementRequest(session, data);
 
+        //then
         Assertions.assertNull(result);
         Mockito.verify(serviceController).getUser(session);
         Mockito.verify(data).check();
@@ -104,19 +108,15 @@ class StatementRequestControllerUnitTest {
 
     @Test
     void runStatementRequest_serverError_callGetErrorResponse() throws Exception {
-        Logger log = Mockito.mock(Logger.class);
-        RequestChainPool chainPool = Mockito.mock(RequestChainPool.class);
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        StatementRequestChain chain = Mockito.mock(StatementRequestChain.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        StatementRequestData data = Mockito.mock(StatementRequestData.class);
-
+        //given
         Mockito.when(chainPool.createStatementRequestChain(any())).thenReturn(chain);
         doThrow(new RuntimeException("test")).when(chainPool).addToPool(chain);
 
+        //when
         StatementRequestController controller = new StatementRequestController(log, chainPool, serviceController);
         ResponseBodyData result = controller.runStatementRequest(session, data);
 
+        //then
         Assertions.assertNull(result);
         Mockito.verify(serviceController).getUser(session);
         Mockito.verify(data).check();

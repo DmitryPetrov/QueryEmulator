@@ -5,24 +5,32 @@ import com.emulator.domain.frontend.response.ResponseSoapMessageList;
 import com.emulator.exception.UserIsNotAuthorizedException;
 import com.emulator.service.SoapMessageService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import javax.servlet.http.HttpSession;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
 
 class SoapMessageControllerUnitTest {
+
+    private ServiceController serviceController;
+    private SoapMessageService messageService;
+    private HttpSession session;
+    private ResponseSoapMessageList response;
+
+    @BeforeEach
+    void before() {
+        serviceController = Mockito.mock(ServiceController.class);
+        messageService = Mockito.mock(SoapMessageService.class);
+        session = Mockito.mock(HttpSession.class);
+        response = Mockito.mock(ResponseSoapMessageList.class);
+    }
 
     @Test
     void getAllMessages_validData_callGetSuccessResponse() throws Exception {
         // given
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        SoapMessageService messageService = Mockito.mock(SoapMessageService.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        ResponseSoapMessageList response = Mockito.mock(ResponseSoapMessageList.class);
-
         Mockito.when(messageService.getAll(session)).thenReturn(response);
 
         // when
@@ -35,10 +43,6 @@ class SoapMessageControllerUnitTest {
     @Test
     void getAllMessages_userNotAuthorized_callGetErrorResponse() throws Exception {
         // given
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        SoapMessageService messageService = Mockito.mock(SoapMessageService.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-
         Mockito.when(messageService.getAll(session)).thenThrow(UserIsNotAuthorizedException.class);
 
         // when
@@ -51,10 +55,6 @@ class SoapMessageControllerUnitTest {
     @Test
     void getAllMessages_serverError_callGetErrorResponse() throws Exception {
         // given
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        SoapMessageService messageService = Mockito.mock(SoapMessageService.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-
         Mockito.when(messageService.getAll(session)).thenThrow(RuntimeException.class);
 
         // when
@@ -67,11 +67,6 @@ class SoapMessageControllerUnitTest {
     @Test
     void getLastRequestMessages_validData_callGetSuccessResponse() throws Exception {
         // given
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        SoapMessageService messageService = Mockito.mock(SoapMessageService.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        ResponseSoapMessageList response = Mockito.mock(ResponseSoapMessageList.class);
-
         Mockito.when(messageService.getLastRequest(session)).thenReturn(response);
 
         // when
@@ -84,10 +79,6 @@ class SoapMessageControllerUnitTest {
     @Test
     void getLastRequestMessages_userNotAuthorized_callGetErrorResponse() throws Exception {
         // given
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        SoapMessageService messageService = Mockito.mock(SoapMessageService.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-
         Mockito.when(messageService.getLastRequest(session)).thenThrow(UserIsNotAuthorizedException.class);
 
         // when
@@ -100,10 +91,6 @@ class SoapMessageControllerUnitTest {
     @Test
     void getLastRequestMessages_serverError_callGetErrorResponse() throws Exception {
         // given
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        SoapMessageService messageService = Mockito.mock(SoapMessageService.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-
         Mockito.when(messageService.getLastRequest(session)).thenThrow(RuntimeException.class);
 
         // when
@@ -118,11 +105,6 @@ class SoapMessageControllerUnitTest {
     @Test
     void removeAllMessages_validData_callGetSuccessResponse() throws Exception {
         // given
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        SoapMessageService messageService = Mockito.mock(SoapMessageService.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        ResponseSoapMessageList response = Mockito.mock(ResponseSoapMessageList.class);
-
         Mockito.when(messageService.removeAll(session)).thenReturn(response);
 
         // when
@@ -135,10 +117,6 @@ class SoapMessageControllerUnitTest {
     @Test
     void removeAllMessages_sessionHaveNotUser_callGetErrorResponse() throws Exception {
         // given
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        SoapMessageService messageService = Mockito.mock(SoapMessageService.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-
         Mockito.when(messageService.removeAll(session)).thenThrow(UserIsNotAuthorizedException.class);
 
         // when
@@ -151,10 +129,6 @@ class SoapMessageControllerUnitTest {
     @Test
     void removeAllMessages_serverError_callGetErrorResponse() throws Exception {
         // given
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        SoapMessageService messageService = Mockito.mock(SoapMessageService.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-
         Mockito.when(messageService.removeAll(session)).thenThrow(RuntimeException.class);
 
         // when
