@@ -5,6 +5,7 @@ import com.emulator.domain.soap.requests.getrequeststatus.dto.stateresponse.Stat
 import com.emulator.domain.soap.requests.incoming.IncomingDto;
 import com.emulator.domain.soap.requests.payrequest.dto.PayRequestDto;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -13,19 +14,29 @@ import java.util.List;
 
 class PayRequestChainDataUnitTest {
 
+    private PayRequestDto payRequestDto;
+    private IncomingDto incomingDto;
+
+    @BeforeEach
+    void before() {
+        payRequestDto = Mockito.mock(PayRequestDto.class);
+        incomingDto = Mockito.mock(IncomingDto.class);
+    }
+
     @Test
     void add_payRequestDto_savedObject() throws Exception {
-        PayRequestDto dto = Mockito.mock(PayRequestDto.class);
+        //given
         String requestId = "test";
         String responseId = "test2";
+        Mockito.when(payRequestDto.getRequestId()).thenReturn(requestId);
+        Mockito.when(payRequestDto.getResponseId()).thenReturn(responseId);
 
-        Mockito.when(dto.getRequestId()).thenReturn(requestId);
-        Mockito.when(dto.getResponseId()).thenReturn(responseId);
-
+        //when
         PayRequestChainData chainData = new PayRequestChainData();
-        chainData.add(dto);
+        chainData.add(payRequestDto);
 
-        Assertions.assertEquals(dto, chainData.getPayRequest());
+        //then
+        Assertions.assertEquals(payRequestDto, chainData.getPayRequest());
         Assertions.assertEquals(requestId, chainData.getRequestId());
         Assertions.assertEquals(requestId, chainData.getPayRequestRequestId());
         Assertions.assertEquals(responseId, chainData.getResponseId());
@@ -34,17 +45,18 @@ class PayRequestChainDataUnitTest {
 
     @Test
     void add_incomingDto_savedObject() throws Exception {
-        IncomingDto dto = Mockito.mock(IncomingDto.class);
+        //given
         String requestId = "test";
         String responseId = "test2";
+        Mockito.when(incomingDto.getRequestId()).thenReturn(requestId);
+        Mockito.when(incomingDto.getResponseId()).thenReturn(responseId);
 
-        Mockito.when(dto.getRequestId()).thenReturn(requestId);
-        Mockito.when(dto.getResponseId()).thenReturn(responseId);
-
+        //when
         PayRequestChainData chainData = new PayRequestChainData();
-        chainData.add(dto);
+        chainData.add(incomingDto);
 
-        Assertions.assertEquals(dto, chainData.getIncoming());
+        //then
+        Assertions.assertEquals(incomingDto, chainData.getIncoming());
         Assertions.assertEquals(requestId, chainData.getIncomingRequestId());
         Assertions.assertEquals(responseId, chainData.getIncomingResponseId());
     }
@@ -77,52 +89,62 @@ class PayRequestChainDataUnitTest {
 
     @Test
     void add_getRequestStatusDto1_savedObject() throws Exception {
+        //given
         GetRequestStatusDto dto = getMockGetRequestStatusDto();
 
+        //when
         PayRequestChainData chainData = new PayRequestChainData();
         chainData.add(dto);
 
+        //then
         Assertions.assertEquals(dto, chainData.getGetRequestStatus1());
         Assertions.assertEquals(STATE, chainData.getPayRequestStatus());
     }
 
     @Test
     void add_getRequestStatusDto1_notProcessedYetStatus() throws Exception {
+        //given
         GetRequestStatusDto dto = getMockGetRequestStatusDtoNotProcessedYet();
 
+        //when
         PayRequestChainData chainData = new PayRequestChainData();
         chainData.add(dto);
 
+        //then
         Assertions.assertEquals(dto, chainData.getGetRequestStatus1());
         Assertions.assertEquals("NOT PROCESSED YET", chainData.getPayRequestStatus());
     }
 
     @Test
     void add_getReqStatDto1ThenGetReqStatDto2_savedGetReqStatDto2() throws Exception {
-        PayRequestDto payRequestDto = Mockito.mock(PayRequestDto.class);
+        //given
         GetRequestStatusDto dto1 = getMockGetRequestStatusDto();
         GetRequestStatusDto dto2 = getMockGetRequestStatusDto();
-
         Mockito.when(payRequestDto.getExternalId()).thenReturn(EXT_ID);
 
+        //when
         PayRequestChainData chainData = new PayRequestChainData();
         chainData.add(payRequestDto);
         chainData.add(dto1);
         chainData.add(dto2);
 
+        //then
         Assertions.assertEquals(dto2, chainData.getGetRequestStatus2());
         Assertions.assertEquals(STATE, chainData.getIncomingStatus());
     }
 
     @Test
     void add_getReqStatDto1ThenGetReqStatDto2_notProcessedYetStatus() throws Exception {
+        //given
         GetRequestStatusDto dto1 = getMockGetRequestStatusDto();
         GetRequestStatusDto dto2 = getMockGetRequestStatusDtoNotProcessedYet();
 
+        //when
         PayRequestChainData chainData = new PayRequestChainData();
         chainData.add(dto1);
         chainData.add(dto2);
 
+        //then
         Assertions.assertEquals(dto1, chainData.getGetRequestStatus1());
         Assertions.assertEquals(dto2, chainData.getGetRequestStatus2());
         Assertions.assertEquals("NOT PROCESSED YET", chainData.getIncomingStatus());
@@ -130,17 +152,18 @@ class PayRequestChainDataUnitTest {
 
     @Test
     void add_getReqStatDto1NotProcessedYetThenGetReqStatDto2_savedGetReqStatDto1() throws Exception {
-        PayRequestDto payRequestDto = Mockito.mock(PayRequestDto.class);
+        //given
         GetRequestStatusDto dto1 = getMockGetRequestStatusDtoNotProcessedYet();
         GetRequestStatusDto dto2 = getMockGetRequestStatusDto();
-
         Mockito.when(payRequestDto.getExternalId()).thenReturn(EXT_ID);
 
+        //when
         PayRequestChainData chainData = new PayRequestChainData();
         chainData.add(payRequestDto);
         chainData.add(dto1);
         chainData.add(dto2);
 
+        //then
         Assertions.assertEquals(dto2, chainData.getGetRequestStatus1());
         Assertions.assertEquals(STATE, chainData.getPayRequestStatus());
         Assertions.assertNull(chainData.getGetRequestStatus2());

@@ -10,24 +10,46 @@ import com.emulator.domain.soap.requests.statementrequest.dto.StatementRequestDt
 import com.emulator.exception.ParameterIsNullException;
 import com.emulator.exception.UserIsNotAuthorizedException;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 
 class StatementRequestChainUnitTest {
 
+    private Logger log;
+    private SoapClient soapClient;
+    private AppUser user;
+    private StatementRequestChainData chainData;
+    private StatementRequestData statementRequestData;
+    private StatementRequestDto statementRequestDto;
+    private IncomingData incomingData;
+    private IncomingDto incomingDto;
+    private GetRequestStatusDto getRequestStatusDto;
+
+    @BeforeEach
+    void before() {
+        log = Mockito.mock(Logger.class);
+        soapClient = Mockito.mock(SoapClient.class);
+        user = Mockito.mock(AppUser.class);
+        chainData = Mockito.mock(StatementRequestChainData.class);
+        statementRequestData = Mockito.mock(StatementRequestData.class);
+        statementRequestDto = Mockito.mock(StatementRequestDto.class);
+        incomingData = Mockito.mock(IncomingData.class);
+        incomingDto = Mockito.mock(IncomingDto.class);
+        getRequestStatusDto = Mockito.mock(GetRequestStatusDto.class);
+    }
+
     @Test
     void constructor_validData_validObject() throws Exception {
-        Logger log = Mockito.mock(Logger.class);
-        SoapClient soapClient = Mockito.mock(SoapClient.class);
-        AppUser user = Mockito.mock(AppUser.class);
-        StatementRequestChainData chainData = Mockito.mock(StatementRequestChainData.class);
+        //given
         String sessionId = "test";
-
         Mockito.when(user.getSessionId()).thenReturn(sessionId);
 
+        //when
         StatementRequestChain chain = new StatementRequestChain(user, soapClient, log, 0, chainData);
 
+        //then
         Assertions.assertNotNull(chain);
         Assertions.assertNotNull(chain.getUser());
         Assertions.assertEquals(user, chain.getUser());
@@ -36,10 +58,7 @@ class StatementRequestChainUnitTest {
 
     @Test
     void constructor_nullAppUser_exception() throws Exception {
-        Logger log = Mockito.mock(Logger.class);
-        SoapClient soapClient = Mockito.mock(SoapClient.class);
-        StatementRequestChainData chainData = Mockito.mock(StatementRequestChainData.class);
-
+        //then
         Assertions.assertThrows(
                 ParameterIsNullException.class,
                 () -> new StatementRequestChain(null, soapClient, log, 0, chainData),
@@ -49,14 +68,11 @@ class StatementRequestChainUnitTest {
 
     @Test
     void constructor_notAuthorizedAppUser_exception() throws Exception {
-        Logger log = Mockito.mock(Logger.class);
-        SoapClient soapClient = Mockito.mock(SoapClient.class);
-        AppUser user = Mockito.mock(AppUser.class);
-        StatementRequestChainData chainData = Mockito.mock(StatementRequestChainData.class);
+        //given
         String sessionId = "";
-
         Mockito.when(user.getSessionId()).thenReturn(sessionId);
 
+        //then
         Assertions.assertThrows(
                 UserIsNotAuthorizedException.class,
                 () -> new StatementRequestChain(user, soapClient, log, 0, chainData),
@@ -66,84 +82,72 @@ class StatementRequestChainUnitTest {
 
     @Test
     void nextStep_validStatementRequestData_statementRequestDtoObject() throws Exception {
-        Logger log = Mockito.mock(Logger.class);
-        SoapClient soapClient = Mockito.mock(SoapClient.class);
-        AppUser user = Mockito.mock(AppUser.class);
-        StatementRequestChainData chainData = Mockito.mock(StatementRequestChainData.class);
-        StatementRequestData data = Mockito.mock(StatementRequestData.class);
-        StatementRequestDto dto = Mockito.mock(StatementRequestDto.class);
+        //given
         int currentPhase = 0;
-
         Mockito.when(user.getSessionId()).thenReturn("test");
-        Mockito.when(soapClient.doRequest(user, data)).thenReturn(dto);
+        Mockito.when(soapClient.doRequest(user, statementRequestData)).thenReturn(statementRequestDto);
 
+        //when
         StatementRequestChain chain = new StatementRequestChain(user, soapClient, log, currentPhase, chainData);
-        chain.nextStep(data);
+        chain.nextStep(statementRequestData);
 
-        Mockito.verify(soapClient).doRequest(user, data);
-        Mockito.verify(chainData).add(dto);
+        //then
+        Mockito.verify(soapClient).doRequest(user, statementRequestData);
+        Mockito.verify(chainData).add(statementRequestDto);
         Assertions.assertEquals((currentPhase + 1), chain.getPhaseNum());
     }
 
     @Test
     void nextStep_validStatementRequestData_exception() throws Exception {
-        Logger log = Mockito.mock(Logger.class);
-        SoapClient soapClient = Mockito.mock(SoapClient.class);
-        AppUser user = Mockito.mock(AppUser.class);
-        StatementRequestChainData chainData = Mockito.mock(StatementRequestChainData.class);
-        StatementRequestData data = Mockito.mock(StatementRequestData.class);
+        //given
         int currentPhase = 0;
-
         Mockito.when(user.getSessionId()).thenReturn("test");
-        Mockito.when(soapClient.doRequest(user, data)).thenThrow(RuntimeException.class);
+        Mockito.when(soapClient.doRequest(user, statementRequestData)).thenThrow(RuntimeException.class);
 
+        //when
         StatementRequestChain chain = new StatementRequestChain(user, soapClient, log, currentPhase, chainData);
 
-        Assertions.assertThrows(RuntimeException.class, () -> chain.nextStep(data));
-        Mockito.verify(soapClient).doRequest(user, data);
+        //then
+        Assertions.assertThrows(RuntimeException.class, () -> chain.nextStep(statementRequestData));
+        Mockito.verify(soapClient).doRequest(user, statementRequestData);
         Assertions.assertNull(chain.getStatementRequest());
         Assertions.assertEquals(currentPhase, chain.getPhaseNum());
     }
 
     @Test
     void nextStep_runGetRequestStatus1_getRequestStatusDtoObject() throws Exception {
-        Logger log = Mockito.mock(Logger.class);
-        SoapClient soapClient = Mockito.mock(SoapClient.class);
-        AppUser user = Mockito.mock(AppUser.class);
-        StatementRequestChainData chainData = Mockito.mock(StatementRequestChainData.class);
-        GetRequestStatusDto dto = Mockito.mock(GetRequestStatusDto.class);
+        //given
         int currentPhase = 1;
         String statementRequestResponseId = "test2";
-
         Mockito.when(user.getSessionId()).thenReturn("test");
         Mockito.when(chainData.getStatementRequestResponseId()).thenReturn(statementRequestResponseId);
         Mockito.when(chainData.getStatementRequestStatus()).thenReturn("DELIVERED");
-        Mockito.when(soapClient.doRequest(user, statementRequestResponseId)).thenReturn(dto);
+        Mockito.when(soapClient.doRequest(user, statementRequestResponseId)).thenReturn(getRequestStatusDto);
 
+        //when
         StatementRequestChain chain = new StatementRequestChain(user, soapClient, log, currentPhase, chainData);
         chain.nextStep();
 
+        //then
         Mockito.verify(chainData).getStatementRequestResponseId();
         Mockito.verify(soapClient).doRequest(user, statementRequestResponseId);
-        Mockito.verify(chainData).add(dto);
+        Mockito.verify(chainData).add(getRequestStatusDto);
         Assertions.assertEquals((currentPhase + 1), chain.getPhaseNum());
     }
 
     @Test
     void nextStep_runGetRequestStatus1_exception() throws Exception {
-        Logger log = Mockito.mock(Logger.class);
-        SoapClient soapClient = Mockito.mock(SoapClient.class);
-        AppUser user = Mockito.mock(AppUser.class);
-        StatementRequestChainData chainData = Mockito.mock(StatementRequestChainData.class);
+        //given
         int currentPhase = 1;
         String statementRequestResponseId = "test2";
-
         Mockito.when(user.getSessionId()).thenReturn("test");
         Mockito.when(chainData.getStatementRequestResponseId()).thenReturn(statementRequestResponseId);
         Mockito.when(soapClient.doRequest(user, statementRequestResponseId)).thenThrow(RuntimeException.class);
 
+        //when
         StatementRequestChain chain = new StatementRequestChain(user, soapClient, log, currentPhase, chainData);
 
+        //then
         Assertions.assertThrows(RuntimeException.class, () -> chain.nextStep());
         Mockito.verify(chainData).getStatementRequestResponseId();
         Mockito.verify(soapClient).doRequest(user, statementRequestResponseId);
@@ -152,84 +156,72 @@ class StatementRequestChainUnitTest {
 
     @Test
     void nextStep_validIncomingData_statementRequestDtoObject() throws Exception {
-        Logger log = Mockito.mock(Logger.class);
-        SoapClient soapClient = Mockito.mock(SoapClient.class);
-        AppUser user = Mockito.mock(AppUser.class);
-        StatementRequestChainData chainData = Mockito.mock(StatementRequestChainData.class);
-        IncomingData data = Mockito.mock(IncomingData.class);
-        IncomingDto dto = Mockito.mock(IncomingDto.class);
+        //given
         int currentPhase = 2;
-
         Mockito.when(user.getSessionId()).thenReturn("test");
-        Mockito.when(soapClient.doRequest(user, data)).thenReturn(dto);
+        Mockito.when(soapClient.doRequest(user, incomingData)).thenReturn(incomingDto);
 
+        //when
         StatementRequestChain chain = new StatementRequestChain(user, soapClient, log, currentPhase, chainData);
-        chain.nextStep(data);
+        chain.nextStep(incomingData);
 
-        Mockito.verify(soapClient).doRequest(user, data);
-        Mockito.verify(chainData).add(dto);
+        //when
+        Mockito.verify(soapClient).doRequest(user, incomingData);
+        Mockito.verify(chainData).add(incomingDto);
         Assertions.assertEquals((currentPhase + 1), chain.getPhaseNum());
     }
 
     @Test
     void nextStep_validIncomingData_exception() throws Exception {
-        Logger log = Mockito.mock(Logger.class);
-        SoapClient soapClient = Mockito.mock(SoapClient.class);
-        AppUser user = Mockito.mock(AppUser.class);
-        StatementRequestChainData chainData = Mockito.mock(StatementRequestChainData.class);
-        IncomingData data = Mockito.mock(IncomingData.class);
+        //given
         int currentPhase = 2;
-
         Mockito.when(user.getSessionId()).thenReturn("test");
-        Mockito.when(soapClient.doRequest(user, data)).thenThrow(RuntimeException.class);
+        Mockito.when(soapClient.doRequest(user, incomingData)).thenThrow(RuntimeException.class);
 
+        //when
         StatementRequestChain chain = new StatementRequestChain(user, soapClient, log, currentPhase, chainData);
 
-        Assertions.assertThrows(RuntimeException.class, () -> chain.nextStep(data));
-        Mockito.verify(soapClient).doRequest(user, data);
+        //then
+        Assertions.assertThrows(RuntimeException.class, () -> chain.nextStep(incomingData));
+        Mockito.verify(soapClient).doRequest(user, incomingData);
         Assertions.assertNull(chain.getStatementRequest());
         Assertions.assertEquals(currentPhase, chain.getPhaseNum());
     }
 
     @Test
     void nextStep_runGetRequestStatus2_getRequestStatusDtoObject() throws Exception {
-        Logger log = Mockito.mock(Logger.class);
-        SoapClient soapClient = Mockito.mock(SoapClient.class);
-        AppUser user = Mockito.mock(AppUser.class);
-        StatementRequestChainData chainData = Mockito.mock(StatementRequestChainData.class);
-        GetRequestStatusDto dto = Mockito.mock(GetRequestStatusDto.class);
+        //given
         int currentPhase = 3;
         String incomingResponseId = "test2";
-
         Mockito.when(user.getSessionId()).thenReturn("test");
         Mockito.when(chainData.getIncomingResponseId()).thenReturn(incomingResponseId);
         Mockito.when(chainData.getIncomingStatus()).thenReturn("DELIVERED");
-        Mockito.when(soapClient.doRequest(user, incomingResponseId)).thenReturn(dto);
+        Mockito.when(soapClient.doRequest(user, incomingResponseId)).thenReturn(getRequestStatusDto);
 
+        //when
         StatementRequestChain chain = new StatementRequestChain(user, soapClient, log, currentPhase, chainData);
         chain.nextStep();
 
+        //then
         Mockito.verify(chainData).getIncomingResponseId();
         Mockito.verify(soapClient).doRequest(user, incomingResponseId);
-        Mockito.verify(chainData).add(dto);
+        Mockito.verify(chainData).add(getRequestStatusDto);
         Assertions.assertEquals((currentPhase + 1), chain.getPhaseNum());
     }
 
     @Test
     void nextStep_runGetRequestStatus2_exception() throws Exception {
-        Logger log = Mockito.mock(Logger.class);
-        SoapClient soapClient = Mockito.mock(SoapClient.class);
-        AppUser user = Mockito.mock(AppUser.class);
-        StatementRequestChainData chainData = Mockito.mock(StatementRequestChainData.class);
+        //given
         int currentPhase = 3;
         String incomingResponseId = "test2";
-
         Mockito.when(user.getSessionId()).thenReturn("test");
         Mockito.when(chainData.getIncomingResponseId()).thenReturn(incomingResponseId);
         Mockito.when(soapClient.doRequest(user, incomingResponseId)).thenThrow(RuntimeException.class);
 
+        //when
         StatementRequestChain chain = new StatementRequestChain(user, soapClient, log, currentPhase, chainData);
 
+        //then
         Assertions.assertThrows(RuntimeException.class, () -> chain.nextStep());
         Mockito.verify(chainData).getIncomingResponseId();
         Mockito.verify(soapClient).doRequest(user, incomingResponseId);
