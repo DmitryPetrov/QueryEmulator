@@ -1,6 +1,7 @@
-package com.emulator.domain.organisation;
+package com.emulator.repository.entity;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "Account")
@@ -45,7 +46,6 @@ public class Account {
     public String toString() {
         return "Account{" +
                 "id=" + id +
-                ", organisation=" + organisation +
                 ", account='" + account + '\'' +
                 ", accountId='" + accountId + '\'' +
                 ", bankSettlementType='" + bankSettlementType + '\'' +
@@ -54,6 +54,26 @@ public class Account {
                 ", bankBic='" + bankBic + '\'' +
                 ", bankCorrAccount='" + bankCorrAccount + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Account)) return false;
+        Account account1 = (Account) o;
+        return id == account1.id &&
+                account.equals(account1.account) &&
+                accountId.equals(account1.accountId) &&
+                bankSettlementType.equals(account1.bankSettlementType) &&
+                bankCity.equals(account1.bankCity) &&
+                bankName.equals(account1.bankName) &&
+                bankBic.equals(account1.bankBic) &&
+                bankCorrAccount.equals(account1.bankCorrAccount);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, account, accountId, bankSettlementType, bankCity, bankName, bankBic, bankCorrAccount);
     }
 
     public long getId() {

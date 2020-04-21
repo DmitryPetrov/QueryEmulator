@@ -1,14 +1,38 @@
 package com.emulator.domain.organisation;
 
+import com.emulator.repository.entity.Account;
+import com.emulator.repository.entity.Organisation;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class OrganisationTransformerUnitTest {
+
+    @Test
+    void transform() {
+        //given
+        Organisation org = getOrg();
+
+        //when
+        OrganisationData data = new OrganisationTransformer().transform(org);
+
+        //then
+        Assert.assertTrue(deepCompare(org, data));
+    }
+
+    @Test
+    void testTransform() {
+        //given
+        OrganisationData data = getOrgData();
+
+        //when
+        Organisation org = new OrganisationTransformer().transform(data);
+
+        //then
+        Assert.assertTrue(deepCompare(org, data));
+    }
 
     private Organisation getOrg() {
         Organisation org = new Organisation();
@@ -33,19 +57,6 @@ class OrganisationTransformerUnitTest {
         org.setOrgId("test org id");
         org.setId(0);
         return org;
-    }
-
-    @Test
-    void transform() {
-        //given
-        OrganisationTransformer transformer = new OrganisationTransformer();
-        Organisation org = getOrg();
-
-        //when
-        OrganisationData data = transformer.transform(org);
-
-        //then
-        Assert.assertTrue(deepCompare(org, data));
     }
 
     private boolean deepCompare(Organisation org, OrganisationData data) {
@@ -101,16 +112,4 @@ class OrganisationTransformerUnitTest {
         return data;
     }
 
-    @Test
-    void testTransform() {
-        //given
-        OrganisationTransformer transformer = new OrganisationTransformer();
-        OrganisationData data = getOrgData();
-
-        //when
-        Organisation org = transformer.transform(data);
-
-        //then
-        Assert.assertTrue(deepCompare(org, data));
-    }
 }

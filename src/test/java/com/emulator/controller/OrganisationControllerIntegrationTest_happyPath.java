@@ -3,6 +3,9 @@ package com.emulator.controller;
 import com.emulator.domain.frontend.response.Response;
 import com.emulator.domain.organisation.*;
 import com.emulator.domain.soap.requests.authorization.AppUser;
+import com.emulator.repository.OrganisationRepository;
+import com.emulator.repository.entity.Account;
+import com.emulator.repository.entity.Organisation;
 import com.emulator.service.OrganisationService;
 import com.emulator.service.UserService;
 import org.junit.Assert;
@@ -131,7 +134,7 @@ class OrganisationControllerIntegrationTest_happyPath {
         // then
         Assert.assertNotNull(response);
         Assert.assertEquals("OK", response.getStatus());
-        Mockito.verify(orgRepo).update(any(Organisation.class), eq(Long.parseLong(id)));
+        Mockito.verify(orgRepo).save(any(Organisation.class));
     }
 
     @Test
