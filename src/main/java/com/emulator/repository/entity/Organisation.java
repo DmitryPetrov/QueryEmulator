@@ -1,4 +1,4 @@
-package com.emulator.domain.organisation;
+package com.emulator.repository.entity;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public class Organisation {
     @Column(name = "orgInn", nullable = false, updatable = true, unique = true)
     private String orgInn;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "organisation")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "organisation", cascade = CascadeType.ALL)
     private List<Account> accounts = new ArrayList<>();
 
     public Organisation() {
@@ -33,13 +33,34 @@ public class Organisation {
 
     @Override
     public String toString() {
+        String accountsId = "";
+        for(Account account: accounts) {
+            accountsId = account.getId() + " ";
+        }
         return "Organisation{" +
                 "id=" + id +
                 ", orgName='" + orgName + '\'' +
                 ", orgId='" + orgId + '\'' +
                 ", orgInn='" + orgInn + '\'' +
-                ", accounts=" + accounts +
+                ", accounts={" + accountsId + "}" +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Organisation)) return false;
+        Organisation that = (Organisation) o;
+        return id == that.id &&
+                orgName.equals(that.orgName) &&
+                orgId.equals(that.orgId) &&
+                orgInn.equals(that.orgInn) &&
+                accounts.equals(that.accounts);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, orgName, orgId, orgInn, accounts);
     }
 
     public long getId() {

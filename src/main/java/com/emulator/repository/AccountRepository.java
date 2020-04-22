@@ -1,0 +1,11 @@
+package com.emulator.repository;
+
+import com.emulator.repository.entity.Account;
+import org.hibernate.cfg.NotYetImplementedException;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface AccountRepository extends JpaRepository<Account, Long> {
+
+}

@@ -7,6 +7,7 @@ import com.emulator.domain.soap.requests.getrequeststatus.GetRequestStatusData;
 import com.emulator.exception.SoapServerBadResponseException;
 import com.emulator.exception.UserIsNotAuthorizedException;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
@@ -15,25 +16,37 @@ import javax.servlet.http.HttpSession;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doThrow;
 
 class GetRequestStatusControllerUnitTest {
 
+    private Logger log;
+    private RequestChainPool chainPool;
+    private ServiceController serviceController;
+    private HttpSession session;
+    private RequestChain chain;
+    private GetRequestStatusData data;
+
+    @BeforeEach
+    void before() {
+        log = Mockito.mock(Logger.class);
+        chainPool = Mockito.mock(RequestChainPool.class);
+        serviceController = Mockito.mock(ServiceController.class);
+        session = Mockito.mock(HttpSession.class);
+        chain = Mockito.mock(RequestChain.class);
+        data = Mockito.mock(GetRequestStatusData.class);
+    }
+
     @Test
     void runGetRequestStatus_validData_callGetSuccessResponse() throws Exception {
-        Logger log = Mockito.mock(Logger.class);
-        RequestChainPool chainPool = Mockito.mock(RequestChainPool.class);
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        RequestChain chain = Mockito.mock(RequestChain.class);
-        GetRequestStatusData data = Mockito.mock(GetRequestStatusData.class);
-
+        //given
         Mockito.when(chainPool.getRequestChain(any(), eq(data))).thenReturn(chain);
 
+        //when
         GetRequestStatusController controller = new GetRequestStatusController(log, chainPool, serviceController);
         ResponseBodyData result = controller.runGetRequestStatus(session, data);
 
+        //then
         Assertions.assertNull(result);
         Mockito.verify(serviceController).getUser(session);
         Mockito.verify(chainPool).getRequestChain(any(), eq(data));
@@ -43,17 +56,14 @@ class GetRequestStatusControllerUnitTest {
 
     @Test
     void runGetRequestStatus_sessionHaveNotUser_callGetErrorResponse() throws Exception {
-        Logger log = Mockito.mock(Logger.class);
-        RequestChainPool chainPool = Mockito.mock(RequestChainPool.class);
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        GetRequestStatusData data = Mockito.mock(GetRequestStatusData.class);
-
+        //given
         Mockito.when(serviceController.getUser(session)).thenThrow(UserIsNotAuthorizedException.class);
 
+        //when
         GetRequestStatusController controller = new GetRequestStatusController(log, chainPool, serviceController);
         ResponseBodyData result = controller.runGetRequestStatus(session, data);
 
+        //then
         Assertions.assertNull(result);
         Mockito.verify(serviceController).getUser(session);
         Mockito.verify(serviceController).getUserIsNotAuthorizedResponse();
@@ -61,19 +71,15 @@ class GetRequestStatusControllerUnitTest {
 
     @Test
     void runGetRequestStatus_badResponseFromSoapServer_callGetErrorResponse() throws Exception {
-        Logger log = Mockito.mock(Logger.class);
-        RequestChainPool chainPool = Mockito.mock(RequestChainPool.class);
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        RequestChain chain = Mockito.mock(RequestChain.class);
-        GetRequestStatusData data = Mockito.mock(GetRequestStatusData.class);
-
+        //given
         Mockito.when(chainPool.getRequestChain(any(), eq(data))).thenReturn(chain);
         doThrow(new SoapServerBadResponseException("test")).when(chain).nextStep();
 
+        //when
         GetRequestStatusController controller = new GetRequestStatusController(log, chainPool, serviceController);
         ResponseBodyData result = controller.runGetRequestStatus(session, data);
 
+        //then
         Assertions.assertNull(result);
         Mockito.verify(serviceController).getUser(session);
         Mockito.verify(chainPool).getRequestChain(any(), eq(data));
@@ -83,19 +89,15 @@ class GetRequestStatusControllerUnitTest {
 
     @Test
     void runGetRequestStatus_serverError_callGetErrorResponse() throws Exception {
-        Logger log = Mockito.mock(Logger.class);
-        RequestChainPool chainPool = Mockito.mock(RequestChainPool.class);
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        RequestChain chain = Mockito.mock(RequestChain.class);
-        GetRequestStatusData data = Mockito.mock(GetRequestStatusData.class);
-
+        //given
         Mockito.when(chainPool.getRequestChain(any(), eq(data))).thenReturn(chain);
         doThrow(new RuntimeException("test")).when(chain).nextStep();
 
+        //when
         GetRequestStatusController controller = new GetRequestStatusController(log, chainPool, serviceController);
         ResponseBodyData result = controller.runGetRequestStatus(session, data);
 
+        //then
         Assertions.assertNull(result);
         Mockito.verify(serviceController).getUser(session);
         Mockito.verify(chainPool).getRequestChain(any(), eq(data));

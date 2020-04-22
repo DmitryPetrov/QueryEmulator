@@ -3,6 +3,7 @@ package com.emulator.controller;
 import com.emulator.domain.organisation.OrganisationData;
 import com.emulator.exception.UserIsNotAuthorizedException;
 import com.emulator.service.OrganisationService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -12,14 +13,21 @@ import static org.mockito.ArgumentMatchers.any;
 
 class OrganisationControllerUnitTest {
 
+    private ServiceController serviceController;
+    private OrganisationService orgService;
+    private HttpSession session;
+    private OrganisationData data;
+
+    @BeforeEach
+    void before() {
+        serviceController = Mockito.mock(ServiceController.class);
+        orgService = Mockito.mock(OrganisationService.class);
+        session = Mockito.mock(HttpSession.class);
+        data = Mockito.mock(OrganisationData.class);
+    }
+
     @Test
     void addOrg_happyPath_callService() {
-        // given
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        OrganisationService orgService = Mockito.mock(OrganisationService.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        OrganisationData data = Mockito.mock(OrganisationData.class);
-
         // when
         new OrganisationController(serviceController, orgService).addOrg(session, data);
 
@@ -29,11 +37,6 @@ class OrganisationControllerUnitTest {
 
     @Test
     void getOrgs_happyPath_callService() {
-        // given
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        OrganisationService orgService = Mockito.mock(OrganisationService.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-
         // when
         new OrganisationController(serviceController, orgService).getOrgs(session);
 
@@ -44,10 +47,6 @@ class OrganisationControllerUnitTest {
     @Test
     void updateOrg_happyPath_callService() {
         // given
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        OrganisationService orgService = Mockito.mock(OrganisationService.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        OrganisationData data = Mockito.mock(OrganisationData.class);
         String id = "1";
 
         // when
@@ -60,9 +59,6 @@ class OrganisationControllerUnitTest {
     @Test
     void removeOrg_happyPath_callService() {
         // given
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        OrganisationService orgService = Mockito.mock(OrganisationService.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
         String id = "1";
 
         // when
@@ -75,11 +71,6 @@ class OrganisationControllerUnitTest {
     @Test
     void addOrg_userNotAuthorized_callGetErrorResponse() {
         // given
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        OrganisationService orgService = Mockito.mock(OrganisationService.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        OrganisationData data = Mockito.mock(OrganisationData.class);
-
         Mockito.when(orgService.add(session, data)).thenThrow(UserIsNotAuthorizedException.class);
 
         // when
@@ -92,10 +83,6 @@ class OrganisationControllerUnitTest {
     @Test
     void getOrgs_userNotAuthorized_callGetErrorResponse() {
         // given
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        OrganisationService orgService = Mockito.mock(OrganisationService.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-
         Mockito.when(orgService.getAll(session)).thenThrow(UserIsNotAuthorizedException.class);
 
         // when
@@ -108,12 +95,7 @@ class OrganisationControllerUnitTest {
     @Test
     void updateOrg_userNotAuthorized_callGetErrorResponse() {
         // given
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        OrganisationService orgService = Mockito.mock(OrganisationService.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        OrganisationData data = Mockito.mock(OrganisationData.class);
         String id = "1";
-
         Mockito.when(orgService.update(session, id, data)).thenThrow(UserIsNotAuthorizedException.class);
 
         // when
@@ -126,11 +108,7 @@ class OrganisationControllerUnitTest {
     @Test
     void removeOrg_userNotAuthorized_callGetErrorResponse() {
         // given
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        OrganisationService orgService = Mockito.mock(OrganisationService.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
         String id = "1";
-
         Mockito.when(orgService.remove(session, id)).thenThrow(UserIsNotAuthorizedException.class);
 
         // when
@@ -143,11 +121,6 @@ class OrganisationControllerUnitTest {
     @Test
     void addOrg_serverError_callGetServerFailResponse() {
         // given
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        OrganisationService orgService = Mockito.mock(OrganisationService.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        OrganisationData data = Mockito.mock(OrganisationData.class);
-
         Mockito.when(orgService.add(session, data)).thenThrow(RuntimeException.class);
 
         // when
@@ -160,10 +133,6 @@ class OrganisationControllerUnitTest {
     @Test
     void getOrgs_serverError_callGetServerFailResponse() {
         // given
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        OrganisationService orgService = Mockito.mock(OrganisationService.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-
         Mockito.when(orgService.getAll(session)).thenThrow(RuntimeException.class);
 
         // when
@@ -176,12 +145,7 @@ class OrganisationControllerUnitTest {
     @Test
     void updateOrg_serverError_callGetServerFailResponse() {
         // given
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        OrganisationService orgService = Mockito.mock(OrganisationService.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        OrganisationData data = Mockito.mock(OrganisationData.class);
         String id = "1";
-
         Mockito.when(orgService.update(session, id, data)).thenThrow(RuntimeException.class);
 
         // when
@@ -194,11 +158,7 @@ class OrganisationControllerUnitTest {
     @Test
     void removeOrg_serverError_callGetServerFailResponse() {
         // given
-        ServiceController serviceController = Mockito.mock(ServiceController.class);
-        OrganisationService orgService = Mockito.mock(OrganisationService.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
         String id = "1";
-
         Mockito.when(orgService.remove(session, id)).thenThrow(RuntimeException.class);
 
         // when

@@ -2,6 +2,8 @@ package com.emulator.service;
 
 import com.emulator.domain.organisation.*;
 import com.emulator.exception.UserIsNotAuthorizedException;
+import com.emulator.repository.OrganisationRepository;
+import com.emulator.repository.entity.Organisation;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

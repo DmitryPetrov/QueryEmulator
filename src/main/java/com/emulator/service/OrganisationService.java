@@ -1,6 +1,8 @@
 package com.emulator.service;
 
 import com.emulator.domain.organisation.*;
+import com.emulator.repository.OrganisationRepository;
+import com.emulator.repository.entity.Organisation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +68,7 @@ public class OrganisationService {
         orgData.check();
         long id = Long.parseLong(organisationId);
         Organisation org = transformer.transform(orgData);
-        orgRepo.update(org, id);
+        orgRepo.save(org);
         return getSuccessPutOrganisations();
     }
 

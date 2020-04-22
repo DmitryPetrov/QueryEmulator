@@ -2,7 +2,7 @@ package com.emulator.controller;
 
 import com.emulator.domain.frontend.response.Response;
 import com.emulator.domain.organisation.OrganisationData;
-import com.emulator.domain.organisation.OrganisationRepository;
+import com.emulator.repository.OrganisationRepository;
 import com.emulator.domain.organisation.OrganisationTransformer;
 import com.emulator.domain.soap.SoapMessageStorage;
 import com.emulator.domain.soap.requests.authorization.AppUser;
