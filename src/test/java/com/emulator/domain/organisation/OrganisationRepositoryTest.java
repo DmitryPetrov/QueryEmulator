@@ -116,6 +116,7 @@ class OrganisationRepositoryTest {
         Organisation orgForUpdate = savedOrgs.get(0);
         orgForUpdate.setOrgId(updatedOrgId);
         orgForUpdate.getAccounts().get(0).setAccountId(updatedAccountId);
+        orgForUpdate.getAccounts().add(getAccount(orgForUpdate));
 
         repository.save(orgForUpdate);
 
@@ -123,6 +124,20 @@ class OrganisationRepositoryTest {
 
         Assert.assertEquals(updatedOrgId, updatedOrg.getOrgId());
         Assert.assertEquals(updatedAccountId, updatedOrg.getAccounts().get(0).getAccountId());
+        Assert.assertEquals(3, updatedOrg.getAccounts().size());
+    }
+
+    private Account getAccount(Organisation org) {
+        Account account = new Account();
+        account.setOrganisation(org);
+        account.setBankSettlementType("BankSettlementType");
+        account.setBankName("BankName");
+        account.setBankCorrAccount("BankCorrAccount");
+        account.setBankCity("BankCity");
+        account.setBankBic("BankBic");
+        account.setAccountId("AccountId");
+        account.setAccount("Account");
+        return account;
     }
 
 }
