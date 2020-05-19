@@ -6,6 +6,7 @@ import java.util.Objects;
 
 public class OrganisationAccountData extends RequestParameters {
 
+    private String id = "";
     private String account = "";
     private String accountId = "";
     private String bankSettlementType = "";
@@ -52,6 +53,14 @@ public class OrganisationAccountData extends RequestParameters {
     public int hashCode() {
         return Objects.hash(account, accountId, bankSettlementType, bankCity, bankName, bankBic,
                 bankCorrAccount);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getAccount() {

@@ -8,6 +8,7 @@ import java.util.Objects;
 
 public class OrganisationData extends RequestParameters {
 
+    private String id = "";
     private String orgName = "";
     private String orgId = "";
     private String orgInn = "";
@@ -45,6 +46,14 @@ public class OrganisationData extends RequestParameters {
     public int hashCode() {
 
         return Objects.hash(orgName, orgId, orgInn, accounts);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getOrgName() {

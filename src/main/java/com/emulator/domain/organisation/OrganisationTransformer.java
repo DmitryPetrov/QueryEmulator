@@ -29,6 +29,11 @@ public class OrganisationTransformer {
 
     private Account transform(OrganisationAccountData accountData, Organisation org) {
         Account account = new Account();
+        try {
+            account.setId(Long.parseLong(accountData.getId()));
+        } catch (NumberFormatException e) {
+            account.setId(0);
+        }
         account.setAccount(accountData.getAccount());
         account.setAccountId(accountData.getAccountId());
         account.setBankBic(accountData.getBankBic());
@@ -42,6 +47,7 @@ public class OrganisationTransformer {
 
     public OrganisationData transform(Organisation org) {
         OrganisationData data = new OrganisationData();
+        data.setId("" + org.getId());
         data.setOrgId(org.getOrgId());
         data.setOrgInn(org.getOrgInn());
         data.setOrgName(org.getOrgName());
@@ -59,6 +65,7 @@ public class OrganisationTransformer {
 
     private OrganisationAccountData transform(Account account) {
         OrganisationAccountData accountData = new OrganisationAccountData();
+        accountData.setId("" + account.getId());
         accountData.setAccount(account.getAccount());
         accountData.setAccountId(account.getAccountId());
         accountData.setBankBic(account.getBankBic());
