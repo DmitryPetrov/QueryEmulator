@@ -6,6 +6,7 @@ import com.emulator.repository.OrganisationRepository;
 import com.emulator.repository.entity.Organisation;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
@@ -13,24 +14,39 @@ import org.slf4j.Logger;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 
 public class OrganisationServiceUnitTest {
 
+    private Logger log;
+    private UserService userService;
+    private OrganisationTransformer transformer;
+    private OrganisationRepository orgRepo;
+    private HttpSession session;
+    private OrganisationData orgData;
+    private String id;
+
+    @BeforeEach
+    void before() {
+        log = Mockito.mock(Logger.class);
+        userService = Mockito.mock(UserService.class);
+        transformer = Mockito.mock(OrganisationTransformer.class);
+        orgRepo = Mockito.mock(OrganisationRepository.class);
+        session = Mockito.mock(HttpSession.class);
+        orgData = Mockito.mock(OrganisationData.class);
+        id = "1";
+    }
+
     @Test
     void add_happyPath_succeedResponse() throws Exception {
         // given
-        Logger log = Mockito.mock(Logger.class);
-        UserService service = Mockito.mock(UserService.class);
-        OrganisationTransformer transformer = Mockito.mock(OrganisationTransformer.class);
-        OrganisationRepository orgRepo = Mockito.mock(OrganisationRepository.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        OrganisationData org = Mockito.mock(OrganisationData.class);
+        OrganisationService orgService = new OrganisationService(log, orgRepo, userService, transformer);;
 
         // when
-        OrganisationResponse response = new OrganisationService(log, orgRepo, service, transformer).add(session, org);
+        OrganisationResponse response = orgService.add(session, orgData);
 
         // then
         Assert.assertNotNull(response);
@@ -46,17 +62,13 @@ public class OrganisationServiceUnitTest {
     @Test
     void getAll_happyPath_succeedResponse() throws Exception {
         // given
-        Logger log = Mockito.mock(Logger.class);
-        UserService service = Mockito.mock(UserService.class);
-        OrganisationTransformer transformer = Mockito.mock(OrganisationTransformer.class);
-        OrganisationRepository orgRepo = Mockito.mock(OrganisationRepository.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
+        OrganisationService orgService = new OrganisationService(log, orgRepo, userService, transformer);;
         List<Organisation> orgs = getOrgs();
 
         Mockito.when(orgRepo.findAll()).thenReturn(orgs);
 
         // when
-        OrganisationResponse response = new OrganisationService(log, orgRepo, service, transformer).getAll(session);
+        OrganisationResponse response = orgService.getAll(session);
 
         // then
         Assert.assertNotNull(response);
@@ -67,17 +79,12 @@ public class OrganisationServiceUnitTest {
     @Test
     void update_happyPath_succeedResponse() throws Exception {
         // given
-        Logger log = Mockito.mock(Logger.class);
-        UserService service = Mockito.mock(UserService.class);
-        OrganisationTransformer transformer = Mockito.mock(OrganisationTransformer.class);
-        OrganisationRepository orgRepo = Mockito.mock(OrganisationRepository.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        OrganisationData data = Mockito.mock(OrganisationData.class);
-        String id = "1";
+        OrganisationService orgService = new OrganisationService(log, orgRepo, userService, transformer);;
+        Organisation organisation = Mockito.mock(Organisation.class);
+        Mockito.when(orgRepo.findById(Long.parseLong(id))).thenReturn(Optional.of(organisation));
 
         // when
-        OrganisationResponse response = new OrganisationService(log, orgRepo, service, transformer)
-                .update(session, id, data);
+        OrganisationResponse response = orgService.update(session, id, orgData);
 
         // then
         Assert.assertNotNull(response);
@@ -87,15 +94,10 @@ public class OrganisationServiceUnitTest {
     @Test
     void remove_happyPath_succeedResponse() throws Exception {
         // given
-        Logger log = Mockito.mock(Logger.class);
-        UserService service = Mockito.mock(UserService.class);
-        OrganisationTransformer transformer = Mockito.mock(OrganisationTransformer.class);
-        OrganisationRepository orgRepo = Mockito.mock(OrganisationRepository.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        String id = "1";
+        OrganisationService orgService = new OrganisationService(log, orgRepo, userService, transformer);;
 
         // when
-        OrganisationResponse response = new OrganisationService(log, orgRepo, service, transformer).remove(session, id);
+        OrganisationResponse response = orgService.remove(session, id);
 
         //then
         Assert.assertNotNull(response);
@@ -105,73 +107,52 @@ public class OrganisationServiceUnitTest {
     @Test
     void add_userIsNotAuthorized_exception() throws Exception {
         // given
-        Logger log = Mockito.mock(Logger.class);
-        UserService service = Mockito.mock(UserService.class);
-        OrganisationTransformer transformer = Mockito.mock(OrganisationTransformer.class);
-        OrganisationRepository orgRepo = Mockito.mock(OrganisationRepository.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        OrganisationData org = Mockito.mock(OrganisationData.class);
-
-        doThrow(new UserIsNotAuthorizedException("")).when(service).authorizationCheck(session);
+        doThrow(new UserIsNotAuthorizedException("")).when(userService).authorizationCheck(session);
 
         // then
         Assertions.assertThrows(
                 UserIsNotAuthorizedException.class,
-                () -> new OrganisationService(log, orgRepo, service, transformer).add(session, org));
+                () -> new OrganisationService(log, orgRepo, userService, transformer).add(session, orgData));
     }
 
     @Test
     void getAll_userIsNotAuthorized_exception() throws Exception {
         // given
-        Logger log = Mockito.mock(Logger.class);
-        UserService service = Mockito.mock(UserService.class);
-        OrganisationTransformer transformer = Mockito.mock(OrganisationTransformer.class);
-        OrganisationRepository orgRepo = Mockito.mock(OrganisationRepository.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-
-        doThrow(new UserIsNotAuthorizedException("")).when(service).authorizationCheck(session);
+        OrganisationService orgService = new OrganisationService(log, orgRepo, userService, transformer);
+        doThrow(new UserIsNotAuthorizedException("")).when(userService).authorizationCheck(session);
 
         // then
         Assertions.assertThrows(
                 UserIsNotAuthorizedException.class,
-                () -> new OrganisationService(log, orgRepo, service, transformer).getAll(session));
+                () -> orgService.getAll(session));
     }
 
     @Test
     void update_userIsNotAuthorized_exception() throws Exception {
         // given
-        Logger log = Mockito.mock(Logger.class);
-        UserService service = Mockito.mock(UserService.class);
-        OrganisationTransformer transformer = Mockito.mock(OrganisationTransformer.class);
-        OrganisationRepository orgRepo = Mockito.mock(OrganisationRepository.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        OrganisationData org = Mockito.mock(OrganisationData.class);
+        OrganisationService orgService = new OrganisationService(log, orgRepo, userService, transformer);
         String id = "1";
 
-        doThrow(new UserIsNotAuthorizedException("")).when(service).authorizationCheck(session);
+        doThrow(new UserIsNotAuthorizedException("")).when(userService).authorizationCheck(session);
 
         // then
         Assertions.assertThrows(
                 UserIsNotAuthorizedException.class,
-                () -> new OrganisationService(log, orgRepo, service, transformer).update(session, id, org));
+                () -> orgService.update(session, id, orgData));
     }
 
     @Test
     void remove_userIsNotAuthorized_exception() throws Exception {
         // given
-        Logger log = Mockito.mock(Logger.class);
-        UserService service = Mockito.mock(UserService.class);
-        OrganisationTransformer transformer = Mockito.mock(OrganisationTransformer.class);
-        OrganisationRepository orgRepo = Mockito.mock(OrganisationRepository.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
+        OrganisationService orgService = new OrganisationService(log, orgRepo, userService, transformer);
         String id = "1";
 
-        doThrow(new UserIsNotAuthorizedException("")).when(service).authorizationCheck(session);
+        doThrow(new UserIsNotAuthorizedException("")).when(userService).authorizationCheck(session);
 
         // then
         Assertions.assertThrows(
                 UserIsNotAuthorizedException.class,
-                () -> new OrganisationService(log, orgRepo, service, transformer).remove(session, id));
+                () -> new OrganisationService(log, orgRepo, userService, transformer).remove(session, id));
     }
 
 }

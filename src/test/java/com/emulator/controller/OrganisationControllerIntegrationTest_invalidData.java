@@ -10,6 +10,7 @@ import com.emulator.exception.RequestParameterLengthException;
 import com.emulator.service.OrganisationService;
 import com.emulator.service.UserService;
 import org.junit.Assert;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
@@ -20,6 +21,31 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 
 public class OrganisationControllerIntegrationTest_invalidData {
+
+    private Logger log;
+    private HttpSession session;
+    private OrganisationRepository orgRepo;
+    private SoapMessageStorage messageStorage;
+    private ServiceController serviceController;
+    private UserService userService;
+    private OrganisationTransformer transformer;
+    private OrganisationService orgService;
+    private OrganisationData orgData;
+    private String id;
+
+    @BeforeEach
+    void before() {
+        log = Mockito.mock(Logger.class);
+        orgRepo = Mockito.mock(OrganisationRepository.class);
+        messageStorage = Mockito.mock(SoapMessageStorage.class);
+        serviceController = new ServiceController(log, messageStorage);
+        userService = new UserService();
+        transformer = new OrganisationTransformer();
+        orgService = new OrganisationService(log, orgRepo, userService, transformer);
+        session = getSessionMock();
+        orgData = getOrganisationData();
+        id = "1";
+    }
 
     private OrganisationData getOrganisationData() {
         OrganisationData data = Mockito.mock(OrganisationData.class);
@@ -35,28 +61,10 @@ public class OrganisationControllerIntegrationTest_invalidData {
         return session;
     }
 
-    private OrganisationController getController() {
-        Logger log = Mockito.mock(Logger.class);
-        OrganisationRepository orgRepo = Mockito.mock(OrganisationRepository.class);
-        SoapMessageStorage messageStorage = Mockito.mock(SoapMessageStorage.class);
-        ServiceController serviceController = new ServiceController(log, messageStorage);
-
-        UserService service = new UserService();
-        OrganisationTransformer transformer = new OrganisationTransformer();
-        OrganisationService orgService = new OrganisationService(log, orgRepo, service, transformer);
-
-        return new OrganisationController(serviceController, orgService);
-    }
-
     @Test
     void addOrg_userNotAuthorized_userNotAuthorizedResponse() {
-        // given
-        HttpSession session = getSessionMock();
-        OrganisationData data = getOrganisationData();
-        OrganisationController controller = getController();
-
         // when
-        Response response = controller.addOrg(session, data);
+        Response response = new OrganisationController(serviceController, orgService).addOrg(session, orgData);
 
         // then
         Assert.assertNotNull(response);
@@ -65,13 +73,8 @@ public class OrganisationControllerIntegrationTest_invalidData {
 
     @Test
     void getOrgs_userNotAuthorized_userNotAuthorizedResponse() {
-        // given
-        HttpSession session = getSessionMock();
-        OrganisationData data = getOrganisationData();
-        OrganisationController controller = getController();
-
         // when
-        Response response = controller.getOrgs(session);
+        Response response = new OrganisationController(serviceController, orgService).getOrgs(session);
 
         // then
         Assert.assertNotNull(response);
@@ -80,14 +83,8 @@ public class OrganisationControllerIntegrationTest_invalidData {
 
     @Test
     void updateOrg_userNotAuthorized_userNotAuthorizedResponse() {
-        // given
-        HttpSession session = getSessionMock();
-        OrganisationData data = getOrganisationData();
-        OrganisationController controller = getController();
-        String id = "1";
-
         // when
-        Response response = controller.updateOrg(session, id, data);
+        Response response = new OrganisationController(serviceController, orgService).updateOrg(session, id, orgData);
 
         // then
         Assert.assertNotNull(response);
@@ -96,13 +93,8 @@ public class OrganisationControllerIntegrationTest_invalidData {
 
     @Test
     void removeOrg_userNotAuthorized_userNotAuthorizedResponse() {
-        // given
-        HttpSession session = getSessionMock();
-        OrganisationController controller = getController();
-        String id = "1";
-
         // when
-        Response response = controller.removeOrg(session, id);
+        Response response = new OrganisationController(serviceController, orgService).removeOrg(session, id);
 
         // then
         Assert.assertNotNull(response);

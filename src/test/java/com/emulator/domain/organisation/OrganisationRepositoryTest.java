@@ -1,7 +1,5 @@
 package com.emulator.domain.organisation;
 
-import com.emulator.domain.requestchain.PayRequestChain;
-import com.emulator.exception.ParameterIsNullException;
 import com.emulator.repository.OrganisationRepository;
 import com.emulator.repository.entity.Account;
 import com.emulator.repository.entity.Organisation;
@@ -14,10 +12,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataAccessException;
-import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
