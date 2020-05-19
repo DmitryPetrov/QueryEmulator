@@ -42,6 +42,16 @@ public class Account {
     public Account() {
     }
 
+    public void update(Account source) {
+        this.account = source.getAccount();
+        this.accountId = source.getAccountId();
+        this.bankSettlementType = source.getBankSettlementType();
+        this.bankCity = source.getBankCity();
+        this.bankName = source.getBankName();
+        this.bankBic = source.getBankBic();
+        this.bankCorrAccount = source.getBankCorrAccount();
+    }
+
     @Override
     public String toString() {
         return "Account{" +

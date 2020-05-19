@@ -1,9 +1,7 @@
 package com.emulator.repository.entity;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Table(name = "Organisation")
@@ -25,10 +23,68 @@ public class Organisation {
     @Column(name = "orgInn", nullable = false, updatable = true, unique = true)
     private String orgInn;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "organisation", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "organisation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Account> accounts = new ArrayList<>();
 
     public Organisation() {
+    }
+
+    public void update(Organisation dataSource) {
+        this.orgId = dataSource.getOrgId();
+        this.orgInn = dataSource.getOrgInn();
+        this.orgName = dataSource.getOrgName();
+
+        List<Account> accountsForUpdate = this.accounts;
+        List<Account> accountsSource = dataSource.getAccounts();
+
+        //remove account from 'accountsForUpdate' if 'accountsSource' do not have account with same id
+        removeAccount(accountsForUpdate, accountsSource);
+
+        //update account from 'accountsForUpdate' if 'accountsSource' have account with same id
+        updateAccounts(accountsForUpdate, accountsSource);
+
+        //add account to 'accountsForUpdate' from 'accountsSource' if 'accountsSource' have account with id = 0
+        addNewAccounts(accountsForUpdate, accountsSource);
+    }
+
+    private void addNewAccounts(List<Account> accountsForUpdate, List<Account> dataSource) {
+        for (Account account: dataSource) {
+            if (account.getId() == 0) {
+                account.setOrganisation(this);
+                accountsForUpdate.add(account);
+            }
+        }
+    }
+
+    private void updateAccounts(List<Account> accountsForUpdate, List<Account> dataSource) {
+        for (Account account: accountsForUpdate) {
+            for (Account accountSource: dataSource) {
+                if (account.getId() == accountSource.getId()) {
+                    account.update(accountSource);
+                    break;
+                }
+            }
+        }
+    }
+
+    private void removeAccount(List<Account> accountsForUpdate, List<Account> dataSource) {
+        List<Account> accountsForRemove = new ArrayList<>();
+        for (Account account: accountsForUpdate) {
+            boolean havePair = false;
+
+            for (Account accountData: dataSource) {
+                if (account.getId() == accountData.getId()) {
+                    havePair = true;
+                    break;
+                }
+            }
+
+            if (!havePair) {
+                accountsForRemove.add(account);
+            }
+        }
+
+        accountsForUpdate.removeAll(accountsForRemove);
     }
 
     @Override
